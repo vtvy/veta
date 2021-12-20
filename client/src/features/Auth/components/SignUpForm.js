@@ -45,6 +45,7 @@ function SignUpForm() {
 			className={`w-full h-full flex  relative bg-white transition-all duration-[0.25s] ${
 				isOpenSelectAvt ? 'w-[72.4rem]' : ''
 			}`}
+			encType="multipart/form-data"
 			onSubmit={handleSubmit(onSubmitHandler)}
 		>
 			<div className="max-w-xl w-full  self-start bg-white shadow rounded-lg p-10 space-y-6">
@@ -184,6 +185,7 @@ function SignUpForm() {
 					<ImgField onSelectAvt={handleSelectAvt} />
 				</div>
 			)}
+			<input type="file" name="avatar" {...register('avatar')} />
 			<div
 				className="absolute w-16 h-16 bg-indigo-600 text-white rounded-[50%] top-1/2 right-0 translate-x-1/2 -translate-y-1/2 flex justify-center items-center text-5xl shadow cursor-pointer"
 				onClick={handleOnclick}

@@ -5,8 +5,8 @@ import SignInPage from './Pages/SignInPage';
 function Auth() {
 	return (
 		<div className="w-full h-full flex justify-center items-center bg-slate-600">
-			{/* <SignUpPage /> */}
-			<SignInPage />
+			<SignUpPage />
+			{/* <SignInPage /> */}
 		</div>
 	);
 }
