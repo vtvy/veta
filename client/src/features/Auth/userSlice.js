@@ -2,26 +2,26 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userApi from '../../api/userApi';
 import StorageKeys from '../../constants/storageKeys';
 
-export const signUp = createAsyncThunk('users/sign-up', async (payload) => {
+export const signUp = createAsyncThunk('users/register', async (payload) => {
 	// return data;
 });
 
-export const signIn = createAsyncThunk('users/sign-in', async (payload) => {
+export const login = createAsyncThunk('auth/login', async (payload) => {
 	try {
 		const response = await userApi.login(payload);
 		localStorage.setItem(StorageKeys.access, response.data.access);
 		localStorage.setItem(StorageKeys.refresh, response.data.refresh);
-		const username = JSON.parse(response.config.data).username;
-		const responseUser = await userApi.getUser({ username: username });
-		const user = { ...responseUser.data[0] };
-		const responseProfile = await userApi.getProfile({ user: user.id });
-		const profile = { ...responseProfile.data };
-		const data = {
-			...user,
-			...profile,
-		};
-		localStorage.setItem(StorageKeys.user, JSON.stringify(data));
-		return data;
+		// const username = JSON.parse(response.config.data).username;
+		// const responseUser = await userApi.getUser({ username: username });
+		// const user = { ...responseUser.data[0] };
+		// const responseProfile = await userApi.getProfile({ user: user.id });
+		// const profile = { ...responseProfile.data };
+		// const data = {
+		// 	...user,
+		// 	...profile,
+		// };
+		// localStorage.setItem(StorageKeys.user, JSON.stringify(data));
+		// return data;
 	} catch (error) {
 		console.log(error);
 		return error.message;
@@ -31,7 +31,7 @@ export const signIn = createAsyncThunk('users/sign-in', async (payload) => {
 const userSlice = createSlice({
 	name: 'user',
 	initialState: {
-		current: JSON.parse(localStorage.getItem(StorageKeys.USER)) || {},
+		current: JSON.parse(localStorage.getItem(StorageKeys.user)) || {},
 		settings: {},
 	},
 	reducers: {
@@ -44,11 +44,11 @@ const userSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[signIn.fulfilled]: (state, action) => {
+		[login.fulfilled]: (state, action) => {
 			state.current = action.payload;
 		},
 
-		[signIn.fulfilled]: (state, action) => {
+		[login.fulfilled]: (state, action) => {
 			state.current = action.payload;
 		},
 	},

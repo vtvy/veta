@@ -1,47 +1,75 @@
+import React, { Fragment, useState } from 'react';
+
 import axios from 'axios';
 
-function Test() {
-	//   let otp = 0;
-	//   const send = () => {
-	//     axios
-	//       .post("http://localhost:9999/api/auth/otp", {
-	//         email: "votrieuvy1661@gmail.com",
-	//       })
-	//       .then((response) => {
-	//         console.log(response.data);
-	//         otp = window.prompt("input your otp");
-	//         console.log(otp);
-	//       });
-	//   };
-	//   const submit = () => {
-	//     axios
-	//       .post("http://localhost:9999/api/auth/register", {
-	//         email: "votrieuvy1661@gmail.com",
-	//         password: "vataweb123",
-	//         firstName: "Vy",
-	//         lastName: "CT",
-	//         avatar: "/images/avatars/avatar(1).svg",
-	//         birthDate: "2001-06-16",
-	//         otp: otp,
-	//       })
-	//       .then((response) => console.log(response));
-	//   };
+const Test = () => {
+	const [file, setFile] = useState('');
+	const [filename, setFilename] = useState('Choose File');
+	const [uploadedFile, setUploadedFile] = useState({});
 
-	const submit = () => {
-		axios
-			.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-				email: 'votrieuvy1661@gmail.com',
-				password: 'vataweb123',
-			})
-			.then((response) => console.log(response.data));
+	const onChange = (e) => {
+		setFile(e.target.files[0]);
+		setFilename(e.target.files[0].name);
+	};
+
+	const onSubmit = async (e) => {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append('file', file);
+		console.log(formData);
+
+		try {
+			const res = await axios.post(
+				`http://localhost:9999/api/auth/register`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				}
+			);
+			const { fileName, filePath } = res.data;
+			console.log(res.data);
+			setUploadedFile({ fileName, filePath });
+		} catch (err) {
+			if (err.response.status === 500) {
+			} else {
+			}
+		}
 	};
 
 	return (
-		<div>
-			{/* <button onClick={send}>Send OTP</button> */}
-			<button onClick={submit}>Click here</button>
-		</div>
+		<Fragment>
+			<form onSubmit={onSubmit}>
+				<div className="custom-file mb-4">
+					<input
+						type="file"
+						className="custom-file-input"
+						id="customFile"
+						onChange={onChange}
+					/>
+					<label className="custom-file-label" htmlFor="customFile">
+						{filename}
+					</label>
+				</div>
+
+				<input
+					type="submit"
+					value="Upload"
+					className="btn btn-primary btn-block mt-4"
+				/>
+			</form>
+
+			{uploadedFile ? (
+				<div className="row mt-5">
+					<div className="col-md-6 m-auto">
+						<h3 className="text-center">{uploadedFile.fileName}</h3>
+						<img style={{ width: '100%' }} src={uploadedFile.filePath} alt="" />
+					</div>
+				</div>
+			) : null}
+		</Fragment>
 	);
-}
+};
 
 export default Test;
