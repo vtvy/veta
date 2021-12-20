@@ -13,7 +13,6 @@ function ImgField({ onSelectAvt, setIsDefault, setFile }) {
       const file = e.target.files[0];
       setIsDefault(false);
       setFile(file);
-      console.log(file);
     }
   };
 
