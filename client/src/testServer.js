@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function Test() {
+function TestServer() {
   let otp = 0;
   const send = () => {
     // axios
@@ -45,4 +45,4 @@ function Test() {
   );
 }
 
-export default Test;
+export default TestServer;

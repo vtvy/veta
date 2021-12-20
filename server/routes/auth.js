@@ -4,8 +4,10 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 const otp = parseInt(Math.random() * 10000);
+
 const User = require("../models/User");
 
 const transporter = nodemailer.createTransport({
@@ -62,16 +64,36 @@ router.post("/otp", async (req, res) => {
 //Register an account
 router.post("/register", async (req, res) => {
   const user = req.body;
-  console.log(user.otp);
-  console.log(otp);
+  let avatarPath = "";
 
   if (user.otp == otp) {
+    if (user.isDefault) {
+      avatarPath = user.firstName + Date.now + user.avatar;
+      fs.copyFile(
+        `../../client/src/assets/images/avatars/${user.avatar}`,
+        `../../client/src/assets/uploads/avatars/${avatarPath}`,
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      const file = req.files.file;
+      avatarPath = user.firstName + Date.now + file.name;
+      file.mv(
+        `../../client/src/assets/uploads/avatars/${avatarPath}`,
+        (err) => {
+          console.error(err);
+        }
+      );
+    }
+
     //Create new account
+
     const hash = bcrypt.hashSync(user.password, saltRounds);
     const newUser = new User({
       email: user.email,
       password: hash,
-      avatar: user.avatar,
+      avatar: avatarPath,
       firstName: user.firstName,
       lastName: user.lastName,
       birthDate: user.birthDate,
@@ -92,6 +114,7 @@ router.post("/register", async (req, res) => {
 
 //Login
 router.post("/login", async (req, res) => {
+  r;
   const { email, password } = req.body;
 
   try {
