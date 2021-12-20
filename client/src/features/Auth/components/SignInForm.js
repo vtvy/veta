@@ -3,6 +3,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from './ErrorMessage';
+import axios from 'axios';
+import axiosClient from '../../../api/axiosClient';
 const schema = yup.object().shape({
 	email: yup.string().email().required(),
 	password: yup.string().required(),
@@ -17,7 +19,16 @@ function SignInForm() {
 	});
 	const onSubmit = (data) => {
 		console.log(data);
+		// const login = async () => {
+		// 	const response = await axios.post(
+		// 		`${process.env.REACT_APP_API_URL}/auth/login`,
+		// 		data
+		// 	);
+		// 	console.log(response.data);
+		// };
+		// login();
 	};
+
 	return (
 		<form
 			className="max-w-xl w-full mx-auto bg-white shadow rounded-lg p-10 space-y-6"
@@ -83,6 +94,7 @@ function SignInForm() {
 			<div className="relative pb-2">
 				<div className="absolute top-0 left-0 w-full border-b"></div>
 			</div>
+			<input type="file" {...register('file')} />
 		</form>
 	);
 }
