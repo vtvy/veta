@@ -1,10 +1,12 @@
 import React from 'react';
-import MainPage from './Pages/MainPage';
+import SignUpPage from './Pages/SignUpPage';
+import SignInPage from './Pages/SignInPage';
 
 function Auth() {
 	return (
-		<div>
-			<MainPage />
+		<div className="w-full h-full flex justify-center items-center bg-slate-600">
+			{/* <SignUpPage /> */}
+			<SignInPage />
 		</div>
 	);
 }
