@@ -23,6 +23,7 @@ const transporter = nodemailer.createTransport({
 
 //send otp
 router.post('/otp', async (req, res) => {
+	console.log(1);
 	const email = req.body.email;
 	try {
 		//Check for exists
@@ -49,6 +50,8 @@ router.post('/otp', async (req, res) => {
 					return console.log(error);
 				} else {
 					console.log('Message sent: %s', info.response);
+					console.log(2);
+
 					return res.json({
 						success: true,
 						message: 'OTP has been send',
@@ -61,56 +64,64 @@ router.post('/otp', async (req, res) => {
 	}
 });
 
-//Register an account
-router.post('/register', async (req, res) => {
+router.post('/confirmOtp', async (req, res) => {
 	const user = req.body;
-	let avatarPath = '';
 
 	if (user.otp == otp) {
-		if (user.isDefault) {
-			avatarPath = user.firstName + Date.now + user.avatar;
-			fs.copyFile(
-				`../../client/src/assets/images/avatars/${user.avatar}`,
-				`../../client/src/assets/uploads/avatars/${avatarPath}`,
-				(err) => {
-					console.log(err);
-				}
-			);
-		} else {
-			const file = req.files.file;
-			avatarPath = user.firstName + Date.now + file.name;
-			file.mv(
-				`../../client/src/assets/uploads/avatars/${avatarPath}`,
-				(err) => {
-					console.error(err);
-				}
-			);
-		}
-
-		//Create new account
-
-		const hash = bcrypt.hashSync(user.password, saltRounds);
-		const newUser = new User({
-			email: user.email,
-			password: hash,
-			avatar: avatarPath,
-			firstName: user.firstName,
-			lastName: user.lastName,
-			birthDate: user.birthDate,
-		});
-		await newUser.save();
-
-		//   //Return token
-		//   const accessToken = jwt.sign(
-		//     { userID: newUser._id },
-		//     process.env.ACCESS_TOKEN_CODE
-		//   );
-
-		//   res.json({ success: true, message: "Register successfully", accessToken });
-		// } else {
-		//   res.json({ success: false, message: "OTP is incorrect" });
-		// }
+		res.json({ success: true, message: 'OTP is correct' });
+	} else {
 	}
+});
+//Register an account
+router.post('/register', async (req, res) => {
+	console.log(3);
+
+	const user = req.body;
+	var avatarPath = '';
+	console.log(req.files);
+
+	if (user.isDefault) {
+		avatarPath = user.firstName + Date.now + user.avatar;
+		console.log(avatarPath);
+
+		fs.copyFile(
+			`../../client/src/assets/images/avatars/${user.avatar}`,
+			`../../client/src/assets/uploads/avatars/${avatarPath}`,
+			(err) => {
+				console.log(err);
+			}
+		);
+	} else {
+		const file = req.files.file;
+		avatarPath = user.firstName + Date.now + file.name;
+		console.log(avatarPath);
+		file.mv(`../../client/src/assets/uploads/avatars/${avatarPath}`, (err) => {
+			console.error(err);
+		});
+	}
+
+	//Create new account
+	console.log(avatarPath);
+
+	const hash = bcrypt.hashSync(user.password, saltRounds);
+	const newUser = new User({
+		email: user.email,
+		password: hash,
+		avatar: avatarPath,
+		firstName: user.firstName,
+		lastName: user.lastName,
+		birthDate: user.birthDate,
+	});
+	await newUser.save();
+
+	//Return token
+	const accessToken = jwt.sign(
+		{ userID: newUser._id },
+		process.env.ACCESS_TOKEN_CODE
+	);
+
+	res.json({ success: true, message: 'Register successfully', accessToken });
+	console.log(4);
 });
 
 //Login
