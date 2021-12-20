@@ -1,14 +1,14 @@
-import Auth from "./features/Auth";
-import Test from "./test";
+import Auth from './features/Auth';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">hello</header>
-      <Auth />
-      <Test />
-    </div>
-  );
+	return (
+		<div className="App h-screen">
+			<Routes>
+				<Route path="/" element={<Auth />} />
+			</Routes>
+		</div>
+	);
 }
 
 export default App;
