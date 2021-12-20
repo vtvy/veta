@@ -1,8 +1,20 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
-import SignInForm from '../../components/SignInForm';
+import LoginForm from '../../components/LoginForm';
+import { login } from '../../userSlice';
 
-function SignInPage() {
+function LoginPage() {
+	const dispatch = useDispatch();
+	const handleSubmit = async (data) => {
+		try {
+			const actions = login(data);
+			await dispatch(actions);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	return (
 		<div className="w-full h-full flex  flex-col justify-center items-center">
 			<div>
@@ -19,9 +31,9 @@ function SignInPage() {
 					</a>
 				</p>
 			</div>
-			<SignInForm />
+			<LoginForm onSubmit={handleSubmit} />
 		</div>
 	);
 }
 
-export default SignInPage;
+export default LoginPage;

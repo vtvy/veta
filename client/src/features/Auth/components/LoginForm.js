@@ -3,13 +3,12 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from './ErrorMessage';
-import axios from 'axios';
-import axiosClient from '../../../api/axiosClient';
+import userApi from '../../../api/userApi';
 const schema = yup.object().shape({
 	email: yup.string().email().required(),
 	password: yup.string().required(),
 });
-function SignInForm() {
+function LoginForm({ onSubmit }) {
 	const {
 		register,
 		handleSubmit,
@@ -17,22 +16,14 @@ function SignInForm() {
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
-	const onSubmit = (data) => {
-		console.log(data);
-		// const login = async () => {
-		// 	const response = await axios.post(
-		// 		`${process.env.REACT_APP_API_URL}/auth/login`,
-		// 		data
-		// 	);
-		// 	console.log(response.data);
-		// };
-		// login();
+	const onSubmitForm = (data) => {
+		onSubmit(data);
 	};
 
 	return (
 		<form
 			className="max-w-xl w-full mx-auto bg-white shadow rounded-lg p-10 space-y-6"
-			onSubmit={handleSubmit(onSubmit)}
+			onSubmit={handleSubmit(onSubmitForm)}
 		>
 			<div className="flex flex-col">
 				<label
@@ -62,7 +53,6 @@ function SignInForm() {
 					className="border rounded-md bg-white px-6 py-4"
 					type="password"
 					name="password"
-					id="password"
 					placeholder="Enter your Password"
 					{...register('password')}
 				/>
@@ -83,7 +73,9 @@ function SignInForm() {
 					<label htmlFor="remember">Remember me</label>
 				</div>
 				<div>
-					<a className="text-indigo-600">Forgot your Password?</a>
+					<a href="http://" className="text-indigo-600">
+						Forgot your Password?
+					</a>
 				</div>
 			</div>
 			<div>
@@ -94,9 +86,8 @@ function SignInForm() {
 			<div className="relative pb-2">
 				<div className="absolute top-0 left-0 w-full border-b"></div>
 			</div>
-			<input type="file" {...register('file')} />
 		</form>
 	);
 }
 
-export default SignInForm;
+export default LoginForm;

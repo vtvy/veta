@@ -2,12 +2,13 @@ import axiosClient from './axiosClient';
 import StorageKeys from '../constants/storageKeys';
 
 const userApi = {
-	signUp(data) {
-		const url = '/register';
+	register(data) {
+		const url = 'auth/register';
 		return axiosClient.post(url, data);
 	},
-	signIn(data) {
-		const url = '/login';
+
+	login(data) {
+		const url = 'auth/login';
 		return axiosClient.post(url, data);
 	},
 	async getUser(params) {
