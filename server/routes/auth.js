@@ -4,7 +4,10 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+
 const otp = parseInt(Math.random() * 10000);
+
 const User = require('../models/User');
 
 const transporter = nodemailer.createTransport({
@@ -59,35 +62,55 @@ router.post('/otp', async (req, res) => {
 });
 
 //Register an account
-router.post('/register', (req, res) => {
-	const user = req;
-	// console.log(user.otp);
-	// console.log(otp);
-	console.log(user.body.avatar);
+router.post('/register', async (req, res) => {
+	const user = req.body;
+	let avatarPath = '';
 
-	// if (user.otp == otp) {
-	//   //Create new account
-	//   const hash = bcrypt.hashSync(user.password, saltRounds);
-	//   const newUser = new User({
-	//     email: user.email,
-	//     password: hash,
-	//     avatar: user.avatar,
-	//     firstName: user.firstName,
-	//     lastName: user.lastName,
-	//     birthDate: user.birthDate,
-	//   });
-	//   await newUser.save();
+	if (user.otp == otp) {
+		if (user.isDefault) {
+			avatarPath = user.firstName + Date.now + user.avatar;
+			fs.copyFile(
+				`../../client/src/assets/images/avatars/${user.avatar}`,
+				`../../client/src/assets/uploads/avatars/${avatarPath}`,
+				(err) => {
+					console.log(err);
+				}
+			);
+		} else {
+			const file = req.files.file;
+			avatarPath = user.firstName + Date.now + file.name;
+			file.mv(
+				`../../client/src/assets/uploads/avatars/${avatarPath}`,
+				(err) => {
+					console.error(err);
+				}
+			);
+		}
 
-	//   //Return token
-	//   const accessToken = jwt.sign(
-	//     { userID: newUser._id },
-	//     process.env.ACCESS_TOKEN_CODE
-	//   );
+		//Create new account
 
-	//   res.json({ success: true, message: "Register successfully", accessToken });
-	// } else {
-	//   res.json({ success: false, message: "OTP is incorrect" });
-	// }
+		const hash = bcrypt.hashSync(user.password, saltRounds);
+		const newUser = new User({
+			email: user.email,
+			password: hash,
+			avatar: avatarPath,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			birthDate: user.birthDate,
+		});
+		await newUser.save();
+
+		//   //Return token
+		//   const accessToken = jwt.sign(
+		//     { userID: newUser._id },
+		//     process.env.ACCESS_TOKEN_CODE
+		//   );
+
+		//   res.json({ success: true, message: "Register successfully", accessToken });
+		// } else {
+		//   res.json({ success: false, message: "OTP is incorrect" });
+		// }
+	}
 });
 
 //Login
