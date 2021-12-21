@@ -1,14 +1,13 @@
-import React from 'react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 import ErrorMessage from './ErrorMessage';
-import userApi from '../../../api/userApi';
 const schema = yup.object().shape({
 	email: yup.string().email().required(),
 	password: yup.string().required(),
 });
-function LoginForm({ onSubmit }) {
+function LoginForm({ onSubmit, isInValidAccount }) {
 	const {
 		register,
 		handleSubmit,
@@ -25,6 +24,11 @@ function LoginForm({ onSubmit }) {
 			className="max-w-xl w-full mx-auto bg-white shadow rounded-lg p-10 space-y-6"
 			onSubmit={handleSubmit(onSubmitForm)}
 		>
+			{isInValidAccount ? (
+				<ErrorMessage message={'Incorrect email or password '} />
+			) : (
+				''
+			)}
 			<div className="flex flex-col">
 				<label
 					className="text-base font-bold text-gray-600 mb-1"
