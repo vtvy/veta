@@ -13,7 +13,7 @@ const userApi = {
 	},
 	async getUser(params) {
 		const newParams = { ...params };
-		const accessToken = localStorage.getItem(StorageKeys.access);
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const url = '/users';
 		const response = await axiosClient.get(url, {
 			params: { ...newParams },
@@ -24,7 +24,7 @@ const userApi = {
 	async getProfile(params) {
 		const newParams = { ...params };
 		const url = '/detail';
-		const accessToken = localStorage.getItem(StorageKeys.access);
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const response = await axiosClient.get(url, {
 			params: { ...newParams },
 			headers: { Authorization: `Bearer ${accessToken}` },

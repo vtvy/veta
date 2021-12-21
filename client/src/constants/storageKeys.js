@@ -1,7 +1,6 @@
 const StorageKeys = {
 	user: 'user',
-	access: 'access_token',
-	refresh: 'refresh_token',
+	accessToken: 'access_token',
 };
 
 export default StorageKeys;

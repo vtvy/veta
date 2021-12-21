@@ -18,7 +18,7 @@ function EmailForm({ onSubmit }) {
 	return (
 		<div>
 			<form
-				className={`w-full h-full flex relative bg-white transition-all duration-[0.25s]
+				className={`w-full h-full flex relative rounded-lg bg-white transition-all duration-[0.25s]
 				`}
 				onSubmit={handleSubmit(onSubmit)}
 			>
