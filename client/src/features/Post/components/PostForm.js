@@ -16,9 +16,11 @@ function PostForm({ onSubmit, onCloseForm }) {
 	} = useForm();
 	const onSubmitForm = (data) => {
 		const formData = new FormData();
-		// console.log(data.file[0]);
+		// formData.append('postText', data.postText);
+		// formData.append('postImage', data.postImage.[0]);
+		// console.log(data.postImage[0]);
 		Object.keys(data).forEach((key) => {
-			if (key === 'file') {
+			if (key === 'postImage') {
 				formData.append(key, data[key][0]);
 			} else formData.append(key, data[key]);
 		});
@@ -53,7 +55,7 @@ function PostForm({ onSubmit, onCloseForm }) {
 							type="text"
 							name="title"
 							placeholder="Enter Title Post"
-							{...register('title', { required: true })}
+							{...register('title')}
 						/>
 						{errors.title ? (
 							<ErrorMessage message={'Title post is required field'} />
@@ -73,7 +75,7 @@ function PostForm({ onSubmit, onCloseForm }) {
 							type="text"
 							rows="7"
 							name="content"
-							{...register('content', { required: true })}
+							{...register('postText', { required: true })}
 							placeholder="Post content"
 						/>
 						{errors.content ? (
@@ -84,24 +86,24 @@ function PostForm({ onSubmit, onCloseForm }) {
 					</div>
 					<div className="flex flex-col mb-8">
 						<label className="text-indigo-600 font-semibold">
-							<i class="fas fa-paperclip"></i>Attach
+							<i className="fas fa-paperclip"></i>Attach
 						</label>
 
 						<div className="border flex justify-around rounded-[2rem] bg-white px-6 py-4 h-full focus:outline-indigo-600">
 							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
-								<i class="far fa-grin-beam text-5xl"></i>
+								<i className="far fa-grin-beam text-5xl"></i>
 							</div>
 							<label htmlFor="file">
 								<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
-									<i class="fas fa-photo-video"></i>
+									<i className="fas fa-photo-video"></i>
 								</div>
 							</label>
 							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
-								<i class="fas fa-user-tag"></i>
+								<i className="fas fa-user-tag"></i>
 							</div>
 
 							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
-								<i class="fas fa-ellipsis-h"></i>
+								<i className="fas fa-ellipsis-h"></i>
 							</div>
 						</div>
 
@@ -111,7 +113,7 @@ function PostForm({ onSubmit, onCloseForm }) {
 							rows="7"
 							name="file"
 							id="file"
-							{...register('file')}
+							{...register('postImage')}
 						/>
 					</div>
 					<Button type="submit" w="w-full" h="h-[4rem]">

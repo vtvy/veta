@@ -3,9 +3,10 @@ import userApi from '../../api/userApi';
 import Avatars from '../../assets/images/avatars';
 import StorageKeys from '../../constants/storageKeys';
 
-export const register = createAsyncThunk('users/register', async (payload) => {
+export const register = createAsyncThunk('auth/register', async (payload) => {
+	console.log(payload);
 	try {
-		const res = await userApi.login(payload);
+		const res = await userApi.register(payload);
 		console.log(res);
 		if (res.data.success) {
 			const user = {
@@ -70,6 +71,9 @@ const userSlice = createSlice({
 		settings: {},
 	},
 	reducers: {
+		getUser(state, action) {
+			state.current = action.payload;
+		},
 		logout(state) {
 			console.log(5);
 			state.current = {};
@@ -85,5 +89,5 @@ const userSlice = createSlice({
 });
 
 const { actions, reducer } = userSlice;
-export const { logout } = actions;
+export const { logout, getUser } = actions;
 export default reducer;

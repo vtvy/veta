@@ -7,7 +7,9 @@ import Button from '../Button';
 
 function Navbar() {
 	const dispatch = useDispatch();
+	console.log();
 	const userAvatar = useSelector((state) => state.user.current.avatar);
+	console.log(userAvatar);
 	const handleLogout = () => {
 		const action = logout();
 		dispatch(action);
