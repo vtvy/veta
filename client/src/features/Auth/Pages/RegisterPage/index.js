@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axiosClient from '../../../../api/axiosClient';
+import StorageKeys from '../../../../constants/storageKeys';
 import EmailForm from '../../components/EmailForm';
 import OtpForm from '../../components/OtpForm';
 import RegisterForm from '../../components/RegisterForm';
@@ -14,6 +16,7 @@ function RegisterPage() {
 
 	const handleSendOtp = async (data) => {
 		const url = '/auth/otp';
+		console.log(data);
 		try {
 			const res = await axiosClient.post(url, data);
 
@@ -43,12 +46,28 @@ function RegisterPage() {
 
 	const handleRegister = async (data) => {
 		data.append('email', email);
+		console.log(data.get('isDefault'));
+		console.log(1);
 		try {
-			const action = register();
-			await dispatch(action);
-		} catch (err) {
-			console.log(err);
+			const res = await axios.post(
+				`${process.env.REACT_APP_API_URL}/auth/register`,
+				data,
+				{
+					headers: { 'Content-Type': 'multipart/form-data' },
+				}
+			);
+			console.log(res.data);
+			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
+		} catch (error) {
+			console.log(error);
 		}
+		// try {
+		//   const action = register(data);
+
+		// 	await dispatch(action);
+		// } catch (err) {
+		// 	console.log(err);
+		// }
 	};
 	return (
 		<div className="flex flex-col justify-center items-center ">
