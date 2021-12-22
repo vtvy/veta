@@ -110,7 +110,7 @@ router.post("/register", async (req, res) => {
 
     //Return token
     const accessToken = jwt.sign(
-      { userID: newUser._id, email: user.email },
+      { userID: newUser._id, email: user.email, avatar: user.avatar },
       process.env.ACCESS_TOKEN_CODE
     );
 
@@ -143,7 +143,11 @@ router.post("/login", async (req, res) => {
       } else {
         //Return token
         const accessToken = jwt.sign(
-          { userID: newUser._id, email: user.email },
+          {
+            userID: existUser._id,
+            email: existUser.email,
+            avatar: existUser.avatar,
+          },
           process.env.ACCESS_TOKEN_CODE
         );
 
