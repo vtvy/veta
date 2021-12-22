@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '../../components/Box';
 import Post from '../Post';
+import PostCard from '../Post/components/PostCard';
 
 function Home() {
 	return (
@@ -11,6 +12,7 @@ function Home() {
 				</Box>
 			</div>
 			<Post />
+			<PostCard />
 		</div>
 	);
 }

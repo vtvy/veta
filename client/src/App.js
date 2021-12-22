@@ -19,7 +19,7 @@ function App() {
 	}, [isLoggedIn]);
 
 	return (
-		<div className="App flex flex-col h-screen bg-slate-500">
+		<div className="App flex flex-col min-h-screen h-full bg-slate-500">
 			<Header />
 
 			<Routes>

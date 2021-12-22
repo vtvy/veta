@@ -6,7 +6,8 @@ function AddEditPost({ setIsAddEditPost }) {
 		if (e.target.classList.contains('emptySpace')) handleCloseForm();
 	};
 	const handleCreateNewPost = (data) => {
-		console.log(data);
+		console.log(data.getAll('file'));
+
 		setIsAddEditPost(false);
 	};
 
@@ -15,7 +16,7 @@ function AddEditPost({ setIsAddEditPost }) {
 	};
 	return (
 		<div
-			className="absolute left-0 right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.2)] flex justify-center items-center emptySpace"
+			className="absolute left-0 right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center emptySpace"
 			onClick={handleClickEmptySpace}
 		>
 			<PostForm onSubmit={handleCreateNewPost} onCloseForm={handleCloseForm} />

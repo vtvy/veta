@@ -1,13 +1,24 @@
-import { get } from 'immer/dist/internal';
+import StorageKeys from '../constants/storageKeys';
 import axiosClient from './axiosClient';
 
 const postApi = {
-	getAll(params) {
+	async getAll(params) {
 		const url = '/posts';
-		return axiosClient.get(url, params);
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
+		const res = await axiosClient.get(url, {
+			params,
+			headers: { Authorization: `Bearer + ${accessToken}` },
+		});
+		return res;
 	},
-	get(id) {
+	async get(id) {
 		const url = `/posts/${id}`;
-		return axiosClient.get(url);
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
+		const res = await axiosClient.get(url, {
+			headers: { Authorization: `Bearer + ${accessToken}` },
+		});
+		return res;
 	},
 };
+
+export default postApi;

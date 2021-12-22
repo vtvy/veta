@@ -5,7 +5,7 @@ import SidebarRight from './SideBarRight';
 
 function Container({ type }) {
 	return (
-		<div className="flex flex-1 w-full h-full p-12">
+		<div className="flex w-full p-12">
 			<SidebarLeft />
 			<MainContainer type={type} />
 			<SidebarRight />
