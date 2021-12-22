@@ -9,7 +9,7 @@ function Post() {
 	const userAvatar = useSelector((state) => state.user.current.avatar);
 
 	return (
-		<div>
+		<div className="">
 			{isAddEditPost ? (
 				<AddEditPost setIsAddEditPost={setIsAddEditPost} />
 			) : (
