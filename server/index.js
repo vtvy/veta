@@ -1,21 +1,22 @@
-require('dotenv').config();
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const authRouter = require('./routes/auth');
+require("dotenv").config();
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const authRouter = require("./routes/auth");
+const postRouter = require("./routes/post");
 
 const connectDB = async () => {
-	try {
-		await mongoose.connect(
-			`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@veta.cud0a.mongodb.net/veta?retryWrites=true&w=majority`
-		);
-		console.log('Database connected');
-	} catch (error) {
-		console.log(error.message);
-		process.exit(1);
-	}
+  try {
+    await mongoose.connect(
+      `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@veta.cud0a.mongodb.net/veta?retryWrites=true&w=majority`
+    );
+    console.log("Database connected");
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 };
 
 connectDB();
@@ -26,8 +27,9 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/auth', authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/post", postRouter);
 
-const PORT = 9999;
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`Server started on port ${process.env.PORT}`)
+);
