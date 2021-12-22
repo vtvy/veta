@@ -28,6 +28,12 @@ function TestServer() {
       .then((response) => console.log(response));
   };
 
+  let a = "";
+
+  if (!a) {
+    var b = 0;
+  }
+
   // const submit = () => {
   //   axios
   //     .post(`${process.env.REACT_APP_API_URL}/auth/login`, {
@@ -37,12 +43,7 @@ function TestServer() {
   //     .then((response) => console.log(response.data));
   // };
 
-  return (
-    <div>
-      <button onClick={send}>Send OTP</button>
-      <button onClick={submit}>Click here</button>
-    </div>
-  );
+  return <div>{b}</div>;
 }
 
 export default TestServer;

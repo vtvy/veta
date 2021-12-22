@@ -5,6 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/auth");
+const postRouter = require("./routes/post");
 
 const connectDB = async () => {
   try {
@@ -27,7 +28,8 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRouter);
+app.use("/api/post", postRouter);
 
-const PORT = 9999;
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`Server started on port ${process.env.PORT}`)
+);

@@ -1,12 +1,13 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
 const router = express.Router();
+const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const verifyToken = require("../middleware/auth");
 
-const otp = parseInt(Math.random() * 10000);
+const otp = parseInt(Math.random() * 10000).toString();
 
 const User = require("../models/User");
 
@@ -23,14 +24,12 @@ const transporter = nodemailer.createTransport({
 
 //send otp
 router.post("/otp", async (req, res) => {
-  console.log(1);
   const email = req.body.email;
 
   try {
     //Check for exists
     const existUser = await User.findOne({ email });
 
-    console.log(existUser);
     if (existUser) {
       return res.json({
         success: false,
@@ -51,9 +50,6 @@ router.post("/otp", async (req, res) => {
         if (error) {
           return console.log(error);
         } else {
-          console.log("Message sent: %s", info.response);
-          console.log(2);
-
           return res.json({
             success: true,
             message: "OTP has been send",
@@ -64,13 +60,11 @@ router.post("/otp", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-  console.log(4);
 });
 
 router.post("/confirmOtp", async (req, res) => {
-  const user = req.body;
-  console.log(user);
-  if (user.otp == otp) {
+  const inputOtp = req.body.otp;
+  if (inputOtp === otp) {
     res.json({ success: true, message: "OTP is correct" });
   } else {
     res.json({ success: false, message: "OTP is incorrect" });
@@ -94,7 +88,6 @@ router.post("/register", async (req, res) => {
     );
   } else {
     const file = req.files.avatar;
-    console.log(file.name);
     avatarPath =
       user.email.slice(0, 5) + "_" + Date.now().toString() + file.name;
     file.mv(`../client/src/assets/uploads/avatars/${avatarPath}`, (err) => {
@@ -103,7 +96,6 @@ router.post("/register", async (req, res) => {
   }
 
   //Create new account
-  console.log(avatarPath);
   try {
     const hash = bcrypt.hashSync(user.password, saltRounds);
     const newUser = new User({
@@ -118,7 +110,7 @@ router.post("/register", async (req, res) => {
 
     //Return token
     const accessToken = jwt.sign(
-      { userID: newUser._id },
+      { userID: newUser._id, email: user.email },
       process.env.ACCESS_TOKEN_CODE
     );
 
@@ -151,7 +143,7 @@ router.post("/login", async (req, res) => {
       } else {
         //Return token
         const accessToken = jwt.sign(
-          { userID: existUser._id },
+          { userID: newUser._id, email: user.email },
           process.env.ACCESS_TOKEN_CODE
         );
 
@@ -167,6 +159,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/", (req, res) => res.send("User"));
+router.get("/", verifyToken, async (req, res) =>
+  res.json({ success: true, message: "Validate successfully", req })
+);
 
 module.exports = router;
