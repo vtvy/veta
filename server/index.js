@@ -30,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 
-app.listen(process.env.PORT, () =>
-  console.log(`Server started on port ${process.env.PORT}`)
-);
+app.listen(process.env.PORT, () => {
+  console.log(`Server started on port ${process.env.PORT}`);
+  console.log("-------------------------------");
+});

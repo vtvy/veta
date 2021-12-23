@@ -1,19 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
 
 const Post = require("../models/Post");
 const verifyToken = require("../middleware/auth");
 
 router.post("/create", verifyToken, async (req, res) => {
   const post = req.body;
-
-  console.log(post.postText !== "");
   if (post.postImage === undefined || post.postText !== "") {
     try {
+      var filePath = "";
       if (req.files.postImage) {
         const file = req.files.postImage;
-        var filePath =
-          req.email.slice(0, 5) + "_" + Date.now().toString() + file.name;
+        filePath =
+          post.email.slice(0, 5) + "_" + Date.now().toString() + file.name;
         file.mv(`../client/public/assets/uploads/posts/${filePath}`, (err) => {
           console.error(err);
         });
@@ -23,7 +23,7 @@ router.post("/create", verifyToken, async (req, res) => {
       const newPost = new Post({
         postText: post.postText,
         postImage: filePath,
-        user: req.userID,
+        user: post.userID,
       });
       await newPost.save();
       return res.json({
@@ -32,21 +32,93 @@ router.post("/create", verifyToken, async (req, res) => {
         newPost,
       });
     } catch (error) {
+      console.log(error);
       return res.json({
         success: false,
         message: "You need to input a value",
-        error,
       });
     }
   }
   return res.json({ success: false, message: "You need to input something" });
 });
 
+//Get all post of an user
 router.get("/", verifyToken, async (req, res) => {
   const { userID } = req.body;
-  console.log("o");
-  const listOfPost = Post.findAll({ user: userID });
+  const listOfPost = await Post.find({ user: userID });
   res.json({ success: true, message: "This is list of post", listOfPost });
+});
+
+router.put("/update/:id", verifyToken, async (req, res) => {
+  const postID = req.params.id;
+  const { userID, postText, email } = req.body;
+
+  const Post = await Post.findOne({ _id: postID, user: userID });
+
+  if (!Post) {
+    res.json({
+      success: false,
+      message: "You do not have permission to delete it",
+    });
+  }
+
+  const imgName = Post.postImage;
+  const file = req.files?.postImage;
+  var filePath = "";
+
+  try {
+    if (imgName !== "" && imgName.slice(-file?.name?.length) !== file?.name) {
+      fs.unlinkSync(`../client/public/assets/uploads/posts/${imgName}`);
+    }
+    if (file?.name !== undefined) {
+      filePath = email.slice(0, 5) + "_" + Date.now().toString() + file.name;
+      file.mv(`../client/public/assets/uploads/posts/${filePath}`, (err) => {
+        console.error(err);
+      });
+    }
+
+    //Update a post
+    const newPost = {
+      postText,
+      postImage: filePath,
+      user: userID,
+    };
+    const updatedPost = await Post.findOneAndUpdate(
+      { _id: postID, user: userID },
+      newPost,
+      { new: true }
+    );
+    return res.json({
+      success: true,
+      message: "Update a status successfully",
+      updatedPost,
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: "Update fail",
+    });
+  }
+});
+
+router.delete("/delete/:id", verifyToken, async (req, res) => {
+  const postID = req.params.id;
+  const { userID } = req.body;
+  try {
+    await Post.findOneAndDelete({ _id: postID, user: userID }, newPost, {
+      new: true,
+    });
+    return res.json({
+      success: true,
+      message: "Delete a status successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      success: false,
+      message: "Delete fail",
+    });
+  }
 });
 
 module.exports = router;

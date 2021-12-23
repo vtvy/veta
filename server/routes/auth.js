@@ -25,7 +25,6 @@ const transporter = nodemailer.createTransport({
 //send otp
 router.post("/otp", async (req, res) => {
   const { email } = req.body;
-  console.log(email);
 
   try {
     //Check for exists
@@ -79,7 +78,7 @@ router.post("/register", async (req, res) => {
     avatarPath =
       user.email.slice(0, 5) + "_" + Date.now().toString() + user.avatar;
 
-    fs.copyFile(
+    fs.copyFileSync(
       `../client/public/assets/images/avatars/${user.avatar}`,
       `../client/public/assets/uploads/avatars/${avatarPath}`,
       (err) => {
