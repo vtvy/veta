@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 
 function Header() {
 	return (
-		<div className="w-full h-20 bg-white">
+		<div className="w-full h-20 z-30 bg-white fixed">
 			<Navbar />
 		</div>
 	);

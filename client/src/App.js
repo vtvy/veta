@@ -5,21 +5,20 @@ import Header from './components/Header';
 import Container from './components/Main';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Auth from './features/Auth';
-import Test from './test';
 import TestServer from './testServer';
 
 function App() {
 	const navigate = useNavigate();
-	const loginInUser = useSelector((state) => state.user.current);
-	const isLoggedIn = true;
+	const loginUser = useSelector((state) => state.user.current);
+	const isLoggedIn = !!loginUser.userID;
 	useEffect(() => {
 		if (isLoggedIn) {
 			navigate('/');
 		}
-	}, []);
+	}, [isLoggedIn]);
 
 	return (
-		<div className="App flex flex-col min-h-screen h-full bg-slate-500">
+		<div className="App flex flex-col min-h-screen h-full bg-slate-300">
 			<Header />
 
 			<Routes>

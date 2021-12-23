@@ -2,6 +2,14 @@ import StorageKeys from '../constants/storageKeys';
 import axiosClient from './axiosClient';
 
 const postApi = {
+	create(data) {
+		const url = '/post/create';
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
+		return axiosClient.post(url, data, {
+			headers: { accessToken },
+		});
+	},
+
 	async getAll(params) {
 		const url = '/posts';
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);

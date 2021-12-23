@@ -14,7 +14,7 @@ function Auth({ type }) {
 	}, [isLoggedIn]);
 
 	return (
-		<div className="w-full min-h-screen h-full flex justify-center items-center bg-slate-300">
+		<div className="w-full flex flex-1 justify-center items-center bg-slate-300">
 			{type === 'login' ? <LoginPage /> : <RegisterPage />}
 		</div>
 	);

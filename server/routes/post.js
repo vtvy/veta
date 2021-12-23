@@ -36,7 +36,7 @@ router.post('/create', verifyToken, async (req, res) => {
 		}
 		// console.log(post.postText);
 		// console.log(post.postImage);
-		console.log(!(post.postText && post.postImage));
+		// console.log(!(post.postText && post.postImage));
 	}
 	return res.json({ success: false, message: 'You need to input something' });
 });

@@ -11,13 +11,11 @@ const userApi = {
 		const url = 'auth/login';
 		return axiosClient.post(url, data);
 	},
-	async getUser(params) {
-		const newParams = { ...params };
+	async getUser() {
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
-		const url = '/users';
+		const url = '/auth';
 		const response = await axiosClient.get(url, {
-			params: { ...newParams },
-			headers: { Authorization: `Bearer + ${accessToken}` },
+			headers: { accessToken },
 		});
 		return response;
 	},
@@ -27,7 +25,7 @@ const userApi = {
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const response = await axiosClient.get(url, {
 			params: { ...newParams },
-			headers: { Authorization: `Bearer ${accessToken}` },
+			headers: { accessToken },
 		});
 		return response;
 	},

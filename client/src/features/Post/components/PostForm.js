@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Avatar from '../../../components/Avatar';
 import Box from '../../../components/Box';
@@ -6,8 +6,15 @@ import Button from '../../../components/Button';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../Auth/components/ErrorMessage';
 
-function PostForm({ onSubmit, onCloseForm }) {
+function PostForm({ onSubmit, initialData }) {
 	const userAvatar = useSelector((state) => state.user.current.avatar);
+	const [imageSelected, setImageSelected] = useState(initialData.postImage);
+	const [reviewImage, setReviewImage] = useState();
+	useEffect(() => {
+		setReviewImage(
+			`${process.env.PUBLIC_URL}/assets/images/avatars/avatar(1).svg`
+		);
+	}, []);
 
 	const {
 		register,
@@ -16,15 +23,22 @@ function PostForm({ onSubmit, onCloseForm }) {
 	} = useForm();
 	const onSubmitForm = (data) => {
 		const formData = new FormData();
-		// formData.append('postText', data.postText);
-		// formData.append('postImage', data.postImage.[0]);
-		// console.log(data.postImage[0]);
 		Object.keys(data).forEach((key) => {
 			if (key === 'postImage') {
-				formData.append(key, data[key][0]);
+				formData.append(key, imageSelected);
 			} else formData.append(key, data[key]);
 		});
 		onSubmit(formData);
+	};
+
+	const handleAddImage = (e) => {
+		const reviewImage = URL.createObjectURL(e.target.files[0]);
+		setReviewImage(reviewImage);
+		setImageSelected(e.target.files[0]);
+	};
+	const handleUndoAddImage = () => {
+		setReviewImage();
+		setImageSelected();
 	};
 
 	return (
@@ -35,34 +49,14 @@ function PostForm({ onSubmit, onCloseForm }) {
 					<div className="flex-1 text-center p-2 bg-slate-400 rounded-[2rem] mx-8">
 						Make A Great Post{' '}
 					</div>
-					<div
-						className="w-16 h-16 rounded-[50%] bg-slate-400 flex items-center justify-center cursor-pointer"
-						onClick={onCloseForm}
-					>
-						<i className="fas fa-times"></i>
+					<div className="w-16 h-16 rounded-[50%] bg-slate-400 flex items-center justify-center cursor-pointer close-position">
+						<i className="fas fa-times close-position"></i>
 					</div>
 				</div>
 				<form
 					className="w-full h-full p-4 mt-4 flex flex-col"
 					onSubmit={handleSubmit(onSubmitForm)}
 				>
-					<div className="flex flex-col">
-						<label htmlFor="title" className="text-indigo-600 font-semibold">
-							<i className="fas fa-pencil-alt mx-4"></i> Title Post
-						</label>
-						<input
-							className="border rounded-[2rem] bg-white px-6 py-4 focus:outline-indigo-600"
-							type="text"
-							name="title"
-							placeholder="Enter Title Post"
-							{...register('title')}
-						/>
-						{errors.title ? (
-							<ErrorMessage message={'Title post is required field'} />
-						) : (
-							''
-						)}
-					</div>
 					<div className="flex flex-col mt-4 mb-4">
 						<label
 							htmlFor="postContent"
@@ -75,6 +69,7 @@ function PostForm({ onSubmit, onCloseForm }) {
 							type="text"
 							rows="7"
 							name="content"
+							defaultValue={initialData.postText || ''}
 							{...register('postText', { required: true })}
 							placeholder="Post content"
 						/>
@@ -84,6 +79,20 @@ function PostForm({ onSubmit, onCloseForm }) {
 							''
 						)}
 					</div>
+					{reviewImage && (
+						<Box custom="relative">
+							<div className="max-h-96 overflow-y-scroll relative">
+								<img src={reviewImage} className="w-full h-full" alt="" />
+							</div>
+							<button
+								type="button"
+								className="absolute right-12 top-6 w-10 h-10 bg-indigo-600 rounded-[50%] text-white "
+								onClick={handleUndoAddImage}
+							>
+								<i className="fas fa-times"></i>
+							</button>
+						</Box>
+					)}
 					<div className="flex flex-col mb-8">
 						<label className="text-indigo-600 font-semibold">
 							<i className="fas fa-paperclip"></i>Attach
@@ -114,10 +123,14 @@ function PostForm({ onSubmit, onCloseForm }) {
 							name="file"
 							id="file"
 							{...register('postImage')}
+							onChange={handleAddImage}
 						/>
 					</div>
+
 					<Button type="submit" w="w-full" h="h-[4rem]">
-						Create Post
+						{initialData.postText || initialData.postImage
+							? 'Edit Post'
+							: 'Create Post'}
 					</Button>
 				</form>
 			</Box>

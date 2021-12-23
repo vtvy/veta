@@ -43,6 +43,7 @@ function EmailForm({ onSubmit }) {
 							''
 						)}
 					</div>
+
 					<div>
 						<button className="w-full bg-indigo-600 text-white rounded-md p-4">
 							Get OTP

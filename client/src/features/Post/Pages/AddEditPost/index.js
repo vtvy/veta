@@ -1,47 +1,42 @@
-import axios from 'axios';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import StorageKeys from '../../../../constants/storageKeys';
+import postApi from '../../../../api/postApi';
+import Modal from '../../../../components/Modal';
 import PostForm from '../../components/PostForm';
 
 function AddEditPost({ setIsAddEditPost }) {
+	const initialData = { id: '', postId: '', postImage: '' };
 	const userEmail = useSelector((state) => state.user.current.email);
-	const accessToken = localStorage.getItem(`${StorageKeys.accessToken}`);
-	console.log(accessToken);
-
-	const handleClickEmptySpace = (e) => {
-		if (e.target.classList.contains('emptySpace')) handleCloseForm();
-	};
 	const handleCreateNewPost = async (data) => {
-		console.log(data.get('postText'));
 		data.append('email', userEmail);
+		console.log(data.get('postImage'));
 		try {
-			const res = await axios.post(
-				`http://localhost:9999/api/post/create`,
-				data,
-				{
-					headers: { accessToken, 'Content-Type': 'multipart/form-data' },
-				}
-			);
+			const res = await postApi.create(data);
 			console.log(res);
+			if (res.data.success) {
+				setIsAddEditPost(false);
+			}
 		} catch (error) {
 			console.log(error);
 		}
-
-		// setIsAddEditPost(false);
 	};
 
-	const handleCloseForm = () => {
-		setIsAddEditPost(false);
-	};
 	return (
-		<div
-			className="absolute left-0 right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center emptySpace"
-			onClick={handleClickEmptySpace}
-		>
-			<PostForm onSubmit={handleCreateNewPost} onCloseForm={handleCloseForm} />
-		</div>
+		<>
+			<Modal setIsOpen={setIsAddEditPost}>
+				<PostForm onSubmit={handleCreateNewPost} initialData={initialData} />
+			</Modal>
+		</>
 	);
 }
 
 export default AddEditPost;
+
+// const res = await axios.post(
+// 	`http://localhost:9999/api/post/create`,
+// 	data,
+// 	{
+// 		headers: { accessToken, 'Content-Type': 'multipart/form-data' },
+// 	}
+// );
+// const accessToken = localStorage.getItem(`${StorageKeys.accessToken}`);
