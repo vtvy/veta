@@ -18,6 +18,7 @@ function RegisterPage() {
 		const url = '/auth/otp';
 		try {
 			const res = await axiosClient.post(url, data);
+			console.log(res);
 			if (res.data.success) {
 				setEmail(data.email);
 				setIsOpenOtpForm(true);

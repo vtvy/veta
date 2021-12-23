@@ -10,12 +10,11 @@ const postApi = {
 		});
 	},
 
-	async getAll(params) {
-		const url = '/posts';
+	async getAll() {
+		const url = '/post';
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const res = await axiosClient.get(url, {
-			params,
-			headers: { Authorization: `Bearer + ${accessToken}` },
+			headers: { accessToken },
 		});
 		return res;
 	},

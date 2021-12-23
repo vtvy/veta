@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 
 //send otp
 router.post('/otp', async (req, res) => {
-	const email = req.body.email;
+	const { email } = req.body;
 	console.log(email);
 
 	try {
@@ -32,6 +32,7 @@ router.post('/otp', async (req, res) => {
 		const existUser = await User.findOne({ email });
 
 		if (existUser) {
+			console.log(existUser);
 			return res.json({
 				success: false,
 				message: 'This email has been registered',
@@ -74,16 +75,19 @@ router.post('/confirmOtp', async (req, res) => {
 //Register an account
 router.post('/register', async (req, res) => {
 	const user = req.body;
-	console.log(user.avatar);
 	var avatarPath = '';
+	console.log(user);
+	console.log(user.isDefault);
 	if (user.isDefault === 'true') {
+		console.log(1);
 		avatarPath =
 			user.email.slice(0, 5) + '_' + Date.now().toString() + user.avatar;
-
-		fs.copyFile(
+		console.log(2);
+		fs.copyFileSync(
 			`../client/public/assets/images/avatars/${user.avatar}`,
 			`../client/public/assets/uploads/avatars/${avatarPath}`,
 			(err) => {
+				console.log(3);
 				console.log(err);
 			}
 		);
@@ -111,7 +115,7 @@ router.post('/register', async (req, res) => {
 
 		//Return token
 		const accessToken = jwt.sign(
-			{ userID: newUser._id, email: user.email, avatar: user.avatar },
+			{ userID: newUser._id },
 			process.env.ACCESS_TOKEN_CODE
 		);
 
@@ -146,8 +150,6 @@ router.post('/login', async (req, res) => {
 				const accessToken = jwt.sign(
 					{
 						userID: existUser._id,
-						email: existUser.email,
-						avatar: existUser.avatar,
 					},
 					process.env.ACCESS_TOKEN_CODE
 				);
@@ -165,7 +167,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/', verifyToken, async (req, res) => {
-	const userID = req.userID;
+	const { userID } = req.body;
 	const existUser = await User.findOne({ _id: userID });
 	let user = {
 		userID: req.userID,

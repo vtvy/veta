@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import postApi from '../../api/postApi';
 import Box from '../../components/Box';
 import Post from '../Post';
 import PostCard from '../Post/components/PostCard';
 
 function Home() {
 	const postList = useSelector((state) => state.post.postList);
+	useEffect(() => {
+		const getAllPost = async () => {
+			const res = await postApi.getAll();
+			console.log(res.data);
+		};
+	});
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="story-slide">

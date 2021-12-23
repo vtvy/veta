@@ -26,7 +26,7 @@ function Navbar() {
 			setAvatar(`${process.env.PUBLIC_URL}/assets/uploads/avatars/default.svg`);
 			setButtonType('Login');
 		}
-	}, [user.userID]);
+	}, []);
 
 	return (
 		<div className="h-full flex items-center px-12 justify-between shadow">

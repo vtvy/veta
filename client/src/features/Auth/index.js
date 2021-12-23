@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Auth({ type }) {
 	const loginInUser = useSelector((state) => state.user.current);
-	const isLoggedIn = !!loginInUser.id;
+	const isLoggedIn = !!loginInUser.userID;
 	const navigate = useNavigate();
 
 	useEffect(() => {

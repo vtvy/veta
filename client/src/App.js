@@ -22,9 +22,9 @@ function App() {
 			<Header />
 
 			<Routes>
+				<Route path="/server" element={<TestServer />} />
 				<Route path="/login" element={<Auth type="login" />} />
 				<Route path="/register" element={<Auth type="register" />} />
-				<Route path="/server" element={<TestServer />} />
 				<Route element={<ProtectedRoutes isLogged={isLoggedIn} />}>
 					<Route path="/" element={<Container type="home" />} />
 					<Route path="/photo" element={<Container type="photo" />} />
