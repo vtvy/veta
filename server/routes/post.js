@@ -10,7 +10,7 @@ router.post('/create', verifyToken, async (req, res) => {
 	if (post.postImage === undefined || post.postText !== '') {
 		try {
 			var filePath = '';
-			if (req.files.postImage) {
+			if (req.files?.postImage) {
 				const file = req.files.postImage;
 				filePath =
 					post.email.slice(0, 5) + '_' + Date.now().toString() + file.name;
@@ -102,12 +102,14 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 });
 
 router.delete('/delete/:id', verifyToken, async (req, res) => {
+	console.log(req.body);
 	const postID = req.params.id;
+	console.log(postID);
+
 	const { userID } = req.body;
 	try {
-		await Post.findOneAndDelete({ _id: postID, user: userID }, newPost, {
-			new: true,
-		});
+		await Post.findOneAndDelete({ _id: postID, user: userID });
+
 		return res.json({
 			success: true,
 			message: 'Delete a status successfully',

@@ -85,11 +85,7 @@ router.post('/register', async (req, res) => {
 		console.log(2);
 		fs.copyFileSync(
 			`../client/public/assets/images/avatars/${user.avatar}`,
-			`../client/public/assets/uploads/avatars/${avatarPath}`,
-			(err) => {
-				console.log(3);
-				console.log(err);
-			}
+			`../client/public/assets/uploads/avatars/${avatarPath}`
 		);
 	} else {
 		const file = req.files.avatar;
@@ -127,6 +123,7 @@ router.post('/register', async (req, res) => {
 
 //Login
 router.post('/login', async (req, res) => {
+	console.log(req.body);
 	const { email, password } = req.body;
 
 	try {
@@ -170,7 +167,7 @@ router.get('/', verifyToken, async (req, res) => {
 	const { userID } = req.body;
 	const existUser = await User.findOne({ _id: userID });
 	let user = {
-		userID: req.userID,
+		userID,
 		avatar: existUser.avatar,
 		firstName: existUser.firstName,
 		lastName: existUser.lastName,

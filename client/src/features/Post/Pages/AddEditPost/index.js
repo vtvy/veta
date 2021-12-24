@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import postApi from '../../../../api/postApi';
 import Modal from '../../../../components/Modal';
 import PostForm from '../../components/PostForm';
 
 function AddEditPost({ setIsAddEditPost }) {
+	const navigate = useNavigate();
 	const initialData = { id: '', postId: '', postImage: '' };
 	const userEmail = useSelector((state) => state.user.current.email);
 	const handleCreateNewPost = async (data) => {
@@ -15,6 +17,7 @@ function AddEditPost({ setIsAddEditPost }) {
 			console.log(res);
 			if (res.data.success) {
 				setIsAddEditPost(false);
+				window.location.reload();
 			}
 		} catch (error) {
 			console.log(error);

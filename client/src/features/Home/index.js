@@ -1,20 +1,32 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import postApi from '../../api/postApi';
 import Box from '../../components/Box';
 import Post from '../Post';
 import PostCard from '../Post/components/PostCard';
+import { setPostList } from '../Post/postSlice';
 
 function Home() {
-	const postList = useSelector((state) => state.post.postList);
+	const dispatch = useDispatch();
 	useEffect(() => {
-		const getAllPost = async () => {
-			const res = await postApi.getAll();
-			console.log(res.data);
+		const getAllPosts = async () => {
+			try {
+				const res = await postApi.getAll();
+				if (res.data.success) {
+					const action = setPostList(res.data.listOfPost);
+					dispatch(action);
+				}
+			} catch (error) {
+				alert(error);
+			}
 		};
-	});
+		getAllPosts();
+	}, []);
+
+	const postList = useSelector((state) => state.post.postList);
+
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex w-full flex-col gap-4">
 			<div className="story-slide">
 				<Box width="w-full">
 					<div className="h-80"></div>

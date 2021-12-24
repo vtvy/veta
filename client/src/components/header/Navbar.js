@@ -12,9 +12,7 @@ function Navbar() {
 		`${process.env.PUBLIC_URL}/assets/uploads/avatars/default.svg`
 	);
 	const [buttonType, setButtonType] = useState('Login');
-	console.log(1);
 	const handleLogout = () => {
-		console.log(1);
 		const action = logout();
 		dispatch(action);
 	};
@@ -26,7 +24,7 @@ function Navbar() {
 			setAvatar(`${process.env.PUBLIC_URL}/assets/uploads/avatars/default.svg`);
 			setButtonType('Login');
 		}
-	}, []);
+	}, [user]);
 
 	return (
 		<div className="h-full flex items-center px-12 justify-between shadow">

@@ -11,9 +11,7 @@ function PostForm({ onSubmit, initialData }) {
 	const [imageSelected, setImageSelected] = useState(initialData.postImage);
 	const [reviewImage, setReviewImage] = useState();
 	useEffect(() => {
-		setReviewImage(
-			`${process.env.PUBLIC_URL}/assets/images/avatars/avatar(1).svg`
-		);
+		setReviewImage(initialData.postImage);
 	}, []);
 
 	const {

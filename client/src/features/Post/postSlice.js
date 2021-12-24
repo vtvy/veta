@@ -1,18 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import postApi from '../../api/postApi';
 
-export const getAllPosts = createAsyncThunk('posts/getAllPosts', async () => {
-	try {
-		const res = await postApi.getAll();
-		if (res.data.success) {
-			console.log(res);
-			return res.data.posts;
-		}
-	} catch (error) {
-		console.log('1');
-	}
-});
-
 export const createPost = createAsyncThunk('posts/create', async (payload) => {
 	try {
 		const res = await postApi.create(payload);
@@ -48,13 +36,32 @@ const postSlice = createSlice({
 		postList: initialState,
 		pending: true,
 	},
-	reducers: {},
-	extraReducers: {
-		[getAllPosts.fulfilled]: (state, action) => {
-			state.push(action.payload);
+	reducers: {
+		setPostList: (state, action) => {
+			const postList = action.payload.map((post) => {
+				return {
+					...post,
+					postImage: `${
+						post.postImage
+							? `${process.env.PUBLIC_URL}/assets/uploads/posts/${post.postImage}`
+							: ''
+					}`,
+				};
+			});
+
+			// var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24 * 365);
+
+			const compareDate = (a, b) => {
+				const date1 = Date(a);
+				const date2 = Date(b);
+				return date1 > date2 ? 1 : -1;
+			};
+			postList.sort((a, b) => compareDate(a.updatedAt, b.updatedAt));
+			state.postList = postList;
 		},
 	},
 });
 
-const { reducer } = postSlice;
+const { actions, reducer } = postSlice;
+export const { setPostList } = actions;
 export default reducer;

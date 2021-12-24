@@ -3,7 +3,6 @@ import userApi from '../../api/userApi';
 import StorageKeys from '../../constants/storageKeys';
 
 export const register = createAsyncThunk('auth/register', async (payload) => {
-	console.log(payload);
 	try {
 		const res = await userApi.register(payload);
 		console.log(res);
@@ -11,7 +10,10 @@ export const register = createAsyncThunk('auth/register', async (payload) => {
 			console.log(res.data);
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
-			const user = resUser.data.user;
+			const user = {
+				...resUser.data.user,
+				avatar: `${process.env.PUBLIC_URL}/assets/uploads/avatars/${resUser.data.user.avatar}`,
+			};
 			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
 			return user;
 		} else {
@@ -36,7 +38,6 @@ export const login = createAsyncThunk('auth/login', async (payload) => {
 			};
 
 			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
-			console.log(user);
 			return user;
 		} else {
 			alert(res.data.message);
@@ -66,6 +67,9 @@ const userSlice = createSlice({
 		},
 	},
 	extraReducers: {
+		[register.fulfilled]: (state, action) => {
+			state.current = action.payload;
+		},
 		[login.fulfilled]: (state, action) => {
 			state.current = action.payload;
 		},

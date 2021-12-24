@@ -20,7 +20,8 @@ function ImgField({ setIsDefault, setFile }) {
 		setFile(file);
 		setIsDefault(true);
 		console.log(file);
-	}, [avatarSelected]);
+		console.log(2);
+	}, []);
 
 	const handleOnclick = (e, avatar) => {
 		if (e.target.classList.contains('default-avatar')) {

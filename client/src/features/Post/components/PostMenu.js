@@ -1,7 +1,14 @@
 import React from 'react';
 import Box from '../../../components/Box';
 
-function PostMenu({ setIsEditPost }) {
+function PostMenu({ setIsEditPost, onDelete }) {
+	const handleClickDelete = () => {
+		const answer = window.confirm('Are you sure you want to delete this post?');
+		if (answer) {
+			onDelete();
+		}
+	};
+
 	return (
 		<div className="absolute right-2">
 			<Box
@@ -16,7 +23,10 @@ function PostMenu({ setIsEditPost }) {
 					>
 						<i class="fas fa-edit w-10"></i> Edit
 					</li>
-					<li className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-b border-solid border-slate-200">
+					<li
+						className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-b border-solid border-slate-200"
+						onClick={handleClickDelete}
+					>
 						<i class="fas fa-trash-alt w-10"></i>Delete
 					</li>
 				</ul>
