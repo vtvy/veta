@@ -19,9 +19,9 @@ function Post() {
 						onClick={() => setIsAddEditPost(true)}
 					>
 						<Avatar avatar={userAvatar} />
-						<div className="ml-4 h-12 bg-slate-200 rounded-2xl p-4 flex items-center leading-[3rem]">
+						<Box custom="bg-[rgba(0,0,0,0.1)] w-full mx-4 flex-1 hover:bg-[rgba(0,0,0,0.2)]">
 							Hey You!!! do something!
-						</div>
+						</Box>
 					</div>
 				</Box>
 			)}

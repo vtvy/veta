@@ -4,7 +4,9 @@ import Box from '../../Box';
 function SidebarRight() {
 	return (
 		<div className="w-1/4 h-full">
-			<Box width="w-full" height="h-full"></Box>
+			<div className="fixed w-1/4 flex pr-8">
+				<Box custom="h-96 w-full"></Box>
+			</div>
 		</div>
 	);
 }
