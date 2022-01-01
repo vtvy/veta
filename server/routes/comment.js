@@ -49,14 +49,18 @@ router.post("/create", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   const { postID } = req.body;
   const listOfPost = await Comment.find({ postID: postID });
-  res.json({ success: true, message: "This is list of post", listOfComment });
+  res.json({
+    success: true,
+    message: "This is list of comment",
+    listOfComment,
+  });
 });
 
 router.put("/update/:id", verifyToken, async (req, res) => {
   const commentID = req.params.id;
   const { userID, commentText, isImageChange, postID } = req.body;
 
-  const updateComment = await Post.findOne({
+  const updateComment = await Comment.findOne({
     _id: commentID,
     userID: userID,
     postID: postID,
@@ -89,7 +93,7 @@ router.put("/update/:id", verifyToken, async (req, res) => {
       );
     }
 
-    //Update a post
+    //Update a comment
     const newComment = {
       commentText,
       postImage: imgName,
@@ -105,7 +109,7 @@ router.put("/update/:id", verifyToken, async (req, res) => {
 
     return res.json({
       success: true,
-      message: "Update a status successfully",
+      message: "Update a comment successfully",
       updatedComment,
     });
   } catch (error) {
@@ -122,7 +126,7 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
 
   const { userID, postID } = req.body;
   try {
-    const deleteComment = await Post.findOneAndDelete({
+    const deleteComment = await Comment.findOneAndDelete({
       _id: commentID,
       userID: userID,
       postID: postID,
@@ -132,7 +136,7 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
       await cloudinary.uploader.destroy(
         deleteComment.postImage,
         (err, result) => {
-          console.log("delete image from cloud successful");
+          console.log("Delete image from cloud successful");
         }
       );
     }
