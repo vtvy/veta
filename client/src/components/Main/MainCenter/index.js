@@ -3,7 +3,7 @@ import Home from '../../../features/Home';
 
 function MainContainer({ type }) {
 	return (
-		<div className="flex flex-1 h-full z-30 w-2/4 mx-12">
+		<div className="flex h-full z-10 overflow-y-scroll w-[68rem] pt-32">
 			{type === 'home' && <Home />}
 		</div>
 	);

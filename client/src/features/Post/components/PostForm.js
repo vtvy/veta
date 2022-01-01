@@ -5,13 +5,18 @@ import Box from '../../../components/Box';
 import Button from '../../../components/Button';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../Auth/components/ErrorMessage';
+import convertNameImgToPath from '../../../myFunction/convertNameImgToPath';
 
 function PostForm({ onSubmit, initialData }) {
 	const userAvatar = useSelector((state) => state.user.current.avatar);
 	const [imageSelected, setImageSelected] = useState(initialData.postImage);
 	const [reviewImage, setReviewImage] = useState();
 	useEffect(() => {
-		setReviewImage(initialData.postImage);
+		setReviewImage(
+			initialData.postImage
+				? convertNameImgToPath(initialData.postImage, 'posts')
+				: ''
+		);
 	}, []);
 
 	const {

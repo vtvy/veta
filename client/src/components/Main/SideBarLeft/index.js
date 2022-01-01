@@ -5,11 +5,12 @@ import Box from '../../Box';
 
 function SidebarLeft() {
 	return (
-		<div className="w-1/4 h-full">
-			<div className="fixed w-1/4 flex flex-col gap-y-6 pr-[3rem]">
+		<div className="w-1/4 lg:flex hidden flex-col space-y-6 mr-12 pt-32 h-screen overflow-y-scroll s">
+			<div className="h-screen w-[32rem] flex flex-col space-y-6">
 				<QuickViewUser />
 				<Menu />
 				<Box width="w-full" height="h-96"></Box>
+				<div className=""></div>
 			</div>
 		</div>
 	);

@@ -15,7 +15,9 @@ function Box({
 		<div
 			className={`${custom} ${rounded || 'rounded-[2rem]'} overflow-hidden ${
 				bg || 'bg-white shadow'
-			} ${p || 'p-4'} inline-block ${flex} ${flexCol} ${width} ${height} `}
+			} ${
+				p || 'p-4'
+			} inline-block ${flex} ${flexCol} ${width} ${height} max-w-full `}
 		>
 			{children}
 		</div>

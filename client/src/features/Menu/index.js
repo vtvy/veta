@@ -5,7 +5,7 @@ import menuItem from '../../constants/menuItem';
 
 function Menu() {
 	return (
-		<Box flex="flex" flexCol="flex-col">
+		<Box flex="flex" flexCol="flex-col" p="py-8">
 			{menuItem.map((item) => (
 				<NavLink
 					to={item.path}

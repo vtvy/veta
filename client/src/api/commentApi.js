@@ -2,9 +2,9 @@ import StorageKeys from '../constants/storageKeys';
 import axiosClient from './axiosClient';
 const accessToken = localStorage.getItem(StorageKeys.accessToken);
 
-const postApi = {
+const commentApi = {
 	create(data) {
-		const url = '/post/create';
+		const url = '/comment/create';
 
 		return axiosClient.post(url, data, {
 			headers: { accessToken },
@@ -12,15 +12,22 @@ const postApi = {
 	},
 
 	async getAll() {
-		const url = '/post';
+		const url = '/comment';
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const res = await axiosClient.get(url, {
 			headers: { accessToken },
 		});
 		return res;
 	},
-	async getPostById(id) {
-		const url = `/posts/${id}`;
+	async getPostComments(postId) {
+		const url = `post/${postId}/comments`;
+		const res = await axiosClient.get(url, {
+			header: { accessToken },
+		});
+		return res;
+	},
+	async getCommentById(id) {
+		const url = `/comments/${id}`;
 
 		const res = await axiosClient.get(url, {
 			headers: { accessToken },
@@ -28,16 +35,16 @@ const postApi = {
 		return res;
 	},
 
-	async updatePostById(id, data) {
-		const url = `/post/update/${id}`;
+	async updateCommentById(id, data) {
+		const url = `/comment/update/${id}`;
 		const res = await axiosClient.put(url, data, {
 			headers: { accessToken },
 		});
 		return res;
 	},
 
-	async deletePostById(id) {
-		const url = `/post/delete/${id}`;
+	async deleteCommentById(id) {
+		const url = `/comment/delete/${id}`;
 		const res = await axiosClient.delete(url, {
 			headers: { accessToken },
 		});
@@ -45,4 +52,4 @@ const postApi = {
 	},
 };
 
-export default postApi;
+export default commentApi;

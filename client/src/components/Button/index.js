@@ -8,9 +8,15 @@ function Button(props) {
       ${props.rounded || 'rounded-[2rem]'} ${
 				props.shadow || 'shadow-lg shadow-indigo-500/50'
 			}
-      py-2 px-4 flex justify-center items-center ${props.w} ${
+      ${props.p || 'py-2 px-4'} flex justify-center items-center ${props.w} ${
 				props.h
-			} cursor-pointer hover:bg-indigo-700 ${props.custom}`}
+			} cursor-pointer  ${props.custom}
+        ${
+					props.isValid === false
+						? 'bg-slate-400 cursor-not-allowed shadow-none'
+						: 'bg-indigo-600 hover:bg-indigo-700'
+				}
+      `}
 		>
 			{props.children}
 		</button>

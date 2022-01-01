@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatars from '../../../assets/images/avatars';
 import Box from '../../../components/Box';
 import Button from '../../../components/Button';
@@ -53,13 +53,13 @@ function ImgField({ setIsDefault, setFile }) {
 					onChange={handleOnclick}
 				/>
 
-				<Button rounded="rounded-lg" w="w-full" shadow="none">
+				<Button w="w-full" shadow="none">
 					<label htmlFor="file" className="block w-full cursor-pointer">
 						Upload
 					</label>
 				</Button>
 				<div className="text-center">Or</div>
-				<Button rounded="rounded-lg" w="w-full" shadow="none">
+				<Button w="w-full" shadow="none">
 					<div
 						className="w-full cursor-pointer"
 						onClick={() => setIsOpenSelectAvt(true)}

@@ -10,12 +10,9 @@ export const register = createAsyncThunk('auth/register', async (payload) => {
 			console.log(res.data);
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
-			const user = {
-				...resUser.data.user,
-				avatar: `${process.env.PUBLIC_URL}/assets/uploads/avatars/${resUser.data.user.avatar}`,
-			};
+			const user = resUser.data.user;
 			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
-			return user;
+			return { ...user, fullName: `${user.firstName} ${user.lastName}` };
 		} else {
 			alert(res.data.message);
 			return {};
@@ -32,11 +29,7 @@ export const login = createAsyncThunk('auth/login', async (payload) => {
 		if (res.data.success) {
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
-			const user = {
-				...resUser.data.user,
-				avatar: `${process.env.PUBLIC_URL}/assets/uploads/avatars/${resUser.data.user.avatar}`,
-			};
-
+			const user = resUser.data.user;
 			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
 			return user;
 		} else {

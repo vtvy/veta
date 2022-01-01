@@ -8,9 +8,7 @@ import Button from '../Button';
 function Navbar() {
 	const user = useSelector((state) => state.user.current);
 	const dispatch = useDispatch();
-	const [avatar, setAvatar] = useState(
-		`${process.env.PUBLIC_URL}/assets/uploads/avatars/default.svg`
-	);
+	const [avatar, setAvatar] = useState(`default.svg`);
 	const [buttonType, setButtonType] = useState('Login');
 	const handleLogout = () => {
 		const action = logout();
@@ -21,7 +19,7 @@ function Navbar() {
 			setAvatar(user.avatar);
 			setButtonType('Logout');
 		} else {
-			setAvatar(`${process.env.PUBLIC_URL}/assets/uploads/avatars/default.svg`);
+			setAvatar(`default.svg`);
 			setButtonType('Login');
 		}
 	}, [user]);

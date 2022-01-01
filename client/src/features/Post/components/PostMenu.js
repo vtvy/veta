@@ -21,13 +21,13 @@ function PostMenu({ setIsEditPost, onDelete }) {
 						className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-y border-solid border-slate-200"
 						onClick={() => setIsEditPost(true)}
 					>
-						<i class="fas fa-edit w-10"></i> Edit
+						<i className="fas fa-edit w-10"></i> Edit
 					</li>
 					<li
 						className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-b border-solid border-slate-200"
 						onClick={handleClickDelete}
 					>
-						<i class="fas fa-trash-alt w-10"></i>Delete
+						<i className="fas fa-trash-alt w-10"></i>Delete
 					</li>
 				</ul>
 			</Box>

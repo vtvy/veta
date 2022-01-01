@@ -2,17 +2,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import ErrorMessage from './ErrorMessage';
+import Button from '../../../components/Button';
+import InputField from '../../../components/InputFile';
 const schema = yup.object().shape({
 	email: yup.string().email().required(),
 	password: yup.string().required(),
 });
-function LoginForm({ onSubmit, isInValidAccount }) {
+function LoginForm({ onSubmit }) {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+
+		formState: { errors, isValid },
 	} = useForm({
+		mode: 'onChange',
 		resolver: yupResolver(schema),
 	});
 	const onSubmitForm = (data) => {
@@ -21,50 +24,28 @@ function LoginForm({ onSubmit, isInValidAccount }) {
 
 	return (
 		<form
-			className="max-w-xl w-full mx-auto bg-white shadow rounded-lg p-10 space-y-6"
+			className="max-w-xl w-full mx-auto bg-white shadow-xl rounded-[2rem] p-10 space-y-6"
 			onSubmit={handleSubmit(onSubmitForm)}
 		>
-			{isInValidAccount ? (
-				<ErrorMessage message={'Incorrect email or password '} />
-			) : (
-				''
-			)}
-			<div className="flex flex-col">
-				<label
-					className="text-base font-bold text-gray-600 mb-1"
-					htmlFor="email"
-				>
-					Email Address
-				</label>
-				<input
-					className="border rounded-md bg-white px-6 py-4"
-					type="text"
+			{/* email */}
+			<div>
+				<InputField
+					label=" Email Address "
+					type="email"
 					name="email"
-					id="email"
-					placeholder="Enter your Email Address"
-					{...register('email')}
+					register={register}
+					error={errors.email}
 				/>
-				{errors.email ? <ErrorMessage message={errors.email.message} /> : ''}
 			</div>
-			<div className="flex flex-col">
-				<label
-					className="text-base font-bold text-gray-600 mb-1"
-					htmlFor="password"
-				>
-					Password
-				</label>
-				<input
-					className="border rounded-md bg-white px-6 py-4"
+			{/* password */}
+			<div>
+				<InputField
+					label="Password "
 					type="password"
 					name="password"
-					placeholder="Enter your Password"
-					{...register('password')}
+					register={register}
+					error={errors.password}
 				/>
-				{errors.password ? (
-					<ErrorMessage message={errors.password.message} />
-				) : (
-					''
-				)}
 			</div>
 			<div className="flex justify-between text-base">
 				<div className="flex items-center space-x-2">
@@ -83,12 +64,9 @@ function LoginForm({ onSubmit, isInValidAccount }) {
 				</div>
 			</div>
 			<div>
-				<button className="w-full bg-indigo-600 text-white rounded-md p-4">
-					Sign in
-				</button>
-			</div>
-			<div className="relative pb-2">
-				<div className="absolute top-0 left-0 w-full border-b"></div>
+				<Button w={'w-full'} p={'p-4'} isValid={isValid} type="submit">
+					Login
+				</Button>
 			</div>
 		</form>
 	);
