@@ -6,24 +6,24 @@ import Button from '../../../components/Button';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../Auth/components/ErrorMessage';
 import convertNameImgToPath from '../../../myFunction/convertNameImgToPath';
+import CloudImg from './CloundImg';
 
-function PostForm({ onSubmit, initialData }) {
+function PostForm({ onSubmit, initialData, isUploading }) {
 	const userAvatar = useSelector((state) => state.user.current.avatar);
 	const [imageSelected, setImageSelected] = useState(initialData.postImage);
-	const [reviewImage, setReviewImage] = useState();
+	const [reviewImage, setReviewImage] = useState({});
 	useEffect(() => {
-		setReviewImage(
-			initialData.postImage
-				? convertNameImgToPath(initialData.postImage, 'posts')
-				: ''
-		);
+		setReviewImage({
+			type: initialData.postImage ? 'cloud' : 'local',
+			path: initialData.postImage,
+		});
 	}, []);
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-	} = useForm();
+		formState: { errors, isValid },
+	} = useForm({ mode: 'onChange' });
 	const onSubmitForm = (data) => {
 		const formData = new FormData();
 		Object.keys(data).forEach((key) => {
@@ -36,7 +36,7 @@ function PostForm({ onSubmit, initialData }) {
 
 	const handleAddImage = (e) => {
 		const reviewImage = URL.createObjectURL(e.target.files[0]);
-		setReviewImage(reviewImage);
+		setReviewImage({ type: 'local', path: reviewImage });
 		setImageSelected(e.target.files[0]);
 	};
 	const handleUndoAddImage = () => {
@@ -82,10 +82,18 @@ function PostForm({ onSubmit, initialData }) {
 							''
 						)}
 					</div>
-					{reviewImage && (
+					{reviewImage.path && (
 						<Box custom="relative">
 							<div className="max-h-96 overflow-y-scroll relative">
-								<img src={reviewImage} className="w-full h-full" alt="" />
+								{reviewImage.type === 'cloud' ? (
+									<CloudImg publicId={reviewImage.path} />
+								) : (
+									<img
+										src={reviewImage.path}
+										className="w-full h-full"
+										alt=""
+									/>
+								)}
 							</div>
 							<button
 								type="button"
@@ -129,8 +137,12 @@ function PostForm({ onSubmit, initialData }) {
 							onChange={handleAddImage}
 						/>
 					</div>
-
-					<Button type="submit" w="w-full" h="h-[4rem]">
+					<Button
+						type="submit"
+						w="w-full"
+						h="h-[4rem] "
+						isValid={!isUploading && isValid}
+					>
 						{initialData.postText || initialData.postImage
 							? 'Edit Post'
 							: 'Create Post'}

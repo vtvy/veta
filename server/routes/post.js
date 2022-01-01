@@ -63,7 +63,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 
 router.put('/update/:id', verifyToken, async (req, res) => {
 	const postID = req.params.id;
-	const { userID, postText, isImgChange } = req.body;
+	const { userID, postText, isImageChange } = req.body;
 
 	const updatePost = await Post.findOne({ _id: postID, user: userID });
 
@@ -77,13 +77,13 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 	try {
 		var imgName = updatePost.postImage;
 		const file = req.files?.postImage;
-		if (isImgChange === 'true' && imgName !== '') {
+		if (isImageChange === 'true' && imgName !== '') {
 			cloudinary.uploader.destroy(imgName, (err, result) => {
 				imgName = '';
 				console.log(imgName);
 			});
 		}
-		if (isImgChange === 'true' && file?.name !== undefined) {
+		if (isImageChange === 'true' && file?.name !== undefined) {
 			cloudinary.uploader.upload(
 				file.tempFilePath,
 				{ folder: 'veta/posts' },

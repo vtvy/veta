@@ -41,7 +41,6 @@ const postSlice = createSlice({
 				(post) => post._id === action.payload._id
 			);
 			state.postList[indexOfPostUpdate] = action.payload;
-			console.log(state.postList);
 		},
 	},
 });

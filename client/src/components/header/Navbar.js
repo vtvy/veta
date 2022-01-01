@@ -8,7 +8,7 @@ import Button from '../Button';
 function Navbar() {
 	const user = useSelector((state) => state.user.current);
 	const dispatch = useDispatch();
-	const [avatar, setAvatar] = useState(`default.svg`);
+	const [avatar, setAvatar] = useState(``);
 	const [buttonType, setButtonType] = useState('Login');
 	const handleLogout = () => {
 		const action = logout();
@@ -19,7 +19,7 @@ function Navbar() {
 			setAvatar(user.avatar);
 			setButtonType('Logout');
 		} else {
-			setAvatar(`default.svg`);
+			setAvatar(``);
 			setButtonType('Login');
 		}
 	}, [user]);
@@ -30,7 +30,7 @@ function Navbar() {
 				<span className="text-indigo-600 font-bold text-4xl">Veta</span>
 			</Link>
 			<div className="flex  gap-x-4 items-center">
-				<Avatar avatar={avatar} />
+				{avatar && <Avatar avatar={avatar} />}
 				<Link to="/login">
 					<Button>
 						<div onClick={handleLogout}>{buttonType}</div>

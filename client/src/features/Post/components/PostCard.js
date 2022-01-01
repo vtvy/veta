@@ -4,12 +4,12 @@ import postApi from '../../../api/postApi';
 import Avatar from '../../../components/Avatar';
 import Box from '../../../components/Box';
 import Modal from '../../../components/Modal';
-import convertNameImgToPath from '../../../myFunction/convertNameImgToPath';
 import getDifferenceTime from '../../../myFunction/getDifferenceTime';
 import { deletePost, updatePost } from '../postSlice';
 import PostComments from './PostComments';
 import PostForm from './PostForm';
 import PostMenu from './PostMenu';
+import CloudImg from './CloundImg';
 
 function PostCard({ post }) {
 	const user = useSelector((state) => state.user.current);
@@ -22,6 +22,7 @@ function PostCard({ post }) {
 	const handleEditPost = async (data) => {
 		console.log(post.postText);
 		const isImageChange = !(data.get('postImage') === post.postImage);
+		console.log(isImageChange);
 
 		if (!isImageChange && data.get('postText') === post.postText) {
 			setIsEditPost(false);
@@ -31,10 +32,10 @@ function PostCard({ post }) {
 				data.append('isImageChange', isImageChange);
 				const res = await postApi.updatePostById(post._id, data);
 				if (res.data.success) {
-					// const action = updatePost(data);
-					// dispatch(action);
-					// setIsEditPost(false);
-					window.location.reload();
+					const updatedPost = res.data.updatedPost;
+					const action = updatePost(updatedPost);
+					dispatch(action);
+					setIsEditPost(false);
 				}
 			} catch (error) {
 				alert(error);
@@ -43,10 +44,8 @@ function PostCard({ post }) {
 	};
 	//delete post
 	const handleDeletePost = async () => {
-		console.log(post._id);
 		try {
 			const res = await postApi.deletePostById(post._id);
-			console.log(res);
 			if (res.data.success) {
 				const action = deletePost(post._id);
 				dispatch(action);
@@ -88,11 +87,7 @@ function PostCard({ post }) {
 					<div className="p-8">{post.postText}</div>
 					{post.postImage && (
 						<div className="w-full max-h-[36rem] rounded-[2rem] overflow-hidden bg-indigo-300">
-							<img
-								src={convertNameImgToPath(post.postImage, 'posts')}
-								alt=""
-								className="h-auto w-full object-cover"
-							/>
+							<CloudImg publicId={post.postImage} />
 						</div>
 					)}
 				</Box>

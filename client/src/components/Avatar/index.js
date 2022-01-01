@@ -1,5 +1,5 @@
 import React from 'react';
-import convertNameImgToPath from '../../myFunction/convertNameImgToPath';
+import CloudImg from '../../features/Post/components/CloundImg';
 
 function Avatar({ size, avatar }) {
 	return (
@@ -8,11 +8,7 @@ function Avatar({ size, avatar }) {
 				size || 'w-16 h-16'
 			} rounded-[50%] bg-indigo-600   flex items-center justify-center overflow-hidden`}
 		>
-			<img
-				src={convertNameImgToPath(avatar, 'avatars')}
-				alt=""
-				className="object-cover w-full h-full"
-			/>
+			<CloudImg publicId={avatar} />
 		</div>
 	);
 }

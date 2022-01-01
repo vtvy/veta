@@ -43,7 +43,7 @@ router.post('/otp', async (req, res) => {
 				subject: 'Otp for registration is: ',
 				html:
 					'<h3>OTP for account verification is </h3>' +
-					"<h1 style='font-weight:bold;'>" +
+					"<h1 style='font-weight:bold; color:#4F46E5;'>" +
 					otp +
 					'</h1>',
 			};

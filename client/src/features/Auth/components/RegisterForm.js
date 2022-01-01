@@ -100,7 +100,7 @@ function RegisterForm({ onSubmit }) {
 			/>
 			<div>
 				<Button w={'w-full'} p={'p-4'} isValid={isValid} type="submit">
-					Login
+					Register
 				</Button>
 			</div>
 		</form>
