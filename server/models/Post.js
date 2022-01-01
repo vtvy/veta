@@ -6,7 +6,7 @@ const PostSchema = new Schema(
   {
     postText: String,
     postImage: String,
-    user: {
+    userID: {
       type: Schema.Types.ObjectId,
       ref: "user",
     },
