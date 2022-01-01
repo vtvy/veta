@@ -12,7 +12,7 @@ const CommentSchema = new Schema(
     },
     postID: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "post",
     },
   },
   { timestamps: true }
