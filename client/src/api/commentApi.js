@@ -13,15 +13,14 @@ const commentApi = {
 
 	async getAll() {
 		const url = '/comment';
-		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const res = await axiosClient.get(url, {
 			headers: { accessToken },
 		});
 		return res;
 	},
 	async getPostComments(postId) {
-		const url = `post/${postId}/comments`;
-		const res = await axiosClient.get(url, {
+		const url = `/comment`;
+		const res = await axiosClient.get(url, postId, {
 			header: { accessToken },
 		});
 		return res;

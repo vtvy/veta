@@ -7,7 +7,7 @@ const Comment = require('../models/Comment');
 
 router.post('/create', verifyToken, async (req, res) => {
 	const cmt = req.body;
-	if (cmt.commentImage === undefined || cmt.postText !== '') {
+	if (cmt.commentImage === undefined || cmt.commentText !== '') {
 		try {
 			var filePath = '';
 			if (req.files?.commentImage) {
@@ -23,10 +23,11 @@ router.post('/create', verifyToken, async (req, res) => {
 
 			//Create new comment
 			const newCmt = new Comment({
-				postComment: cmt.commentText,
+				commentText: cmt.commentText,
 				commentImage: filePath,
-				user: cmt.userID,
-				post: cmt.postID,
+				userID: cmt.userID,
+				postID: cmt.postID,
+				replyOf: cmt.replyOf,
 			});
 			await newCmt.save();
 			return res.json({

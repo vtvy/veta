@@ -6,11 +6,12 @@ const CommentSchema = new Schema(
 	{
 		commentText: String,
 		commentImage: String,
-		user: {
+		replyOf: String,
+		userID: {
 			type: Schema.Types.ObjectId,
 			ref: 'user',
 		},
-		post: {
+		postID: {
 			type: Schema.Types.ObjectId,
 			ref: 'user',
 		},
