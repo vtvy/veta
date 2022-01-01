@@ -1,44 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const { cloudinary } = require('../configs');
-
-const Post = require('../models/Post');
 const verifyToken = require('../middleware/auth');
 
+const Comment = require('../models/Comment');
+
 router.post('/create', verifyToken, async (req, res) => {
-	const post = req.body;
-	if (post.postImage === undefined || post.postText !== '') {
+	const cmt = req.body;
+	if (cmt.commentImage === undefined || cmt.postText !== '') {
 		try {
 			var filePath = '';
-			if (req.files?.postImage) {
-				const file = req.files.postImage;
-
+			if (req.files?.commentImage) {
+				const file = req.files.commentImage;
 				await cloudinary.uploader.upload(
 					file.tempFilePath,
-					{ folder: 'veta/posts' },
+					{ folder: 'veta/comments' },
 					(error, result) => {
 						filePath = result.public_id;
 					}
 				);
 			}
 
-			//Create new post
-			const newPost = new Post({
-				postText: post.postText,
-				postImage: filePath,
-				user: post.userID,
+			//Create new comment
+			const newCmt = new Comment({
+				postComment: cmt.commentText,
+				commentImage: filePath,
+				user: cmt.userID,
+				post: cmt.postID,
 			});
-
-			await newPost.save();
+			await newCmt.save();
 			return res.json({
 				success: true,
-				message: 'Post a status successfully',
-				newPost,
+				message: 'Comment successfully',
+				newCmt,
 			});
 		} catch (error) {
 			return res.json({
 				success: false,
-				message: 'Cannot create a post',
+				message: 'Cannot comment at this post',
 				error,
 			});
 		}
@@ -46,28 +45,24 @@ router.post('/create', verifyToken, async (req, res) => {
 	return res.json({ success: false, message: 'You need to input something' });
 });
 
-//Get all post of an user
+//Get all comment of a post
 router.get('/', verifyToken, async (req, res) => {
-	const { userID } = req.body;
-	const listOfPost = await Post.find({ user: userID });
-	res.json({ success: true, message: 'This is list of post', listOfPost });
-});
-
-router.get('/:id', verifyToken, async (req, res) => {
-	const postID = req.params.id;
-
-	const { userID } = req.body;
-	const aPost = await Post.findOne({ user: userID, postID });
-	res.json({ success: true, message: 'This is list of post', aPost });
+	const { postID } = req.body;
+	const listOfPost = await Comment.find({ post: postID });
+	res.json({ success: true, message: 'This is list of post', listOfComment });
 });
 
 router.put('/update/:id', verifyToken, async (req, res) => {
-	const postID = req.params.id;
-	const { userID, postText, isImgChange } = req.body;
+	const commentID = req.params.id;
+	const { userID, commentText, isImgChange, postID } = req.body;
 
-	const updatePost = await Post.findOne({ _id: postID, user: userID });
+	const updateComment = await Post.findOne({
+		_id: commentID,
+		user: userID,
+		post: postID,
+	});
 
-	if (!updatePost) {
+	if (!updateComment) {
 		res.json({
 			success: false,
 			message: 'You do not have permission to update it',
@@ -75,8 +70,8 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 	}
 
 	try {
-		var imgName = updatePost.postImage;
-		const file = req.files?.postImage;
+		var imgName = updateComment.commentImage;
+		const file = req.files?.commentImage;
 		if (isImgChange === 'true' && imgName !== '') {
 			cloudinary.uploader.destroy(imgName, (err, result) => {
 				imgName = '';
@@ -86,7 +81,7 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 		if (isImgChange === 'true' && file?.name !== undefined) {
 			cloudinary.uploader.upload(
 				file.tempFilePath,
-				{ folder: 'veta/posts' },
+				{ folder: 'veta/comments' },
 				(err, result) => {
 					imgName = result.public_id;
 					console.log(imgName);
@@ -95,22 +90,22 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 		}
 
 		//Update a post
-		const newPost = {
-			postText,
+		const newComment = {
+			commentText,
 			postImage: imgName,
 			user: userID,
 		};
 
-		const updatedPost = await Post.findOneAndUpdate(
-			{ _id: postID, user: userID },
-			newPost,
+		const updatedComment = await Comment.findOneAndUpdate(
+			{ _id: commentID, user: userID, post: postID },
+			newComment,
 			{ new: true }
 		);
 
 		return res.json({
 			success: true,
 			message: 'Update a status successfully',
-			updatedPost,
+			updatedComment,
 		});
 	} catch (error) {
 		return res.json({
@@ -122,24 +117,28 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 });
 
 router.delete('/delete/:id', verifyToken, async (req, res) => {
-	const postID = req.params.id;
+	const commentID = req.params.id;
 
-	const { userID } = req.body;
+	const { userID, postID } = req.body;
 	try {
-		const deletePost = await Post.findOneAndDelete({
-			_id: postID,
+		const deleteComment = await Post.findOneAndDelete({
+			_id: commentID,
 			user: userID,
+			post: postID,
 		});
 
-		if (deletePost.postImage !== '') {
-			await cloudinary.uploader.destroy(deletePost.postImage, (err, result) => {
-				console.log('delete image from cloud successful');
-			});
+		if (deleteComment.commentImage !== '') {
+			await cloudinary.uploader.destroy(
+				deleteComment.postImage,
+				(err, result) => {
+					console.log('delete image from cloud successful');
+				}
+			);
 		}
 
 		return res.json({
 			success: true,
-			message: 'Delete a status successfully',
+			message: 'Delete a comment successfully',
 		});
 	} catch (error) {
 		console.log(error);
