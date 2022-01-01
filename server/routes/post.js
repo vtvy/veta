@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
+const { cloudinary } = require("../configs");
 
 const Post = require("../models/Post");
 const verifyToken = require("../middleware/auth");
@@ -12,11 +12,14 @@ router.post("/create", verifyToken, async (req, res) => {
       var filePath = "";
       if (req.files?.postImage) {
         const file = req.files.postImage;
-        filePath =
-          post.email.slice(0, 5) + "_" + Date.now().toString() + file.name;
-        file.mv(`../client/public/assets/uploads/posts/${filePath}`, (err) => {
-          console.error(err);
-        });
+
+        await cloudinary.uploader.upload(
+          file.tempFilePath,
+          { folder: "veta/posts" },
+          (error, result) => {
+            filePath = result.public_id;
+          }
+        );
       }
 
       //Create new post
@@ -25,6 +28,7 @@ router.post("/create", verifyToken, async (req, res) => {
         postImage: filePath,
         user: post.userID,
       });
+
       await newPost.save();
       return res.json({
         success: true,
@@ -59,43 +63,50 @@ router.get("/:id", verifyToken, async (req, res) => {
 
 router.put("/update/:id", verifyToken, async (req, res) => {
   const postID = req.params.id;
-  const { userID, postText, email } = req.body;
+  const { userID, postText, isImgChange } = req.body;
 
   const updatePost = await Post.findOne({ _id: postID, user: userID });
 
   if (!updatePost) {
     res.json({
       success: false,
-      message: "You do not have permission to delete it",
+      message: "You do not have permission to update it",
     });
   }
 
-  const imgName = updatePost.postImage;
-  const file = req.files?.postImage;
-  var filePath = "";
-
   try {
-    if (imgName !== "" && imgName.slice(-file?.name?.length) !== file?.name) {
-      fs.unlinkSync(`../client/public/assets/uploads/posts/${imgName}`);
-    }
-    if (file?.name !== undefined) {
-      filePath = email.slice(0, 5) + "_" + Date.now().toString() + file.name;
-      file.mv(`../client/public/assets/uploads/posts/${filePath}`, (err) => {
-        console.error(err);
+    var imgName = updatePost.postImage;
+    const file = req.files?.postImage;
+    if (isImgChange === "true" && imgName !== "") {
+      cloudinary.uploader.destroy(imgName, (err, result) => {
+        imgName = "";
+        console.log(imgName);
       });
+    }
+    if (isImgChange === "true" && file?.name !== undefined) {
+      cloudinary.uploader.upload(
+        file.tempFilePath,
+        { folder: "veta/posts" },
+        (err, result) => {
+          imgName = result.public_id;
+          console.log(imgName);
+        }
+      );
     }
 
     //Update a post
     const newPost = {
       postText,
-      postImage: filePath,
+      postImage: imgName,
       user: userID,
     };
+
     const updatedPost = await Post.findOneAndUpdate(
       { _id: postID, user: userID },
       newPost,
       { new: true }
     );
+
     return res.json({
       success: true,
       message: "Update a status successfully",
@@ -121,9 +132,9 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
     });
 
     if (deletePost.postImage !== "") {
-      fs.unlinkSync(
-        `../client/public/assets/uploads/posts/${deletePost.postImage}`
-      );
+      await cloudinary.uploader.destroy(deletePost.postImage, (err, result) => {
+        console.log("delete image from cloud successful");
+      });
     }
 
     return res.json({

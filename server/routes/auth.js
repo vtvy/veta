@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const { cloudinary } = require("../configs");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -70,25 +71,31 @@ router.post("/confirmOtp", async (req, res) => {
     res.json({ success: false, message: "OTP is incorrect" });
   }
 });
+
 //Register an account
 router.post("/register", async (req, res) => {
   const user = req.body;
   var avatarPath = "";
   console.log(user.isDefault);
   if (user.isDefault === "true") {
-    avatarPath =
-      user.email.slice(0, 5) + "_" + Date.now().toString() + user.avatar;
-    fs.copyFileSync(
+    await cloudinary.uploader.upload(
       `../client/public/assets/images/avatars/${user.avatar}`,
-      `../client/public/assets/uploads/avatars/${avatarPath}`
+      { folder: "veta/avatars" },
+      (error, result) => {
+        avatarPath = result.public_id;
+        console.log(avatarPath);
+      }
     );
   } else {
     const file = req.files.avatar;
-    avatarPath =
-      user.email.slice(0, 5) + "_" + Date.now().toString() + file.name;
-    file.mv(`../client/public/assets/uploads/avatars/${avatarPath}`, (err) => {
-      console.error(err);
-    });
+    await cloudinary.uploader.upload(
+      file.tempFilePath,
+      { folder: "veta/avatars" },
+      (error, result) => {
+        avatarPath = result.public_id;
+        console.log(avatarPath);
+      }
+    );
   }
 
   //Create new account

@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const Comment = new Schema(
+const CommentSchema = new Schema(
   {
-    postComment: String,
-    postImage: String,
+    commentText: String,
+    commentImage: String,
     user: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -13,10 +13,6 @@ const Comment = new Schema(
     post: {
       type: Schema.Types.ObjectId,
       ref: "user",
-    },
-    parentComment: {
-      type: Schema.Types.ObjectId,
-      ref: "comment",
     },
   },
   { timestamps: true }
