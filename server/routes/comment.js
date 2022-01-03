@@ -12,18 +12,12 @@ router.post("/create", verifyToken, async (req, res) => {
       var filePath = "";
       if (req.files?.commentImage) {
         const file = req.files.commentImage;
-        await cloudinary.uploader.upload(
-          file.tempFilePath,
-          { folder: "veta/comments" },
-          (error, result) => {
-            filePath = result.public_id;
-          }
-        );
+        filePath = uploadComment(file.tempFilePath);
       }
 
       //Create new comment
       const newCmt = new Comment({
-        postComment: cmt.commentText,
+        commentText: cmt.commentText,
         commentImage: filePath,
         userID: cmt.userID,
         postID: cmt.postID,
