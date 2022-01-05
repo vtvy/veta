@@ -1,29 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { cloudinary } = require('../configs');
+const { upload, destroy } = require('../utils');
 const verifyToken = require('../middleware/auth');
 
 const Comment = require('../models/Comment');
 
 router.post('/create', verifyToken, async (req, res) => {
 	const cmt = req.body;
+	console.log(cmt);
 	if (cmt.commentImage === undefined || cmt.postText !== '') {
 		try {
 			var filePath = '';
 			if (req.files?.commentImage) {
 				const file = req.files.commentImage;
-				await cloudinary.uploader.upload(
-					file.tempFilePath,
-					{ folder: 'veta/comments' },
-					(error, result) => {
-						filePath = result.public_id;
-					}
-				);
+				filePath = upload(file.tempFilePath, 'veta/comments');
 			}
 
 			//Create new comment
 			const newCmt = new Comment({
-				postComment: cmt.commentText,
+				commentText: cmt.commentText,
 				commentImage: filePath,
 				userID: cmt.userID,
 				postID: cmt.postID,
@@ -46,9 +41,11 @@ router.post('/create', verifyToken, async (req, res) => {
 });
 
 //Get all comment of a post
-router.get('/', verifyToken, async (req, res) => {
-	const { postID } = req.body;
-	const listOfPost = await Comment.find({ postID: postID });
+router.get('/:id', verifyToken, async (req, res) => {
+	console.log(req.body);
+	const postID = req.params.id;
+	console.log(postID);
+	const listOfComment = await Comment.find({ postID: postID });
 	res.json({
 		success: true,
 		message: 'This is list of comment',
@@ -77,20 +74,10 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 		var imgName = updateComment.commentImage;
 		const file = req.files?.commentImage;
 		if (isImageChange === 'true' && imgName !== '') {
-			cloudinary.uploader.destroy(imgName, (err, result) => {
-				imgName = '';
-				console.log(imgName);
-			});
+			await destroy(imgName);
 		}
 		if (isImageChange === 'true' && file?.name !== undefined) {
-			cloudinary.uploader.upload(
-				file.tempFilePath,
-				{ folder: 'veta/comments' },
-				(err, result) => {
-					imgName = result.public_id;
-					console.log(imgName);
-				}
-			);
+			imgName = upload(file.tempFilePath, 'veta/comments');
 		}
 
 		//Update a comment
@@ -124,21 +111,15 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 router.delete('/delete/:id', verifyToken, async (req, res) => {
 	const commentID = req.params.id;
 
-	const { userID, postID } = req.body;
+	const { userID } = req.body;
 	try {
 		const deleteComment = await Comment.findOneAndDelete({
 			_id: commentID,
 			userID: userID,
-			postID: postID,
 		});
 
-		if (deleteComment.commentImage !== '') {
-			await cloudinary.uploader.destroy(
-				deleteComment.postImage,
-				(err, result) => {
-					console.log('Delete image from cloud successful');
-				}
-			);
+		if (deleteComment?.commentImage !== '') {
+			await destroy(deleteComment.commentImage);
 		}
 
 		return res.json({

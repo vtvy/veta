@@ -1,33 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const { cloudinary } = require('../configs');
+const { upload, destroy } = require('../utils');
 
 const Post = require('../models/Post');
 const verifyToken = require('../middleware/auth');
+const fs = require('fs');
 
 router.post('/create', verifyToken, async (req, res) => {
-	const post = req.body;
-	if (post.postImage === undefined || post.postText !== '') {
+	const { userID, postImage, postText } = req.body;
+	if (postImage === undefined || postText !== '') {
 		try {
-			var filePath = '';
+			newPostImage = '';
 			if (req.files?.postImage) {
 				const file = req.files.postImage;
+				console.log(1);
 
-				await cloudinary.uploader.upload(
-					file.tempFilePath,
-					{ folder: 'veta/posts' },
-					(error, result) => {
-						filePath = result.public_id;
-					}
-				);
+				newPostImage = await upload(file.tempFilePath, 'veta/posts');
 			}
 
 			//Create new post
-			const newPost = new Post({
-				postText: post.postText,
-				postImage: filePath,
-				userID: post.userID,
-			});
+			const newPost = new Post({ postText, postImage: newPostImage, userID });
 
 			await newPost.save();
 			return res.json({
@@ -36,6 +28,8 @@ router.post('/create', verifyToken, async (req, res) => {
 				newPost,
 			});
 		} catch (error) {
+			console.log(error);
+			if (req.files?.postImage) fs.unlinkSync(req.files.postImage.tempFilePath);
 			return res.json({
 				success: false,
 				message: 'Cannot create a post',
@@ -49,7 +43,7 @@ router.post('/create', verifyToken, async (req, res) => {
 //Get all post of an user
 router.get('/', verifyToken, async (req, res) => {
 	const { userID } = req.body;
-	const listOfPost = await Post.find({ userID: userID });
+	const listOfPost = await Post.find({ userID });
 	res.json({ success: true, message: 'This is list of post', listOfPost });
 });
 
@@ -57,7 +51,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 	const postID = req.params.id;
 
 	const { userID } = req.body;
-	const aPost = await Post.findOne({ userID: userID, postID });
+	const aPost = await Post.findOne({ userID, postID });
 	res.json({ success: true, message: 'This is list of post', aPost });
 });
 
@@ -65,7 +59,7 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 	const postID = req.params.id;
 	const { userID, postText, isImageChange } = req.body;
 
-	const updatePost = await Post.findOne({ _id: postID, userID: userID });
+	const updatePost = await Post.findOne({ _id: postID, userID });
 
 	if (!updatePost) {
 		res.json({
@@ -75,33 +69,21 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 	}
 
 	try {
-		var imgName = updatePost.postImage;
+		var postImage = updatePost.postImage;
 		const file = req.files?.postImage;
-		if (isImageChange === 'true' && imgName !== '') {
-			cloudinary.uploader.destroy(imgName, (err, result) => {
-				imgName = '';
-				console.log(imgName);
-			});
+		if (isImageChange === 'true' && postImage !== '') {
+			await destroy(postImage);
+			postImage = '';
 		}
 		if (isImageChange === 'true' && file?.name !== undefined) {
-			cloudinary.uploader.upload(
-				file.tempFilePath,
-				{ folder: 'veta/posts' },
-				(err, result) => {
-					imgName = result.public_id;
-					console.log(imgName);
-				}
-			);
+			postImage = await upload(file.tempFilePath, 'veta/posts');
 		}
 
 		//Update a post
-		const newPost = {
-			postText,
-			postImage: imgName,
-			userID: userID,
-		};
+		const newPost = { postText, postImage, userID };
+
 		const updatedPost = await Post.findOneAndUpdate(
-			{ _id: postID, userID: userID },
+			{ _id: postID, userID },
 			newPost,
 			{ new: true }
 		);
@@ -125,15 +107,11 @@ router.delete('/delete/:id', verifyToken, async (req, res) => {
 
 	const { userID } = req.body;
 	try {
-		const deletePost = await Post.findOneAndDelete({
-			_id: postID,
-			userID: userID,
-		});
+		const deletePost = await Post.findOneAndDelete({ _id: postID, userID });
 
 		if (deletePost.postImage !== '') {
-			await cloudinary.uploader.destroy(deletePost.postImage, (err, result) => {
-				console.log('delete image from cloud successful');
-			});
+			await destroy(deletePost.postImage);
+			console.log('delete image from cloud successful');
 		}
 
 		return res.json({

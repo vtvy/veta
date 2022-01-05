@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logout } from '../../features/Auth/userSlice';
+import { logOut } from '../../features/Auth/userSlice';
 import useClickOutside from '../../Hooks/useClickOutside';
 import Avatar from '../Avatar';
 import NavbarMenu from './NavbarMenu';
@@ -12,7 +12,7 @@ function Navbar({ setToggleMenu, toggleMenu }) {
 	const dispatch = useDispatch();
 	const [refInside, isInside, setIsInside] = useClickOutside(false);
 	const handleLogout = () => {
-		const action = logout();
+		const action = logOut();
 		dispatch(action);
 	};
 	return (

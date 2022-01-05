@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '../../../components/Box';
 
-function CommentMenu({ setIdEditComment, commentId, onDelete, onClickReply }) {
+function CommentMenu({ setIdEditComment, commentId, onDelete }) {
 	const handleClickDelete = () => {
 		const answer = window.confirm('Are you sure you want to delete this post?');
 		if (answer) {

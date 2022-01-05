@@ -1,27 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const { cloudinary } = require('../configs');
-const saltRounds = 10;
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const verifyToken = require('../middleware/auth');
+const { upload, transporter } = require('../utils');
 
 const otp = parseInt(Math.random() * 10000).toString();
+const saltRounds = 10;
 
 const User = require('../models/User');
-
-const transporter = nodemailer.createTransport({
-	host: 'smtp.gmail.com',
-	port: 465,
-	secure: true,
-	service: 'Gmail',
-	auth: {
-		user: 'vnteamnoreply@gmail.com',
-		pass: 's@oslpVN',
-	},
-});
 
 //send otp
 router.post('/otp', async (req, res) => {
@@ -76,26 +63,15 @@ router.post('/confirmOtp', async (req, res) => {
 router.post('/register', async (req, res) => {
 	const user = req.body;
 	var avatarPath = '';
-	console.log(user.isDefault);
 	if (user.isDefault === 'true') {
-		await cloudinary.uploader.upload(
+		avatarPath = await upload(
 			`../client/public/assets/images/avatars/${user.avatar}`,
-			{ folder: 'veta/avatars' },
-			(error, result) => {
-				avatarPath = result.public_id;
-				console.log(avatarPath);
-			}
+			'veta/avatars',
+			false
 		);
 	} else {
 		const file = req.files.avatar;
-		await cloudinary.uploader.upload(
-			file.tempFilePath,
-			{ folder: 'veta/avatars' },
-			(error, result) => {
-				avatarPath = result.public_id;
-				console.log(avatarPath);
-			}
-		);
+		avatarPath = await upload(file.tempFilePath, 'veta/avatars', true);
 	}
 
 	//Create new account

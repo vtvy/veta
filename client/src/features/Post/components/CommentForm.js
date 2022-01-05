@@ -18,7 +18,7 @@ function CommentForm({ onSubmit, initialValue, type }) {
 			alert('you must have at least one field for your comment');
 		} else {
 			const formData = new FormData();
-			formData.append('commentID', initialValue.commentID);
+			formData.append('commentID', initialValue._id);
 			formData.append('replyOf', initialValue.replyOf);
 			formData.append('postID', initialValue.postID);
 			formData.append('userID', userID);

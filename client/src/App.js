@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import userApi from './api/userApi';
 import Header from './components/Header';
 import Container from './components/Main';
 import ProtectedRoutes from './components/ProtectedRoutes';
@@ -8,13 +9,33 @@ import PublicRoutes from './components/PublicRoutes';
 import SidebarLeft from './components/SidebarLeft';
 import SidebarRight from './components/SidebarRight';
 import Auth from './features/Auth';
+import { logOut, setUser } from './features/Auth/userSlice';
 import AddEditPost from './features/Post/Pages/AddEditPost';
 import TestServer from './testServer';
 export const ModalContext = createContext();
 
 function App() {
-	const loginUser = useSelector((state) => state.user.current);
-	const isLoggedIn = !!loginUser.userID;
+	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		const loginUser = async () => {
+			const res = await userApi.getUser();
+			if (res.data.success) {
+				const action = setUser(res.data.user);
+				dispatch(action);
+			} else {
+				const action = logOut();
+				dispatch(action);
+			}
+		};
+		loginUser();
+		return () => {
+			loginUser();
+		};
+	}, []);
+
+	//handleModal
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [modal, setModal] = useState({
 		isOpen: false,
@@ -22,7 +43,6 @@ function App() {
 		setIsOpen: false,
 		content: {},
 	});
-
 	useEffect(() => {
 		const handleResizeWindow = () => {
 			if (window.innerWidth <= 1280) {
@@ -31,12 +51,12 @@ function App() {
 				setToggleMenu(true);
 			}
 		};
-
 		window.addEventListener('resize', handleResizeWindow);
 		return () => {
 			window.addEventListener('resize', handleResizeWindow);
 		};
 	}, []);
+
 	return (
 		<ModalContext.Provider value={setModal}>
 			<div className="App flex flex-col min-h-screen h-full bg-slate-300">

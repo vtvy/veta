@@ -38,11 +38,11 @@ function Comment({
 	// 	getUserComment();
 	// }, []);
 	const handleClickReply = () => {
-		onClickReply(rootComment.commentID, userComment.firstName);
+		onClickReply(rootComment._id, userComment.firstName);
 		setIsShowReplyComments(true);
 	};
 	const handleOpenCommentMenu = () => {
-		setIdTopZIndex(parentComment.commentID);
+		setIdTopZIndex(parentComment._id);
 		setIsOpenCommentMenu(!isOpenCommentMenu);
 	};
 
@@ -52,12 +52,12 @@ function Comment({
 	};
 	return (
 		<div>
-			{idEditComment === parentComment.commentID ? (
+			{idEditComment === parentComment._id ? (
 				<>
 					<CommentForm
 						onSubmit={handleEditComment}
 						initialValue={parentComment}
-						type={`editComment${parentComment.commentID}`}
+						type={`editComment${parentComment._id}`}
 					/>
 					<span
 						className="ml-20 text-xl cursor-pointer hover:text-indigo-600 "
@@ -69,10 +69,10 @@ function Comment({
 			) : (
 				<div
 					className={`flex w-full relative ${
-						idTopZIndex === parentComment.commentID ? 'z-50' : 'z-10'
+						idTopZIndex === parentComment._id ? 'z-50' : 'z-10'
 					}`}
 				>
-					{rootComment.commentID === parentComment.commentID ? (
+					{rootComment._id === parentComment._id ? (
 						<>
 							{replyComments.length > 0 && isShowReplyComments && (
 								<div className="w-10 h-[calc(100%_-_6rem)] left-[1.7rem]  border-l-2 border-solid border-slate-400 translate-y-16 absolute  "></div>
@@ -81,7 +81,7 @@ function Comment({
 					) : (
 						<>
 							{' '}
-							{lastReplyComment?.commentID === parentComment.commentID && (
+							{lastReplyComment?._id === parentComment._id && (
 								<div className="-left-[0.3rem]  bg-white -translate-x-full w-20 top-0  h-[80%] absolute  "></div>
 							)}
 							<div className="flex justify-end -left-[0.3rem] rounded-bl-3xl border-l-2 border-b-2 border-solid border-slate-400  w-10 -translate-x-full -translate-y-full top-8  h-20 absolute  "></div>
@@ -93,7 +93,7 @@ function Comment({
 					<div className="flex flex-col flex-1 ml-4">
 						<div
 							className={`flex flex-col mb-4 max-w-[95%] items-start ${
-								idTopZIndex === parentComment.commentID ? 'z-50' : 'z-10'
+								idTopZIndex === parentComment._id ? 'z-50' : 'z-10'
 							} `}
 						>
 							<Box
@@ -112,7 +112,7 @@ function Comment({
 									{isOpenCommentMenu && (
 										<CommentMenu
 											setIdEditComment={setIdEditComment}
-											commentId={parentComment.commentID}
+											commentId={parentComment._id}
 											onDelete={onDeleteComment}
 										/>
 									)}
@@ -140,9 +140,9 @@ function Comment({
 						) : (
 							replyComments.map((replyComment) => (
 								<div
-									key={replyComment.commentID}
+									key={replyComment._id}
 									className={`w-full ${
-										idTopZIndex === parentComment.commentID ? 'z-10' : ''
+										idTopZIndex === parentComment._id ? 'z-10' : ''
 									}`}
 								>
 									<Comment

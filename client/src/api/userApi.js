@@ -19,6 +19,7 @@ const userApi = {
 		});
 		return response;
 	},
+
 	async getUserById(id) {
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const url = `/users/${id}`;

@@ -21,7 +21,7 @@ function NavbarMenu({ user, onLogOut }) {
 				</li>
 				<li className="flex w-full p-2 items-center">
 					<div className="flex items-center text-3xl w-full p-2 cursor-pointer rounded-lg hover:bg-blue-200">
-						<i class="fas fa-cog w-12"></i>
+						<i className="fas fa-cog w-12"></i>
 						<span className=" text-2xl">My account</span>
 					</div>
 				</li>
@@ -33,7 +33,7 @@ function NavbarMenu({ user, onLogOut }) {
 				</li>
 				<li className="flex w-full p-2 items-center">
 					<div className="flex items-center text-3xl w-full p-2 cursor-pointer rounded-lg hover:bg-blue-200">
-						<i class="fas fa-moon w-12"></i>
+						<i className="fas fa-moon w-12"></i>
 						<span className=" text-2xl">Dark mode</span>
 					</div>
 				</li>
@@ -43,7 +43,7 @@ function NavbarMenu({ user, onLogOut }) {
 						className="flex items-center text-3xl w-full p-2 cursor-pointer rounded-lg hover:bg-blue-200"
 						onClick={onLogOut}
 					>
-						<i class="fas fa-sign-out-alt w-12"></i>
+						<i className="fas fa-sign-out-alt w-12"></i>
 						<span className=" text-2xl">Log Out</span>
 					</Link>
 				</li>
