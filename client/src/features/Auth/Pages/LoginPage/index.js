@@ -16,22 +16,25 @@ function LoginPage() {
 	};
 
 	return (
-		<div className="w-full h-full flex  flex-col justify-center items-center">
+		<div className="md:max-w-[50rem] md:items-start max-w-full items-center w-full bg-white h-screen flex  flex-col pt-24 md:px-28 px-4 space-y-12 ">
 			<div>
-				<h1 className="mt-6 text-center text-5xl font-extrabold text-slate-700">
-					Sign in to your account
-				</h1>
-				<p className="my-4 text-2xl text-center  text-gray-600">
-					Or
+				<h1 className="my-6  text-7xl font-bold text-slate-700">Login</h1>
+				<span className="inline-block text-2xl text-gray-500">
+					Enter your email address and password to access admin panel.
+				</span>
+			</div>
+			<LoginForm onSubmit={handleLogin} />
+			<div className="py-4 border-t border-solid w-full border-gray-300">
+				<p className="my-4 text-2xl text-gray-600">
+					Don't have an account?
 					<Link
 						to="/register"
-						className="font-medium ml-4 text-xl text-indigo-900 border-b border-indigo-600"
+						className="font-medium ml-2 text-2xl text-indigo-600 underline"
 					>
-						Register your FREE account{' '}
+						Register
 					</Link>
 				</p>
 			</div>
-			<LoginForm onSubmit={handleLogin} />
 		</div>
 	);
 }

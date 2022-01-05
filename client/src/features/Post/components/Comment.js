@@ -75,16 +75,16 @@ function Comment({
 					{rootComment.commentID === parentComment.commentID ? (
 						<>
 							{replyComments.length > 0 && isShowReplyComments && (
-								<div className="w-10 h-[calc(100%_-_6rem)] left-[1.7rem]  border-l border-solid border-slate-400 translate-y-16 absolute  "></div>
+								<div className="w-10 h-[calc(100%_-_6rem)] left-[1.7rem]  border-l-2 border-solid border-slate-400 translate-y-16 absolute  "></div>
 							)}
 						</>
 					) : (
 						<>
 							{' '}
 							{lastReplyComment?.commentID === parentComment.commentID && (
-								<div className="-left-[0.3rem]  bg-slate-200 -translate-x-full w-20 top-0  h-[80%] absolute  "></div>
+								<div className="-left-[0.3rem]  bg-white -translate-x-full w-20 top-0  h-[80%] absolute  "></div>
 							)}
-							<div className="flex justify-end -left-[0.3rem] rounded-bl-3xl border-l border-b border-solid border-slate-400  w-10 -translate-x-full -translate-y-full top-8  h-20 absolute  "></div>
+							<div className="flex justify-end -left-[0.3rem] rounded-bl-3xl border-l-2 border-b-2 border-solid border-slate-400  w-10 -translate-x-full -translate-y-full top-8  h-20 absolute  "></div>
 						</>
 					)}
 					<div className="relative h-full ">
@@ -97,10 +97,12 @@ function Comment({
 							} `}
 						>
 							<Box
-								custom={`min-h-[4rem] flex flex-col relative overflow-visible group`}
+								custom={`min-h-[4rem] rounded-[1.6rem] bg-[#F0F2F5] flex flex-col relative overflow-visible group`}
 							>
-								<span className="text-xl">{userComment.firstName}</span>
-								<span>{parentComment.commentText}</span>
+								<span className="text-2xl text-black font-medium ">
+									{userComment.firstName + ' ' + userComment.lastName}
+								</span>
+								<span className="font-thin">{parentComment.commentText}</span>
 								<span className="w-96 h-full top-0 absolute right-0 translate-x-full"></span>
 								<div
 									className="absolute -right-12 w-10 h-10 hidden rounded-[50%] cursor-pointer  top-1/2 -translate-y-1/2 group-hover:flex hover:bg-slate-300 items-center justify-center"
@@ -126,10 +128,10 @@ function Comment({
 						</div>
 						{!isShowReplyComments && replyComments.length > 0 ? (
 							<div>
-								<div className="flex justify-end left-[4.2rem] rounded-bl-3xl border-l border-b border-solid border-slate-400  w-10 -translate-x-full  top-16  h-[calc(100%_-_5rem)] absolute  "></div>
+								<div className="flex justify-end left-[4.2rem] rounded-bl-3xl border-l-2 border-b-2 border-solid border-slate-400  w-10 -translate-x-full  top-16  h-[calc(100%_-_5rem)] absolute  "></div>
 								<span
 									className="cursor-pointer text-xl"
-									onClick={handleClickReply}
+									onClick={() => setIsShowReplyComments(true)}
 								>
 									<i className="fas fa-reply rotate-180 mx-2"></i>
 									Reply

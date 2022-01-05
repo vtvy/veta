@@ -42,11 +42,13 @@ function CommentForm({ onSubmit, initialValue, type }) {
 	return (
 		<>
 			<div className="flex w-full items-center">
-				<Avatar avatar={userAvatar} size="w-14 h-14" />
+				<div className="mr-4">
+					<Avatar avatar={userAvatar} size="w-14 h-14" />
+				</div>
 				<form className="w-full" onSubmit={handleSubmit(onSubmitForm)}>
-					<Box custom="w-full ml-4 py-3 flex items-center relative">
+					<Box custom="w-full py-3 flex items-center relative bg-[#f0f2f5] rounded-[2rem] ">
 						<input
-							className="w-full outline-none"
+							className="w-full outline-none bg-[#f0f2f5]"
 							type="text"
 							placeholder="write an answer..."
 							{...register('commentText')}

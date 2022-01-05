@@ -26,7 +26,7 @@ router.post('/create', verifyToken, async (req, res) => {
 			const newPost = new Post({
 				postText: post.postText,
 				postImage: filePath,
-				user: post.userID,
+				userID: post.userID,
 			});
 
 			await newPost.save();
@@ -49,7 +49,7 @@ router.post('/create', verifyToken, async (req, res) => {
 //Get all post of an user
 router.get('/', verifyToken, async (req, res) => {
 	const { userID } = req.body;
-	const listOfPost = await Post.find({ user: userID });
+	const listOfPost = await Post.find({ userID: userID });
 	res.json({ success: true, message: 'This is list of post', listOfPost });
 });
 
@@ -57,7 +57,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 	const postID = req.params.id;
 
 	const { userID } = req.body;
-	const aPost = await Post.findOne({ user: userID, postID });
+	const aPost = await Post.findOne({ userID: userID, postID });
 	res.json({ success: true, message: 'This is list of post', aPost });
 });
 
@@ -65,7 +65,7 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 	const postID = req.params.id;
 	const { userID, postText, isImageChange } = req.body;
 
-	const updatePost = await Post.findOne({ _id: postID, user: userID });
+	const updatePost = await Post.findOne({ _id: postID, userID: userID });
 
 	if (!updatePost) {
 		res.json({
@@ -98,11 +98,10 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 		const newPost = {
 			postText,
 			postImage: imgName,
-			user: userID,
+			userID: userID,
 		};
-
 		const updatedPost = await Post.findOneAndUpdate(
-			{ _id: postID, user: userID },
+			{ _id: postID, userID: userID },
 			newPost,
 			{ new: true }
 		);
@@ -128,7 +127,7 @@ router.delete('/delete/:id', verifyToken, async (req, res) => {
 	try {
 		const deletePost = await Post.findOneAndDelete({
 			_id: postID,
-			user: userID,
+			userID: userID,
 		});
 
 		if (deletePost.postImage !== '') {

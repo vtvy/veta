@@ -1,47 +1,35 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import postApi from '../../../api/postApi';
+import { ModalContext } from '../../../App';
 import Avatar from '../../../components/Avatar';
 import Box from '../../../components/Box';
-import Modal from '../../../components/Modal';
+import useClickOutside from '../../../Hooks/useClickOutside';
 import getDifferenceTime from '../../../myFunction/getDifferenceTime';
-import { deletePost, updatePost } from '../postSlice';
+import { deletePost } from '../postSlice';
+import CloudImg from './CloudImg';
 import PostComments from './PostComments';
-import PostForm from './PostForm';
 import PostMenu from './PostMenu';
-import CloudImg from './CloundImg';
 
 function PostCard({ post }) {
 	const user = useSelector((state) => state.user.current);
-	const [isOpenPostMenu, setIsOpenPostMenu] = useState(false);
 	const [isEditPost, setIsEditPost] = useState(false);
 	const [isShowComment, setIsShowComment] = useState(false);
-	const email = useSelector((state) => state.user.current.email);
-	const dispatch = useDispatch();
-	//edit post
-	const handleEditPost = async (data) => {
-		console.log(post.postText);
-		const isImageChange = !(data.get('postImage') === post.postImage);
-		console.log(isImageChange);
+	const [refInside, isInside, setIsInside] = useClickOutside(false);
 
-		if (!isImageChange && data.get('postText') === post.postText) {
-			setIsEditPost(false);
-		} else {
-			try {
-				data.append('email', email);
-				data.append('isImageChange', isImageChange);
-				const res = await postApi.updatePostById(post._id, data);
-				if (res.data.success) {
-					const updatedPost = res.data.updatedPost;
-					const action = updatePost(updatedPost);
-					dispatch(action);
-					setIsEditPost(false);
-				}
-			} catch (error) {
-				alert(error);
-			}
-		}
-	};
+	const setModal = useContext(ModalContext);
+	useEffect(() => {
+		setModal({
+			isOpen: isEditPost,
+			type: 'post',
+			setIsOpen: setIsEditPost,
+			content: {
+				type: 'edit',
+				initialValue: post,
+			},
+		});
+	}, [isEditPost]);
+	const dispatch = useDispatch();
 	//delete post
 	const handleDeletePost = async () => {
 		try {
@@ -59,8 +47,8 @@ function PostCard({ post }) {
 	const { differenceNumber, timeUnit } = getDifferenceTime(post.updatedAt);
 	return (
 		<>
-			<Box height="min-h-[25rem] w-full" bg="bg-slate-200 shadow-lg" p="p-6">
-				<div className="flex flex-1 mb-6">
+			<Box height="w-full" bg="bg-white shadow-lg" p="p-6">
+				<div className="flex flex-1 mb-6 items-center">
 					<div className="flex flex-1">
 						<Avatar avatar={user.avatar} />
 						<div className="flex flex-col ml-4">
@@ -71,11 +59,14 @@ function PostCard({ post }) {
 						</div>
 					</div>
 					<div
+						ref={refInside}
 						className="justify-self-end relative cursor-pointer"
-						onClick={() => setIsOpenPostMenu(!isOpenPostMenu)}
+						onClick={() => setIsInside(!isInside)}
 					>
-						<Box>...</Box>
-						{isOpenPostMenu && (
+						<div className="] p-2  transition-all hover:bg-slate-200 flex justify-center items-center rounded-full">
+							<i className="fa fa-ellipsis-h"></i>
+						</div>
+						{isInside && (
 							<PostMenu
 								setIsEditPost={setIsEditPost}
 								onDelete={handleDeletePost}
@@ -83,48 +74,43 @@ function PostCard({ post }) {
 						)}
 					</div>
 				</div>
-				<Box width="w-full" height="min-h-[10rem]" custom="p-0 ">
-					<div className="p-8">{post.postText}</div>
+				<Box width="w-full" custom="p-0 bg-indigo-600">
+					{post.postText && <div className="p-8">{post.postText}</div>}
 					{post.postImage && (
-						<div className="w-full max-h-[36rem] rounded-[2rem] overflow-hidden bg-indigo-300">
+						<div className="w-full max-h-[36rem] overflow-hidden bg-indigo-300">
 							<CloudImg publicId={post.postImage} />
 						</div>
 					)}
 				</Box>
 
-				<div className="flex justify-between mx-4">
-					<span>
-						<span className="text-indigo-600 font-semibold">2</span> Likes
+				<div className="flex justify-between mb-[0.2rem]">
+					<span className="text-slate-600">
+						<span className="text-indigo-600">2</span> Likes
 					</span>
 					<span
 						onClick={() => setIsShowComment(!isShowComment)}
-						className="hover:underline cursor-pointer"
+						className="hover:underline decoration-[0.5px] cursor-pointer text-slate-600"
 					>
-						<span className="text-indigo-600 font-semibold">2</span> Comments
+						<span className="text-indigo-600 ">2</span> Comments
 					</span>
 				</div>
-				<div className="flex flex-1 justify-between pt-4 my-4 border-t border-solid">
-					<div className="cursor-pointer flex-1 text-center rounded-lg hover:bg-slate-400">
+				<div className="flex flex-1 justify-between pt-2  border-t border-solid border-slate-300">
+					<div className="cursor-pointer flex-1 text-center rounded-lg p-2 hover:bg-slate-200">
 						<i className="fas fa-thumbs-up text-blue-700"></i> Like
 					</div>
 					<div
-						className="cursor-pointer flex-1 text-center rounded-lg hover:bg-slate-400"
+						className="cursor-pointer flex-1 text-center rounded-lg hover:bg-slate-200 p-2"
 						onClick={() => setIsShowComment(!isShowComment)}
 					>
-						<i className="far fa-comment-alt "></i> Comment
+						<i className="far fa-comment-alt  "></i> Comment
 					</div>
 				</div>
 				{isShowComment && (
-					<div className="border-t border-solid pt-4">
+					<div className="border-t w-full border-solid border-slate-300 pt-4 mt-2">
 						<PostComments postId={post._id} />
 					</div>
 				)}
 			</Box>
-			{isEditPost && (
-				<Modal setIsOpen={setIsEditPost}>
-					<PostForm onSubmit={handleEditPost} initialData={post} />
-				</Modal>
-			)}
 		</>
 	);
 }

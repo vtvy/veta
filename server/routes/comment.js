@@ -7,7 +7,7 @@ const Comment = require('../models/Comment');
 
 router.post('/create', verifyToken, async (req, res) => {
 	const cmt = req.body;
-	if (cmt.commentImage === undefined || cmt.commentText !== '') {
+	if (cmt.commentImage === undefined || cmt.postText !== '') {
 		try {
 			var filePath = '';
 			if (req.files?.commentImage) {
@@ -23,11 +23,10 @@ router.post('/create', verifyToken, async (req, res) => {
 
 			//Create new comment
 			const newCmt = new Comment({
-				commentText: cmt.commentText,
+				postComment: cmt.commentText,
 				commentImage: filePath,
 				userID: cmt.userID,
 				postID: cmt.postID,
-				replyOf: cmt.replyOf,
 			});
 			await newCmt.save();
 			return res.json({
@@ -49,18 +48,22 @@ router.post('/create', verifyToken, async (req, res) => {
 //Get all comment of a post
 router.get('/', verifyToken, async (req, res) => {
 	const { postID } = req.body;
-	const listOfPost = await Comment.find({ post: postID });
-	res.json({ success: true, message: 'This is list of post', listOfComment });
+	const listOfPost = await Comment.find({ postID: postID });
+	res.json({
+		success: true,
+		message: 'This is list of comment',
+		listOfComment,
+	});
 });
 
 router.put('/update/:id', verifyToken, async (req, res) => {
 	const commentID = req.params.id;
 	const { userID, commentText, isImageChange, postID } = req.body;
 
-	const updateComment = await Post.findOne({
+	const updateComment = await Comment.findOne({
 		_id: commentID,
-		user: userID,
-		post: postID,
+		userID: userID,
+		postID: postID,
 	});
 
 	if (!updateComment) {
@@ -90,22 +93,23 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 			);
 		}
 
-		//Update a post
+		//Update a comment
 		const newComment = {
 			commentText,
 			postImage: imgName,
-			user: userID,
+			userID: userID,
+			postID: postID,
 		};
 
 		const updatedComment = await Comment.findOneAndUpdate(
-			{ _id: commentID, user: userID, post: postID },
+			{ _id: commentID, userID: userID, postID: postID },
 			newComment,
 			{ new: true }
 		);
 
 		return res.json({
 			success: true,
-			message: 'Update a status successfully',
+			message: 'Update a comment successfully',
 			updatedComment,
 		});
 	} catch (error) {
@@ -122,17 +126,17 @@ router.delete('/delete/:id', verifyToken, async (req, res) => {
 
 	const { userID, postID } = req.body;
 	try {
-		const deleteComment = await Post.findOneAndDelete({
+		const deleteComment = await Comment.findOneAndDelete({
 			_id: commentID,
-			user: userID,
-			post: postID,
+			userID: userID,
+			postID: postID,
 		});
 
 		if (deleteComment.commentImage !== '') {
 			await cloudinary.uploader.destroy(
 				deleteComment.postImage,
 				(err, result) => {
-					console.log('delete image from cloud successful');
+					console.log('Delete image from cloud successful');
 				}
 			);
 		}

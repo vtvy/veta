@@ -3,68 +3,68 @@ import axiosClient from '../../../api/axiosClient';
 import commentApi from '../../../api/commentApi';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
-// const commentsFake = [
-// 	{
-// 		commentID: 'c1',
-// 		postID: '61c7ea4e5ffb63ecc3441aba',
-// 		userID: 'u1',
-// 		replyOf: '',
-// 		commentText: 'alabatrap1u3uo41 ',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// 	{
-// 		commentID: 'c2',
-// 		postID: '61c7ea4e5ffb63ecc3441aba',
-// 		userID: 'u2',
-// 		replyOf: 'c1',
-// 		commentText: 'alabatrap',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// 	{
-// 		commentID: 'c3',
-// 		postID: '61c7ea4e5ffb63ecc3441aba ',
-// 		userID: 'u3',
-// 		replyOf: '',
-// 		commentText: 'alabatrap',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// 	{
-// 		commentID: 'c4',
-// 		postID: '61c7ea4e5ffb63ecc3441aba',
-// 		userID: '1',
-// 		replyOf: 'c3',
-// 		commentText: 'alabatrap  as d fas df as df as fd a ',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// 	{
-// 		commentID: 'c5',
-// 		postID: '61c7ea4e5ffb63ecc3441aba',
-// 		userID: '22',
-// 		replyOf: 'c3',
-// 		commentText: 'alabatrap',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// 	{
-// 		commentID: 'c6',
-// 		postID: '61c7ea4e5ffb63ecc3441aba',
-// 		userID: '22',
-// 		replyOf: '',
-// 		commentText: 'alabatrap',
-// 		commentImagePath: '',
-// 		isEdit: false,
-// 		CreatedAt: new Date(),
-// 	},
-// ];
+const commentsFake = [
+	{
+		commentID: 'c1',
+		postID: '61c7ea4e5ffb63ecc3441aba',
+		userID: 'u1',
+		replyOf: '',
+		commentText: 'alabatrap1u3uo41 ',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+	{
+		commentID: 'c2',
+		postID: '61c7ea4e5ffb63ecc3441aba',
+		userID: 'u2',
+		replyOf: 'c1',
+		commentText: 'alabatrap',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+	{
+		commentID: 'c3',
+		postID: '61c7ea4e5ffb63ecc3441aba ',
+		userID: 'u3',
+		replyOf: '',
+		commentText: 'alabatrap',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+	{
+		commentID: 'c4',
+		postID: '61c7ea4e5ffb63ecc3441aba',
+		userID: '1',
+		replyOf: 'c3',
+		commentText: 'alabatrap  as d fas df as df as fd a ',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+	{
+		commentID: 'c5',
+		postID: '61c7ea4e5ffb63ecc3441aba',
+		userID: '22',
+		replyOf: 'c3',
+		commentText: 'alabatrap',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+	{
+		commentID: 'c6',
+		postID: '61c7ea4e5ffb63ecc3441aba',
+		userID: '22',
+		replyOf: '',
+		commentText: 'alabatrap',
+		commentImagePath: '',
+		isEdit: false,
+		CreatedAt: new Date(),
+	},
+];
 
 function PostComments({ postId }) {
 	const [replyOf, setReplyOf] = useState('');
@@ -135,9 +135,10 @@ function PostComments({ postId }) {
 	useEffect(() => {
 		const getPostComments = async () => {
 			try {
+				console.log(postId);
 				const res = await commentApi.getPostComments(postId);
 				console.log(res);
-				// setComments(commentsFake);
+				setComments(commentsFake);
 			} catch (error) {
 				console.log(error);
 			}
@@ -151,7 +152,7 @@ function PostComments({ postId }) {
 	};
 
 	return (
-		<div className=" space-y-10">
+		<div className="space-y-10">
 			{rootComments.map((rootComment) => {
 				const replyComments = getReplyComments(rootComment.commentID);
 				return (
@@ -165,7 +166,7 @@ function PostComments({ postId }) {
 							onEditComment={handleEditComment}
 							lastReplyComment={replyComments[replyComments.length - 1]}
 						/>
-						<div className="ml-20 mr-5">
+						<div className="ml-20">
 							{rootComment.commentID === replyOf && (
 								<CommentForm
 									onSubmit={handleCreateComment}

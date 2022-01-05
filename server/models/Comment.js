@@ -6,14 +6,13 @@ const CommentSchema = new Schema(
 	{
 		commentText: String,
 		commentImage: String,
-		replyOf: String,
 		userID: {
 			type: Schema.Types.ObjectId,
 			ref: 'user',
 		},
 		postID: {
 			type: Schema.Types.ObjectId,
-			ref: 'user',
+			ref: 'post',
 		},
 	},
 	{ timestamps: true }

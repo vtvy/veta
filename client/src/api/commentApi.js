@@ -21,8 +21,9 @@ const commentApi = {
 	async getPostComments(postId) {
 		const url = `/comment`;
 		const res = await axiosClient.get(url, postId, {
-			header: { accessToken },
+			headers: { accessToken },
 		});
+
 		return res;
 	},
 	async getCommentById(id) {

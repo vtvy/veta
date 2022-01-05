@@ -53,7 +53,7 @@ function RegisterForm({ onSubmit }) {
 
 	return (
 		<form
-			className={` w-xl h-full flex flex-col  relative bg-white transition-all duration-[0.25s] max-w-xl w-full  self-start shadow rounded-[2rem] p-10 space-y-6 `}
+			className={` w-xl flex flex-col relative bg-white  max-w-xl w-full  self-start  p-y-10 space-y-6 `}
 			encType="multipart/form-data"
 			onSubmit={handleSubmit(onSubmitHandler)}
 		>
