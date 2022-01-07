@@ -1,25 +1,40 @@
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 cloudinary.config({
-	cloud_name: process.env.CLOUD_NAME,
-	api_key: process.env.CLOUD_KEY,
-	api_secret: process.env.CLOUD_SECRET,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET,
 });
 
-const upload = async (path, folder, isRemoveTemp = true) => {
-	var imagePath = '';
-	await cloudinary.uploader.upload(path, { folder }, (error, result) => {
-		imagePath = result.public_id;
-	});
+const deleteTmp = async (files) => {
+  Object.keys(files).map((key) => {
+    fs.unlinkSync(files[key].tempFilePath);
+  });
+};
 
-	if (isRemoveTemp) fs.unlinkSync(path);
-
-	return imagePath;
+const upload = async (path, folder) => {
+  var imagePath = "";
+  await cloudinary.uploader.upload(path, { folder }, (error, result) => {
+    imagePath = result.public_id;
+  });
+  return imagePath;
 };
 
 const destroy = async (path) => {
-	await cloudinary.uploader.destroy(path);
+  await cloudinary.uploader.destroy(path);
 };
 
-module.exports = { upload, destroy };
+const destroyDirectory = async (path) => {
+  await cloudinary.api.delete_resources_by_prefix(
+    path,
+    function (error, result) {
+      console.log(result, error);
+    }
+  );
+  await cloudinary.api.delete_folder(path, function (error, result) {
+    console.log(result, error);
+  });
+};
+
+module.exports = { upload, destroy, destroyDirectory, deleteTmp };
