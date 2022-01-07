@@ -4,7 +4,6 @@ import Box from '../../../components/Box';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import Button from '../../../components/Button';
-import ErrorMessage from './ErrorMessage';
 import InputField from '../../../components/InputFile';
 
 const schema = yup.object().shape({
@@ -25,13 +24,13 @@ function OtpForm({ onSubmit, resendOtp }) {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<Box rounded="rounded-[2rem]" width="w-[30rem]">
+			<Box width="w-[30rem]">
 				<div className=" flex flex-col gap-6">
 					<div className="flex flex-col">
-						<div className="flex justify-end cursor-pointer">
+						<div className="flex justify-end cursor-pointer ">
 							<i className="fas fa-times-circle text-4xl close-position"></i>
 						</div>
-						<span className="text-xl text-center block mt-4 mb-8">
+						<span className="text-xl text-center block mt-4 ">
 							You will get OTP code in your Email
 						</span>
 						<InputField
@@ -48,7 +47,7 @@ function OtpForm({ onSubmit, resendOtp }) {
 							Verify
 						</Button>
 
-						<span className="text-xl text-center block  my-12 mt-4 ">
+						<span className="text-xl text-center block my-8 ">
 							Did't receive the OTP code?&nbsp;
 							<span
 								className="text-indigo-600 cursor-pointer "

@@ -13,7 +13,7 @@ function Box({
 }) {
 	return (
 		<div
-			className={`${custom} ${rounded || 'rounded-[2rem]'} overflow-hidden ${
+			className={`${custom} ${rounded || 'rounded-lg'} overflow-hidden ${
 				bg || 'bg-white shadow'
 			} ${
 				p || 'p-4'

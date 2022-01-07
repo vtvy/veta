@@ -24,7 +24,7 @@ function LoginForm({ onSubmit }) {
 
 	return (
 		<form
-			className="max-w-xl w-full mx-auto bg-white shadow-xl rounded-[2rem] p-10 space-y-6"
+			className="max-w-xl w-full mx-auto bg-white rounded-lg  space-y-8"
 			onSubmit={handleSubmit(onSubmitForm)}
 		>
 			{/* email */}
@@ -50,15 +50,17 @@ function LoginForm({ onSubmit }) {
 			<div className="flex justify-between text-base">
 				<div className="flex items-center space-x-2">
 					<input
-						className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+						className="h-6 w-6 border text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
 						type="checkbox"
 						name="remember"
 						id="remember"
 					/>
-					<label htmlFor="remember">Remember me</label>
+					<label htmlFor="remember" className="text-2xl">
+						Remember me
+					</label>
 				</div>
 				<div>
-					<a href="http://" className="text-indigo-600">
+					<a href="http://" className="text-2xl text-indigo-600">
 						Forgot your Password?
 					</a>
 				</div>

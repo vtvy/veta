@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import React, { Component } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 
 const PublicRoutes = ({ isLogged }) => {
-  return isLogged ? <Navigate to="/" /> : <Outlet />;
+	return isLogged ? <Navigate to="/" /> : <Outlet />;
 };
 export default PublicRoutes;

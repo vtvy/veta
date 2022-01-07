@@ -5,14 +5,11 @@ import StorageKeys from '../../constants/storageKeys';
 export const register = createAsyncThunk('auth/register', async (payload) => {
 	try {
 		const res = await userApi.register(payload);
-		console.log(res);
 		if (res.data.success) {
-			console.log(res.data);
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
 			const user = resUser.data.user;
-			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
-			return { ...user, fullName: `${user.firstName} ${user.lastName}` };
+			return user;
 		} else {
 			alert(res.data.message);
 			return {};
@@ -25,12 +22,10 @@ export const register = createAsyncThunk('auth/register', async (payload) => {
 export const login = createAsyncThunk('auth/login', async (payload) => {
 	try {
 		const res = await userApi.login(payload);
-
 		if (res.data.success) {
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
 			const user = resUser.data.user;
-			localStorage.setItem(StorageKeys.user, JSON.stringify(user));
 			return user;
 		} else {
 			alert(res.data.message);
@@ -46,40 +41,30 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState: {
 		current: JSON.parse(localStorage.getItem(StorageKeys.user)) || {},
-		settings: {},
+		isLoggedIn: localStorage.getItem(StorageKeys.accessToken) ? true : false,
 	},
 	reducers: {
-		getUser(state, action) {
+		setUser(state, action) {
 			state.current = action.payload;
 		},
-		logout(state) {
-			console.log(5);
+		logOut(state) {
 			state.current = {};
+			state.isLoggedIn = false;
 			localStorage.removeItem(StorageKeys.accessToken);
-			localStorage.removeItem(StorageKeys.user);
 		},
 	},
 	extraReducers: {
 		[register.fulfilled]: (state, action) => {
 			state.current = action.payload;
+			state.isLoggedIn = true;
 		},
 		[login.fulfilled]: (state, action) => {
 			state.current = action.payload;
+			state.isLoggedIn = true;
 		},
 	},
 });
 
 const { actions, reducer } = userSlice;
-export const { logout, getUser } = actions;
+export const { logOut, setUser } = actions;
 export default reducer;
-
-// const responseUser = await userApi.getUser();
-// const user = { ...responseUser.data[0] };
-// const responseProfile = await userApi.getProfile({ user: user.id });
-// const profile = { ...responseProfile.data };
-// const data = {
-// 	...user,
-// 	...profile,
-// };
-// localStorage.setItem(StorageKeys.user, JSON.stringify(data));
-// return data;

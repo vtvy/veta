@@ -3,20 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import postApi from '../../../../api/postApi';
 import Modal from '../../../../components/Modal';
 import PostForm from '../../components/PostForm';
-import { addNewPost } from '../../postSlice';
+import { addNewPost, updatePost } from '../../postSlice';
 
-function AddEditPost({ setIsAddEditPost }) {
+function AddEditPost({ setIsAddEditPost, content }) {
 	const dispatch = useDispatch();
 	const [isUploading, setIsUploading] = useState(false);
-	const initialData = { id: '', postId: '', postImage: '' };
-	const userEmail = useSelector((state) => state.user.current.email);
+	const user = useSelector((state) => state.user.current);
+
 	const handleCreateNewPost = async (data) => {
-		data.append('email', userEmail);
+		data.append('email', user.email);
 		console.log(data.get('postImage'));
 		setIsUploading(true);
 		try {
 			const res = await postApi.create(data);
-			console.log(res);
 			if (res.data.success) {
 				setIsUploading(false);
 				console.log(res.data.newPost);
@@ -30,13 +29,47 @@ function AddEditPost({ setIsAddEditPost }) {
 		}
 	};
 
+	const handleEditPost = async (data) => {
+		setIsUploading(true);
+		const isImageChange = !(
+			data.get('postImage') === content.initialValue.postImage
+		);
+		if (
+			!isImageChange &&
+			data.get('postText') === content.initialValue.postText
+		) {
+			setIsAddEditPost(false);
+		} else {
+			try {
+				data.append('email', user.email);
+				data.append('isImageChange', isImageChange);
+				const res = await postApi.updatePostById(
+					content.initialValue._id,
+					data
+				);
+				if (res.data.success) {
+					console.log(res.data.updatedPost);
+					const updatedPost = res.data.updatedPost;
+					const action = updatePost(updatedPost);
+					dispatch(action);
+					setIsAddEditPost(false);
+				}
+			} catch (error) {
+				alert(error);
+			}
+		}
+	};
+
 	return (
 		<>
 			<Modal setIsOpen={setIsAddEditPost}>
 				<PostForm
-					onSubmit={handleCreateNewPost}
+					onSubmit={
+						content.type === 'create' ? handleCreateNewPost : handleEditPost
+					}
 					isUploading={isUploading}
-					initialData={initialData}
+					initialData={content.initialValue}
+					type={content.type}
 				/>
 			</Modal>
 		</>

@@ -5,12 +5,13 @@ import Box from '../../../components/Box';
 import Button from '../../../components/Button';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../Auth/components/ErrorMessage';
-import convertNameImgToPath from '../../../myFunction/convertNameImgToPath';
-import CloudImg from './CloundImg';
+import CloudImg from './CloudImg';
+import CardSection from '../../../components/CardSection';
 
-function PostForm({ onSubmit, initialData, isUploading }) {
-	const userAvatar = useSelector((state) => state.user.current.avatar);
+function PostForm({ onSubmit, initialData, isUploading, type }) {
+	const user = useSelector((state) => state.user.current);
 	const [imageSelected, setImageSelected] = useState(initialData.postImage);
+	const [isValid, setIsValid] = useState(false);
 	const [reviewImage, setReviewImage] = useState({});
 	useEffect(() => {
 		setReviewImage({
@@ -22,7 +23,8 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid },
+		watch,
+		formState: { errors },
 	} = useForm({ mode: 'onChange' });
 	const onSubmitForm = (data) => {
 		const formData = new FormData();
@@ -31,8 +33,16 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 				formData.append(key, imageSelected);
 			} else formData.append(key, data[key]);
 		});
-		onSubmit(formData);
+		if (!isUploading && isValid) {
+			onSubmit(formData);
+		}
 	};
+
+	useEffect(() => {
+		if (watch('postText') || imageSelected) {
+			setIsValid(true);
+		} else setIsValid(false);
+	}, [watch('postText'), imageSelected]);
 
 	const handleAddImage = (e) => {
 		const reviewImage = URL.createObjectURL(e.target.files[0]);
@@ -40,24 +50,27 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 		setImageSelected(e.target.files[0]);
 	};
 	const handleUndoAddImage = () => {
-		setReviewImage();
+		setReviewImage({ type: 'local', path: '' });
 		setImageSelected();
 	};
 
 	return (
-		<div>
-			<Box width="w-[50rem]" bg="bg-slate-200">
-				<div className="flex items-center">
-					<Avatar avatar={userAvatar} />
-					<div className="flex-1 text-center p-2 bg-slate-400 rounded-[2rem] mx-8">
-						Make A Great Post{' '}
+		<div className="w-[50rem] relative">
+			<CardSection title={`${type} Post`}>
+				<div className="flex items-start">
+					<Avatar avatar={user.avatar} />
+					<div className="ml-4">
+						<span className="font-bold">
+							{user.firstName + ' ' + user.lastName}
+						</span>
 					</div>
-					<div className="w-16 h-16 rounded-[50%] bg-slate-400 flex items-center justify-center cursor-pointer close-position">
-						<i className="fas fa-times close-position"></i>
+
+					<div className="absolute right-4 top-4 w-16 h-16 rounded-[50%] bg-slate-200 flex items-center justify-center cursor-pointer close-position hover:bg-slate-300">
+						<i className="fas fa-times close-position font-thin text-3xl"></i>
 					</div>
 				</div>
 				<form
-					className="w-full h-full p-4 mt-4 flex flex-col"
+					className="w-full h-full mt-4 flex flex-col "
 					onSubmit={handleSubmit(onSubmitForm)}
 				>
 					<div className="flex flex-col mt-4 mb-4">
@@ -65,15 +78,15 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 							htmlFor="postContent"
 							className="text-indigo-600 font-semibold"
 						>
-							<i className="fas fa-scroll mx-4"></i>Post
+							<i className="fas fa-scroll"></i>Post
 						</label>
 						<textarea
-							className="border rounded-[2rem] bg-white px-6 py-4 h-full focus:outline-indigo-600"
+							className="border rounded-lg bg-white px-6 py-4 h-full focus:outline-indigo-600"
 							type="text"
-							rows="7"
+							rows="3"
 							name="content"
 							defaultValue={initialData.postText || ''}
-							{...register('postText', { required: true })}
+							{...register('postText')}
 							placeholder="Post content"
 						/>
 						{errors.content ? (
@@ -83,8 +96,8 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 						)}
 					</div>
 					{reviewImage.path && (
-						<Box custom="relative">
-							<div className="max-h-96 overflow-y-scroll relative">
+						<Box custom="relative bg-slate-200 border border-solid border-slate-300 shadow-md">
+							<div className="max-h-96 rounded-lg overflow-y-scroll relative">
 								{reviewImage.type === 'cloud' ? (
 									<CloudImg publicId={reviewImage.path} />
 								) : (
@@ -95,13 +108,12 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 									/>
 								)}
 							</div>
-							<button
-								type="button"
-								className="absolute right-12 top-6 w-10 h-10 bg-indigo-600 rounded-[50%] text-white "
+							<div
+								className="absolute right-12 top-6 w-10 h-10 bg-indigo-600 rounded-full flex justify-center items-center text-white"
 								onClick={handleUndoAddImage}
 							>
-								<i className="fas fa-times"></i>
-							</button>
+								<i className="fas fa-times font-thin"></i>
+							</div>
 						</Box>
 					)}
 					<div className="flex flex-col mb-8">
@@ -109,7 +121,7 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 							<i className="fas fa-paperclip"></i>Attach
 						</label>
 
-						<div className="border flex justify-around rounded-[2rem] bg-white px-6 py-4 h-full focus:outline-indigo-600">
+						<div className="border border-solid border-slate-300 shadow-md flex justify-around rounded-lg bg-white px-6 py-4 h-full focus:outline-indigo-600">
 							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
 								<i className="far fa-grin-beam text-5xl"></i>
 							</div>
@@ -143,12 +155,10 @@ function PostForm({ onSubmit, initialData, isUploading }) {
 						h="h-[4rem] "
 						isValid={!isUploading && isValid}
 					>
-						{initialData.postText || initialData.postImage
-							? 'Edit Post'
-							: 'Create Post'}
+						<span className="capitalize">{type} Post</span>
 					</Button>
 				</form>
-			</Box>
+			</CardSection>
 		</div>
 	);
 }

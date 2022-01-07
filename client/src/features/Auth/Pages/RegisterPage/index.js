@@ -58,38 +58,37 @@ function RegisterPage() {
 		}
 	};
 	return (
-		<div className="flex flex-col justify-center items-center ">
-			<div className=" text-center h-2/6 flex flex-col justify-center">
-				<h4 className="text-5xl font-bold text-slate-700">New Veta Account</h4>
-				<span className="text-center my-4">
-					Already an account?{' '}
-					<Link to="/login" className="text-indigo-800  cursor-pointer ">
+		<div className="md:max-w-[50rem] w-full bg-white h-screen flex justify-center  flex-col pt-12 lg:px-28 md:items-start items-center px-4 space-y-12 ">
+			<div>
+				<h1 className="my-2 text-7xl font-bold text-slate-700">Register</h1>
+			</div>
+
+			<div className="w-full flex justify-center items-center">
+				{' '}
+				{isCorrectOtp && (
+					<RegisterForm onSubmit={handleRegister} email={email} />
+				)}
+				{!isCorrectOtp && <EmailForm onSubmit={handleSendOtp} />}
+				{isOpenOtpForm && (
+					<Modal setIsOpen={setIsOpenOtpForm}>
+						<OtpForm onSubmit={handleSubmitOtp} resendOtp={resendOtp} />
+					</Modal>
+				)}
+			</div>
+
+			<div className="py-4 border-t text-center md:text-left w-full border-solid border-gray-300">
+				<p className="my-4 text-2xl text-gray-600">
+					Already an account?
+					<Link
+						to="/login"
+						className="font-medium ml-2 text-2xl text-indigo-600 underline"
+					>
 						Login
 					</Link>
-				</span>
+				</p>
 			</div>
-			{isCorrectOtp && <RegisterForm onSubmit={handleRegister} email={email} />}
-			{!isCorrectOtp && <EmailForm onSubmit={handleSendOtp} />}
-			{isOpenOtpForm && (
-				<Modal setIsOpen={setIsOpenOtpForm}>
-					<OtpForm onSubmit={handleSubmitOtp} resendOtp={resendOtp} />
-				</Modal>
-			)}
 		</div>
 	);
 }
 
 export default RegisterPage;
-// try {
-// 	const res = await axios.post(
-// 		`${process.env.REACT_APP_API_URL}/auth/register`,
-// 		data,
-// 		{
-// 			headers: { 'Content-Type': 'multipart/form-data' },
-// 		}
-// 	);
-// 	console.log(res.data);
-// 	localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
-// } catch (error) {
-// 	console.log(error);
-// }

@@ -18,27 +18,25 @@ function EmailForm({ onSubmit }) {
 		resolver: yupResolver(schema),
 	});
 	return (
-		<div>
-			<form
-				className={`w-full h-full flex flex-col p-8 space-y-8 pb-10 relative rounded-[2rem] bg-white transition-all duration-[0.25s]
+		<form
+			className={`w-full h-full self-center flex flex-col space-y-12 pb-10 relative bg-white 
 				`}
-				onSubmit={handleSubmit(onSubmit)}
-			>
-				<InputField
-					label=" Email Address "
-					type="email"
-					name="email"
-					register={register}
-					error={errors.email}
-				/>
+			onSubmit={handleSubmit(onSubmit)}
+		>
+			<InputField
+				label=" Email Address "
+				type="email"
+				name="email"
+				register={register}
+				error={errors.email}
+			/>
 
-				<div>
-					<Button w={'w-full'} p={'p-4'} isValid={isValid} type="submit">
-						Get OTP
-					</Button>
-				</div>
-			</form>
-		</div>
+			<div>
+				<Button w={'w-full'} p={'p-4'} isValid={isValid} type="submit">
+					Get OTP
+				</Button>
+			</div>
+		</form>
 	);
 }
 

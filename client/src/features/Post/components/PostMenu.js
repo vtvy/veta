@@ -1,5 +1,4 @@
 import React from 'react';
-import Box from '../../../components/Box';
 
 function PostMenu({ setIsEditPost, onDelete }) {
 	const handleClickDelete = () => {
@@ -10,27 +9,24 @@ function PostMenu({ setIsEditPost, onDelete }) {
 	};
 
 	return (
-		<div className="absolute right-2">
-			<Box
-				width="w-56"
-				custom="py-6"
-				bg="bg-slate-300 border-slate-400 border-solid border shadow-2xl"
-			>
-				<ul>
-					<li
-						className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-y border-solid border-slate-200"
-						onClick={() => setIsEditPost(true)}
-					>
-						<i className="fas fa-edit w-10"></i> Edit
-					</li>
-					<li
-						className="hover:bg-slate-200 hover: py-2 -mx-4 px-4 flex items-center border-b border-solid border-slate-200"
-						onClick={handleClickDelete}
-					>
-						<i className="fas fa-trash-alt w-10"></i>Delete
-					</li>
-				</ul>
-			</Box>
+		<div className="absolute p-2 right-2 rounded-lg w-64 bg-slate-200 shadow-xl">
+			<ul className="flex flex-col w-full space-y-2">
+				<li
+					className="flex w-full items-center"
+					onClick={() => setIsEditPost(true)}
+				>
+					<div className="flex items-center text-3xl w-full p-2 cursor-pointer rounded-lg hover:bg-blue-200">
+						<i className="fas fa-edit w-12"></i>
+						<span className=" text-2xl">Edit</span>
+					</div>
+				</li>
+				<li className="flex w-full items-center" onClick={handleClickDelete}>
+					<div className="flex items-center text-3xl w-full p-2 cursor-pointer rounded-lg hover:bg-blue-200">
+						<i className="fas fa-trash-alt w-12"></i>
+						<span className=" text-2xl">Delete</span>
+					</div>
+				</li>
+			</ul>
 		</div>
 	);
 }
