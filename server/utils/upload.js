@@ -26,15 +26,8 @@ const destroy = async (path) => {
 };
 
 const destroyDirectory = async (path) => {
-  await cloudinary.api.delete_resources_by_prefix(
-    path,
-    function (error, result) {
-      console.log(result, error);
-    }
-  );
-  await cloudinary.api.delete_folder(path, function (error, result) {
-    console.log(result, error);
-  });
+  await cloudinary.api.delete_resources_by_prefix(path);
+  await cloudinary.api.delete_folder(path);
 };
 
 module.exports = { upload, destroy, destroyDirectory, deleteTmp };

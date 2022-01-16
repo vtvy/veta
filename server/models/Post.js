@@ -10,15 +10,20 @@ const PostSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "user",
     },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "comment",
+      },
+    ],
   },
   { timestamps: true }
 );
-
-PostSchema.virtual("commentCount", {
-  ref: "comment",
-  localField: "_id",
-  foreignField: "post",
-  count: true, // Set `count: true` on the virtual
-});
 
 module.exports = mongoose.model("post", PostSchema);

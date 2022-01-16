@@ -18,6 +18,12 @@ const ChildCommentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "comment",
     },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   { timestamps: true }
 );
