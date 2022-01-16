@@ -24,7 +24,7 @@ function Navbar({ setToggleMenu, toggleMenu }) {
 					}}
 					className="cursor-pointer text-4xl"
 				>
-					<i className="fas fa-bars"></i>
+					<i className="fas fa-bars dark:text-textColorDark"></i>
 				</span>
 				<Link
 					to="/"
@@ -35,8 +35,8 @@ function Navbar({ setToggleMenu, toggleMenu }) {
 			</div>
 			<SearchBar />
 			<div className="flex gap-x-4 items-center">
-				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] hover:bg-[#d9dbdd] cursor-pointer">
-					<i className="fas fa-comment-dots"></i>
+				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] dark:bg-indigo-850 hover:bg-[#d9dbdd] cursor-pointer">
+					<i className="fas fa-comment-dots dark:text-white"></i>
 				</div>
 				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] hover:bg-[#d9dbdd] cursor-pointer">
 					<i className="fas fa-bell text-3xl"></i>

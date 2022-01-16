@@ -30,7 +30,7 @@ function Post() {
 							onClick={() => setIsAddPost(true)}
 						>
 							<Avatar avatar={user.avatar} />
-							<Box custom="bg-[#f0f2f5] rounded-[2rem] py-2 px-4 w-full mx-4 flex-1 hover:bg-[#E4E6E9]">
+							<Box custom="bg-[#f0f2f5] rounded-[2rem] py-2 px-4 w-full mx-4 flex-1 hover:bg-[#E4E6E9] dark:bg-[#BEDAFD] dark:text-slate-700">
 								<span className="opacity-80">
 									Hello {user.firstName}!!! what's new?
 								</span>

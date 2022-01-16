@@ -51,7 +51,7 @@ function Comment({
 		onEditComment(data);
 	};
 	return (
-		<div>
+		<div className="dark:text-textColorDark">
 			{idEditComment === parentComment._id ? (
 				<>
 					<CommentForm
@@ -97,7 +97,7 @@ function Comment({
 							} `}
 						>
 							<Box
-								custom={`min-h-[4rem] rounded-[1.6rem] bg-[#F0F2F5] flex flex-col relative overflow-visible group`}
+								custom={`min-h-[4rem] rounded-[1.6rem] bg-[#F0F2F5] flex flex-col relative overflow-visible group dark:bg-[#BEDAFD]`}
 							>
 								<span className="text-2xl text-black font-medium ">
 									{userComment.firstName + ' ' + userComment.lastName}

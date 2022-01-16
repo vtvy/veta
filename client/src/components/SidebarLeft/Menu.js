@@ -3,19 +3,23 @@ import { NavLink } from 'react-router-dom';
 import menuItem from '../../constants/menuItem';
 
 function Menu({ toggleMenu }) {
+	const stylesItem =
+		'h-20 flex items-center rounded-lg border-l-4 transition-all duration-[0.15s] border-solid border-transparent -mx-4 text-3xl group ';
 	return (
 		<div className="w-full flex flex-col">
 			{menuItem.map((item) => (
 				<NavLink
 					to={item.path}
 					key={item.title}
-					className={`h-20 flex items-center rounded-lg border-l-4 transition-all duration-[0.15s] border-solid text-gray-600 border-transparent -mx-4 text-3xl  hover:text-indigo-600 group`}
+					className={({ isActive }) =>
+						isActive
+							? `bg-[#bfdbfe] ${stylesItem} border-indigo-600 text-indigo-600`
+							: ` ${stylesItem}dark:text-white opacity-60 hover:opacity-100`
+					}
 				>
 					<i className={`${item.icon} w-10 mx-5`} />{' '}
 					<span
-						className={`font-normal group-hover:text-indigo-600 ${
-							toggleMenu ? 'inline-block' : 'hidden'
-						}`}
+						className={`font-normal ${toggleMenu ? 'inline-block' : 'hidden'}`}
 					>
 						{item.title}
 					</span>

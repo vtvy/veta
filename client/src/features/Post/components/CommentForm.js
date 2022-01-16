@@ -46,9 +46,9 @@ function CommentForm({ onSubmit, initialValue, type }) {
 					<Avatar avatar={userAvatar} size="w-14 h-14" />
 				</div>
 				<form className="w-full" onSubmit={handleSubmit(onSubmitForm)}>
-					<Box custom="w-full py-3 flex items-center relative bg-[#f0f2f5] rounded-[2rem] ">
+					<Box custom="w-full py-3 flex items-center relative bg-[#f0f2f5] rounded-[2rem] dark:bg-[#BEDAFD] ">
 						<input
-							className="w-full outline-none bg-[#f0f2f5]"
+							className="w-full outline-none bg-[#f0f2f5] dark:bg-[#BEDAFD]"
 							type="text"
 							placeholder="write an answer..."
 							{...register('commentText')}

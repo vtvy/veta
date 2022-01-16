@@ -9,10 +9,10 @@ export const register = createAsyncThunk('auth/register', async (payload) => {
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
 			const user = resUser.data.user;
-			return user;
+			return { user, isLoggedIn: true };
 		} else {
 			alert(res.data.message);
-			return {};
+			return { user: null, isLoggedIn: false };
 		}
 	} catch (err) {
 		console.log(err);
@@ -26,10 +26,10 @@ export const login = createAsyncThunk('auth/login', async (payload) => {
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
 			const user = resUser.data.user;
-			return user;
+			return { user, isLoggedIn: true };
 		} else {
 			alert(res.data.message);
-			return {};
+			return { user: null, isLoggedIn: false };
 		}
 	} catch (error) {
 		console.log(error);
@@ -51,16 +51,18 @@ const userSlice = createSlice({
 			state.current = {};
 			state.isLoggedIn = false;
 			localStorage.removeItem(StorageKeys.accessToken);
+			localStorage.removeItem('theme');
+			const root = window.document.documentElement;
+			if (root.classList.contains('dark')) root.classList.remove('dark');
 		},
 	},
 	extraReducers: {
 		[register.fulfilled]: (state, action) => {
-			state.current = action.payload;
-			state.isLoggedIn = true;
+			state.current = action.payload.user;
 		},
 		[login.fulfilled]: (state, action) => {
-			state.current = action.payload;
-			state.isLoggedIn = true;
+			state.current = action.payload.user;
+			state.isLoggedIn = action.payload.isLoggedIn;
 		},
 	},
 });

@@ -39,8 +39,6 @@ function RegisterForm({ onSubmit }) {
 		resolver: yupResolver(schema),
 	});
 	const onSubmitHandler = async (data) => {
-		console.log(file);
-		console.log(isDefault);
 		const formData = new FormData();
 		formData.append('firstName', data.firstName);
 		formData.append('lastName', data.lastName);

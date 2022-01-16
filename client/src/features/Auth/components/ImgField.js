@@ -19,18 +19,16 @@ function ImgField({ setIsDefault, setFile }) {
 		const file = convertPathToNameAvatar(avatarSelected);
 		setFile(file);
 		setIsDefault(true);
-		console.log(file);
-		console.log(2);
 	}, []);
 
 	const handleOnclick = (e, avatar) => {
 		if (e.target.classList.contains('default-avatar')) {
+			const file = convertPathToNameAvatar(avatar);
 			setAvatarSelected(avatar);
-			console.log(1);
+			setFile(file);
 		} else {
 			const file = e.target.files[0];
 			setAvatarSelected(URL.createObjectURL(file));
-			console.log(file);
 			setIsDefault(false);
 			setFile(file);
 		}

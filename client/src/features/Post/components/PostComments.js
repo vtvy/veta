@@ -6,20 +6,19 @@ import CommentForm from './CommentForm';
 function PostComments({ postId }) {
 	const [replyOf, setReplyOf] = useState('');
 	const [replyUser, setReplyUser] = useState('');
-	const [comments, setComments] = useState([]);
+	const [listOfComment, setListOfComment] = useState([]);
+
 	const handleClickReply = (replyOf, replyUser) => {
 		setReplyOf(replyOf);
 		setReplyUser(replyUser);
 	};
+
 	const handleCreateComment = async (data) => {
 		try {
 			const res = await commentApi.create(data);
 			if (res.data.success) {
-				console.log(res);
 				const newComment = { ...res.data.newCmt, replyOf: '' };
-				const newComments = [...comments];
-				newComments.push(newComment);
-				setComments(newComments);
+				setListOfComment([...listOfComment, newComment]);
 			}
 		} catch (error) {}
 	};
@@ -28,9 +27,10 @@ function PostComments({ postId }) {
 		console.log(commentId);
 		try {
 			const res = await commentApi.deleteCommentById(commentId);
-			console.log(res);
 			if (res.data.success) {
-				setComments(comments.filter((comment) => comment._id !== commentId));
+				setListOfComment(
+					listOfComment.filter((comment) => comment._id !== commentId)
+				);
 			}
 		} catch (error) {
 			console.log(error);
@@ -44,34 +44,35 @@ function PostComments({ postId }) {
 				data
 			);
 			if (res.data.success) {
-				setComments(
-					comments.map((comment) => {
-						if (comment._id === data.get('commentID'))
-							return res.data.updatedComment;
-						return comment;
-					})
-				);
+				const newListOfComment = listOfComment.map((comment) => {
+					if (comment._id === data.get('commentID'))
+						return res.data.updatedComment;
+					return comment;
+				});
+				setListOfComment(newListOfComment);
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
-		const getPostComments = async () => {
+		const getListOfComment = async () => {
 			try {
 				const res = await commentApi.getPostComments(postId);
 				if (res.data.success) {
-					setComments([...res.data.listOfComment]);
+					setListOfComment([...res.data.listOfComment]);
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		getPostComments();
+		getListOfComment();
 	}, []);
 
 	return (
 		<div className="space-y-10">
-			{comments.map((rootComment, key) => {
+			{listOfComment.map((rootComment, key) => {
 				const replyComments = [];
 				return (
 					<div key={key}>

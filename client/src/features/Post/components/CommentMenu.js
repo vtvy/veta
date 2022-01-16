@@ -10,10 +10,20 @@ function CommentMenu({ setIdEditComment, commentId, onDelete }) {
 	};
 	return (
 		<div className="w-40 h-20 absolute -bottom-4 translate-y-full">
-			<Box width="w-full">
+			<Box width="w-full p-2 border border-solid border-indigo-800">
 				<ul>
-					<li onClick={() => setIdEditComment(commentId)}>Edit</li>
-					<li onClick={handleClickDelete}>Delete</li>
+					<li
+						className="rounded-lg px-2 hover:bg-blue-200 dark:hover:text-slate-800"
+						onClick={() => setIdEditComment(commentId)}
+					>
+						Edit
+					</li>
+					<li
+						onClick={handleClickDelete}
+						className="rounded-lg px-2 hover:bg-blue-200 dark:hover:text-slate-800"
+					>
+						Delete
+					</li>
 				</ul>
 			</Box>
 		</div>
