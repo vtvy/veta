@@ -3,6 +3,8 @@ const router = express.Router();
 const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
 const verifyToken = require("../middleware/auth");
 const Comment = require("../models/Comment");
+const ChildComment = require("../models/ChildComment");
+const Post = require("../models/Post");
 var success = false;
 
 router.post("/create", verifyToken, async (req, res) => {
@@ -21,13 +23,22 @@ router.post("/create", verifyToken, async (req, res) => {
       });
       await newComment.save();
 
+      //Update a post
+      await Post.findOneAndUpdate(
+        { _id: postID },
+        {
+          $push: { comments: newComment._id },
+        },
+        { new: true }
+      );
+
       if (file) {
         commentImage = await upload(
           file.tempFilePath,
           `veta/posts/${postID}/${newComment._id}`
         );
 
-        //Update a post
+        //Update a comment
         newComment = await Comment.findOneAndUpdate(
           { _id: newComment._id },
           { commentImage },
@@ -42,6 +53,7 @@ router.post("/create", verifyToken, async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+
   if (req.files) await deleteTmp(req.files);
   if (success) {
     return res.json({
@@ -60,22 +72,12 @@ router.post("/create", verifyToken, async (req, res) => {
 //Get all comment of a post
 router.get("/:id", verifyToken, async (req, res) => {
   const postID = req.params.id;
-  const listOfComment = await Comment.aggregate([
-    {
-      $lookup: {
-        from: "childComments",
-        localField: "_id",
-        foreignField: "comment",
-        as: "comment_count",
-      },
-    },
-    { $addFields: { comment_count: { $size: "$comment_count" } } },
-  ]);
-  // .populate({
-  //   path: "user",
-  //   select: "avatar name",
-  // })
-  // .populate({ path: "childCommentCount" })
+  const listOfComment = await Comment.find({
+    post: postID,
+  }).populate({
+    path: "user",
+    select: "avatar name",
+  });
   res.json({
     success: true,
     message: "This is list of comment",
@@ -89,8 +91,8 @@ router.put("/update/:id", verifyToken, async (req, res) => {
 
   const updateComment = await Comment.findOne({
     _id: commentID,
-    userID: userID,
-    postID: postID,
+    user: userID,
+    post: postID,
   });
 
   if (!updateComment) {
@@ -114,12 +116,12 @@ router.put("/update/:id", verifyToken, async (req, res) => {
     const newComment = {
       commentText,
       postImage: imgName,
-      userID: userID,
-      postID: postID,
+      user: userID,
+      post: postID,
     };
 
     const updatedComment = await Comment.findOneAndUpdate(
-      { _id: commentID, userID: userID, postID: postID },
+      { _id: commentID, user: userID, post: postID },
       newComment,
       { new: true }
     );
@@ -145,20 +147,34 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
   try {
     const deleteComment = await Comment.findOneAndDelete({
       _id: commentID,
-      userID: userID,
+      user: userID,
     });
 
-    if (deleteComment?.commentImage !== "") {
-      await destroy(deleteComment.commentImage);
-    }
+    await Post.findOneAndUpdate(
+      { _id: deleteComment.post },
+      {
+        $pull: { comments: deleteComment._id },
+      }
+    );
 
-    return res.json({
+    await ChildComment.deleteMany({ comment: deleteComment._id });
+
+    await destroyDirectory(
+      `veta/posts/${deleteComment.post}/${deleteComment._id}`
+    );
+
+    success = true;
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (success) {
+    res.json({
       success: true,
       message: "Delete a comment successfully",
     });
-  } catch (error) {
-    console.log(error);
-    return res.json({
+  } else {
+    res.json({
       success: false,
       message: "Delete fail",
     });

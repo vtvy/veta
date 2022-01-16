@@ -24,10 +24,18 @@ router.post("/create", verifyToken, async (req, res) => {
       });
       await newChildComment.save();
 
+      await Comment.findOneAndUpdate(
+        { _id: newChildComment.comment },
+        {
+          $push: { childComments: newChildComment._id },
+        },
+        { new: true }
+      );
+
       if (file) {
         commentImage = await upload(
           file.tempFilePath,
-          `veta/posts/${comment.post}/${newChildComment._id}`
+          `veta/posts/${comment.post}/${newChildComment.comment}`
         );
 
         //Update a child comment
@@ -158,6 +166,13 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
       _id: childCommentID,
       user: userID,
     });
+
+    await Comment.findOneAndUpdate(
+      { _id: deleteComment.comment },
+      {
+        $pull: { childComments: deleteComment._id },
+      }
+    );
 
     if (deleteComment?.commentImage !== "") {
       await destroy(deleteComment.commentImage);

@@ -25,6 +25,22 @@ const UserSchema = new Schema(
       type: Date,
       required: true,
     },
+    story: {
+      type: String,
+      maxlength: 200,
+    },
+    followers: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   { timestamps: true }
 );

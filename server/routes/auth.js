@@ -148,7 +148,7 @@ router.get("/", verifyToken, async (req, res) => {
   const { userID } = req.body;
   const existUser = await User.findOne({ _id: userID });
   let user = {
-    _id: userID,
+    _id: existUser._id,
     avatar: existUser.avatar,
     name: existUser.name,
     email: existUser.email,
