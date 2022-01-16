@@ -8,9 +8,40 @@ import useClickOutside from '../../../Hooks/useClickOutside';
 import getDifferenceTime from '../../../myFunction/getDifferenceTime';
 import { deletePost } from '../postSlice';
 import CloudImg from './CloudImg';
+import ListOfComments from './ListOfComment';
 import PostComments from './PostComments';
 import PostMenu from './PostMenu';
 import ReactionBar from './ReactionBar';
+const myListOfComments = [
+	{
+		_id: 1,
+		commentText: '2',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '3',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '4',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '5',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+];
 
 function PostCard({ post }) {
 	const user = useSelector((state) => state.user.current);
@@ -59,7 +90,7 @@ function PostCard({ post }) {
 						<Avatar avatar={user.avatar} />
 						<div className="flex flex-col ml-4">
 							<span className="font-semibold dark:text-slate-300">
-								{user.firstName + ' ' + user.lastName}
+								{user.name}
 							</span>
 							<span className="text-xl text-slate-700 dark:text-textColorDark">{`${differenceNumber} ${timeUnit} ago`}</span>
 						</div>
@@ -130,7 +161,7 @@ function PostCard({ post }) {
 				</div>
 				{isShowComment && (
 					<div className="border-t w-full border-solid border-slate-300 pt-4 mt-2">
-						<PostComments postId={post._id} />
+						<ListOfComments type="comment" id={post._id} />
 					</div>
 				)}
 			</Box>

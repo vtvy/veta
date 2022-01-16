@@ -40,8 +40,7 @@ function RegisterForm({ onSubmit }) {
 	});
 	const onSubmitHandler = async (data) => {
 		const formData = new FormData();
-		formData.append('firstName', data.firstName);
-		formData.append('lastName', data.lastName);
+		formData.append('name', data.firstName + ' ' + data.lastName);
 		formData.append('password', data.password);
 		formData.append('isDefault', isDefault);
 		formData.append('birthDate', data.birthDate);

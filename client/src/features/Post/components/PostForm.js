@@ -61,9 +61,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 				<div className="flex items-start">
 					<Avatar avatar={user.avatar} />
 					<div className="ml-4">
-						<span className="font-bold">
-							{user.firstName + ' ' + user.lastName}
-						</span>
+						<span className="font-bold">{user.name}</span>
 					</div>
 
 					<div className="absolute right-4 top-4 w-16 h-16 rounded-[50%] bg-slate-200 flex items-center justify-center cursor-pointer close-position hover:bg-slate-300">

@@ -36,9 +36,7 @@ function NavbarMenu({ user, onLogOut }) {
 							<Avatar avatar={user.avatar} />
 						</div>
 						<div className="flex flex-col ml-4 ">
-							<span className=" text-2xl font-semibold">
-								{user.firstName + ' ' + user.lastName}
-							</span>
+							<span className=" text-2xl font-semibold">{user.name}</span>
 							<span className="text-lg">{user.email}</span>
 						</div>
 					</div>

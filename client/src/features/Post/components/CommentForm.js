@@ -19,7 +19,6 @@ function CommentForm({ onSubmit, initialValue, type }) {
 		} else {
 			const formData = new FormData();
 			formData.append('commentID', initialValue._id);
-			formData.append('replyOf', initialValue.replyOf);
 			formData.append('postID', initialValue.postID);
 			formData.append('userID', userID);
 			formData.append('commentText', data.commentText);

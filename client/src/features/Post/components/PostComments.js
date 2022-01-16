@@ -2,11 +2,41 @@ import React, { useEffect, useState } from 'react';
 import commentApi from '../../../api/commentApi';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+const myListOfComments = [
+	{
+		_id: 1,
+		commentText: '2',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '3',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '4',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+	{
+		_id: 1,
+		commentText: '5',
+		commentImage: '',
+		user: { _id: '1', name: 'Nhat', avatar: '' },
+		post: { _id: '' },
+	},
+];
 
 function PostComments({ postId }) {
 	const [replyOf, setReplyOf] = useState('');
 	const [replyUser, setReplyUser] = useState('');
-	const [listOfComment, setListOfComment] = useState([]);
+	const [listOfComments, setListOfComments] = useState([]);
 
 	const handleClickReply = (replyOf, replyUser) => {
 		setReplyOf(replyOf);
@@ -17,8 +47,7 @@ function PostComments({ postId }) {
 		try {
 			const res = await commentApi.create(data);
 			if (res.data.success) {
-				const newComment = { ...res.data.newCmt, replyOf: '' };
-				setListOfComment([...listOfComment, newComment]);
+				setListOfComments([...listOfComments, res.data.newCmt]);
 			}
 		} catch (error) {}
 	};
@@ -28,8 +57,8 @@ function PostComments({ postId }) {
 		try {
 			const res = await commentApi.deleteCommentById(commentId);
 			if (res.data.success) {
-				setListOfComment(
-					listOfComment.filter((comment) => comment._id !== commentId)
+				setListOfComments(
+					listOfComments.filter((comment) => comment._id !== commentId)
 				);
 			}
 		} catch (error) {
@@ -44,12 +73,12 @@ function PostComments({ postId }) {
 				data
 			);
 			if (res.data.success) {
-				const newListOfComment = listOfComment.map((comment) => {
+				const newListOfComments = listOfComments.map((comment) => {
 					if (comment._id === data.get('commentID'))
 						return res.data.updatedComment;
 					return comment;
 				});
-				setListOfComment(newListOfComment);
+				setListOfComments(newListOfComments);
 			}
 		} catch (error) {
 			console.log(error);
@@ -57,36 +86,33 @@ function PostComments({ postId }) {
 	};
 
 	useEffect(() => {
-		const getListOfComment = async () => {
+		const getListOfComments = async () => {
 			try {
 				const res = await commentApi.getPostComments(postId);
 				if (res.data.success) {
-					setListOfComment([...res.data.listOfComment]);
-				}
+					// setListOfComments([...res.data.listOfComments]);
+					setListOfComments(myListOfComments);
+				} else console.log(1);
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		getListOfComment();
+		getListOfComments();
 	}, []);
 
 	return (
 		<div className="space-y-10">
-			{listOfComment.map((rootComment, key) => {
-				const replyComments = [];
+			{listOfComments.map((comment, key) => {
 				return (
 					<div key={key}>
 						<Comment
-							rootComment={rootComment}
-							parentComment={rootComment}
-							replyComments={replyComments}
+							comment={comment}
 							onClickReply={handleClickReply}
 							onDeleteComment={handleDeleteComment}
 							onEditComment={handleEditComment}
-							lastReplyComment={replyComments[replyComments.length - 1]}
 						/>
 						<div className="ml-20">
-							{rootComment.commentID === replyOf && (
+							{comment.commentID === replyOf && (
 								<CommentForm
 									onSubmit={handleCreateComment}
 									initialValue={{
@@ -106,7 +132,6 @@ function PostComments({ postId }) {
 					onSubmit={handleCreateComment}
 					type={`creatNewComment${postId}`}
 					initialValue={{
-						replyOf: '',
 						postID: postId,
 						commentText: '',
 					}}
