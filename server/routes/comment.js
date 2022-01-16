@@ -3,10 +3,9 @@ const router = express.Router();
 const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
 const verifyToken = require("../middleware/auth");
 const Comment = require("../models/Comment");
-const fs = require("fs");
+var success = false;
 
 router.post("/create", verifyToken, async (req, res) => {
-  var success = false;
   const { commentText, userID, postID } = req.body;
   const file = req.files?.commentImage;
 
@@ -17,8 +16,8 @@ router.post("/create", verifyToken, async (req, res) => {
       var newComment = new Comment({
         commentText,
         commentImage,
-        userID,
-        postID,
+        user: userID,
+        post: postID,
       });
       await newComment.save();
 
@@ -33,7 +32,10 @@ router.post("/create", verifyToken, async (req, res) => {
           { _id: newComment._id },
           { commentImage },
           { new: true }
-        );
+        ).populate({
+          path: "user",
+          select: "avatar name",
+        });
       }
       success = true;
     }
@@ -43,25 +45,37 @@ router.post("/create", verifyToken, async (req, res) => {
   if (req.files) await deleteTmp(req.files);
   if (success) {
     return res.json({
-      success: true,
+      success,
       message: "Comment successfully",
       newComment,
     });
   } else {
     return res.json({
-      success: false,
+      success,
       message: "Cannot comment at this post",
-      error,
     });
   }
 });
 
 //Get all comment of a post
 router.get("/:id", verifyToken, async (req, res) => {
-  console.log(req.body);
   const postID = req.params.id;
-  console.log(postID);
-  const listOfComment = await Comment.find({ postID: postID });
+  const listOfComment = await Comment.aggregate([
+    {
+      $lookup: {
+        from: "childComments",
+        localField: "_id",
+        foreignField: "comment",
+        as: "comment_count",
+      },
+    },
+    { $addFields: { comment_count: { $size: "$comment_count" } } },
+  ]);
+  // .populate({
+  //   path: "user",
+  //   select: "avatar name",
+  // })
+  // .populate({ path: "childCommentCount" })
   res.json({
     success: true,
     message: "This is list of comment",

@@ -7,12 +7,12 @@ const { upload, transporter, deleteTmp } = require("../utils");
 
 const otp = parseInt(Math.random() * 10000).toString();
 const saltRounds = 10;
+var success = false;
 
 const User = require("../models/User");
 
 //send otp
 router.post("/otp", async (req, res) => {
-  var success = false;
   const { email } = req.body;
   try {
     //Check for exists
@@ -37,12 +37,12 @@ router.post("/otp", async (req, res) => {
   }
   if (req.files) await deleteTmp(req.files);
   if (success) {
-    return res.json({
+    res.json({
       success,
       message: "OTP has been send",
     });
   } else {
-    return res.json({
+    res.json({
       success,
       message: "This email has been registered",
     });
@@ -55,23 +55,14 @@ router.post("/confirmOtp", async (req, res) => {
   if (inputOtp === otp) {
     res.json({ success: true, message: "OTP is correct" });
   } else {
-    res.json({ success: false, message: "OTP is incorrect" });
+    res.json({ success, message: "OTP is incorrect" });
   }
 });
 
 //Register an account
 router.post("/register", async (req, res) => {
-  var success = false;
-  const {
-    isDefault,
-    avatar,
-    userID,
-    password,
-    firstName,
-    lastName,
-    birthDate,
-    email,
-  } = req.body;
+  const { isDefault, avatar, password, firstName, lastName, birthDate, email } =
+    req.body;
   var avatarPath = "";
   if (isDefault === "true") {
     avatarPath = await upload(
@@ -90,8 +81,7 @@ router.post("/register", async (req, res) => {
       email,
       password: hash,
       avatar: avatarPath,
-      firstName,
-      lastName,
+      name: firstName + " " + lastName,
       birthDate,
     });
     await newUser.save();
@@ -106,6 +96,8 @@ router.post("/register", async (req, res) => {
   } catch (e) {
     console.log(e);
   }
+
+  if (req.files) await deleteTmp(req.files);
   if (success) {
     res.json({ success, message: "Register successfully", accessToken });
   } else {
@@ -115,47 +107,38 @@ router.post("/register", async (req, res) => {
 
 //Login
 router.post("/login", async (req, res) => {
-  var success = false;
   const { email, password } = req.body;
-
   try {
     //Check for exists
     const existUser = await User.findOne({ email });
 
-    if (!existUser) {
-      return res.json({
-        success: false,
-        message: "Invalid account",
-      });
-    } else {
+    if (existUser) {
       const match = bcrypt.compareSync(password, existUser.password);
-      if (!match) {
-        return res.json({
-          success: false,
-          message: "Invalid account",
-        });
-      } else {
+      if (match) {
         //Return token
-        const accessToken = jwt.sign(
+        var accessToken = jwt.sign(
           {
             userID: existUser._id,
           },
           process.env.ACCESS_TOKEN_CODE
         );
-
-        if (req.files) deleteTmp(req.files);
-        res.json({
-          success: true,
-          message: "Login successfully",
-          accessToken,
-        });
+        success = true;
       }
     }
   } catch (error) {
     console.log(error);
-    if (req.files) deleteTmp(req.files);
+  }
+
+  if (req.files) await deleteTmp(req.files);
+  if (success) {
     res.json({
-      succes: false,
+      success,
+      message: "Login successfully",
+      accessToken,
+    });
+  } else {
+    res.json({
+      success,
       message: "Invalid account",
     });
   }
@@ -165,10 +148,9 @@ router.get("/", verifyToken, async (req, res) => {
   const { userID } = req.body;
   const existUser = await User.findOne({ _id: userID });
   let user = {
-    userID,
+    _id: userID,
     avatar: existUser.avatar,
-    firstName: existUser.firstName,
-    lastName: existUser.lastName,
+    name: existUser.name,
     email: existUser.email,
   };
   res.json({ success: true, message: "Validate successfully", user });

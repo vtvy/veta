@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema(
+const ChildCommentSchema = new Schema(
   {
     commentText: String,
     commentImage: String,
@@ -14,8 +14,12 @@ const CommentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "post",
     },
+    comment: {
+      type: Schema.Types.ObjectId,
+      ref: "comment",
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("comment", CommentSchema);
+module.exports = mongoose.model("childComment", ChildCommentSchema);

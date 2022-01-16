@@ -5,16 +5,16 @@ const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
 const Post = require("../models/Post");
 const verifyToken = require("../middleware/auth");
 const fs = require("fs");
+var success = false;
 
 router.post("/create", verifyToken, async (req, res) => {
-  var success = true;
   const { userID, postText } = req.body;
   const file = req.files?.postImage;
   try {
     if (file || postText) {
       var postImage = "";
       //Create new post
-      var newPost = new Post({ postText, postImage, userID });
+      var newPost = new Post({ postText, postImage, user: userID });
       await newPost.save();
       if (file) {
         postImage = await upload(
@@ -29,24 +29,23 @@ router.post("/create", verifyToken, async (req, res) => {
           { new: true }
         );
       }
+      success = true;
     }
   } catch (error) {
-    success = false;
     console.log(error);
   }
 
   if (req.files) await deleteTmp(req.files);
   if (success) {
-    return res.json({
-      success: true,
+    res.json({
+      success,
       message: "Post a status successfully",
       newPost,
     });
   } else {
-    return res.json({
-      success: false,
+    res.json({
+      success,
       message: "Cannot create a post",
-      error,
     });
   }
 });
