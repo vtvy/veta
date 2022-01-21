@@ -46,9 +46,10 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 	}, [watch('postText'), imageSelected]);
 
 	const handleAddImage = (e) => {
-		const reviewImage = URL.createObjectURL(e.target.files[0]);
+		const image = e.target.files[0];
+		const reviewImage = URL.createObjectURL(image);
 		setReviewImage({ type: 'local', path: reviewImage });
-		setImageSelected(e.target.files[0]);
+		setImageSelected(image);
 	};
 	const handleUndoAddImage = () => {
 		setReviewImage({ type: 'local', path: '' });

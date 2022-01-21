@@ -43,7 +43,7 @@ function ImgField({ setIsDefault, setFile }) {
 					className="w-full h-full object-cover"
 				/>
 			</Box>
-			<div className="flex-1 flex flex-col justify-evenly ">
+			<div className="flex-1 flex flex-col justify-between ">
 				<input
 					type="file"
 					id="file"
@@ -51,13 +51,13 @@ function ImgField({ setIsDefault, setFile }) {
 					onChange={handleOnclick}
 				/>
 
-				<Button w="w-full" shadow="none">
+				<Button w="w-full" p="p-4" shadow="none">
 					<label htmlFor="file" className="block w-full cursor-pointer">
 						Upload
 					</label>
 				</Button>
 				<div className="text-center">Or</div>
-				<Button w="w-full" shadow="none">
+				<Button w="w-full" p="p-4" shadow="none">
 					<div
 						className="w-full cursor-pointer"
 						onClick={() => setIsOpenSelectAvt(true)}

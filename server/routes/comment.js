@@ -88,7 +88,6 @@ router.get('/:id', verifyToken, async (req, res) => {
 router.put('/update/:id', verifyToken, async (req, res) => {
 	const commentID = req.params.id;
 	const { userID, commentText, isImageChange, postID } = req.body;
-
 	const updateComment = await Comment.findOne({
 		_id: commentID,
 		user: userID,
@@ -109,13 +108,13 @@ router.put('/update/:id', verifyToken, async (req, res) => {
 			await destroy(imgName);
 		}
 		if (isImageChange === 'true' && file?.name !== undefined) {
-			imgName = upload(file.tempFilePath, 'veta/comments');
+			imgName = await upload(file.tempFilePath, 'veta/comments');
 		}
 
 		//Update a comment
 		const newComment = {
 			commentText,
-			postImage: imgName,
+			commentImage: imgName,
 			user: userID,
 			post: postID,
 		};

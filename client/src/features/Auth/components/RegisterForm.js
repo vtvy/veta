@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import ImgField from './ImgField';
-import ErrorMessage from './ErrorMessage';
-import InputField from '../../../components/InputFile';
 import Button from '../../../components/Button';
+import DatePicker from '../../../components/DatePicker';
+import InputField from '../../../components/InputFile';
+import ImgField from './ImgField';
 
 const schema = yup.object().shape({
 	firstName: yup.string().required('First Name is a required field'),
@@ -30,14 +30,21 @@ const schema = yup.object().shape({
 function RegisterForm({ onSubmit }) {
 	const [isDefault, setIsDefault] = useState(true);
 	const [file, setFile] = useState();
+	const [date, setDate] = useState();
+
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { errors, isValid },
 	} = useForm({
 		mode: 'onChange',
 		resolver: yupResolver(schema),
 	});
+	useEffect(() => {
+		setValue('birthDate', date);
+	}, [date]);
+
 	const onSubmitHandler = async (data) => {
 		const formData = new FormData();
 		formData.append('name', data.firstName + ' ' + data.lastName);
@@ -87,16 +94,9 @@ function RegisterForm({ onSubmit }) {
 				register={register}
 				error={errors.confirmPassword}
 			/>
-
-			<InputField
-				label=" Date of Birth"
-				type="date"
-				name="birthDate"
-				register={register}
-				error={errors.birthDate}
-			/>
+			<DatePicker setDate={setDate} />
 			<div>
-				<Button w={'w-full'} p={'p-4'} isValid={isValid} type="submit">
+				<Button w={'w-full mt-6'} p={'p-4'} isValid={isValid} type="submit">
 					Register
 				</Button>
 			</div>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import postApi from '../../../api/postApi';
 import { ModalContext } from '../../../App';
 import Avatar from '../../../components/Avatar';
@@ -8,48 +8,20 @@ import useClickOutside from '../../../Hooks/useClickOutside';
 import getDifferenceTime from '../../../myFunction/getDifferenceTime';
 import { deletePost } from '../postSlice';
 import CloudImg from './CloudImg';
+import Like from './Like';
 import ListOfComments from './ListOfComment';
-import PostComments from './PostComments';
 import PostMenu from './PostMenu';
-import ReactionBar from './ReactionBar';
-const myListOfComments = [
-	{
-		_id: 1,
-		commentText: '2',
-		commentImage: '',
-		user: { _id: '1', name: 'Nhat', avatar: '' },
-		post: { _id: '' },
-	},
-	{
-		_id: 1,
-		commentText: '3',
-		commentImage: '',
-		user: { _id: '1', name: 'Nhat', avatar: '' },
-		post: { _id: '' },
-	},
-	{
-		_id: 1,
-		commentText: '4',
-		commentImage: '',
-		user: { _id: '1', name: 'Nhat', avatar: '' },
-		post: { _id: '' },
-	},
-	{
-		_id: 1,
-		commentText: '5',
-		commentImage: '',
-		user: { _id: '1', name: 'Nhat', avatar: '' },
-		post: { _id: '' },
-	},
-];
 
 function PostCard({ post }) {
-	const user = useSelector((state) => state.user.current);
+	console.log(post);
 	const [isEditPost, setIsEditPost] = useState(false);
 	const [isShowComment, setIsShowComment] = useState(false);
 	const [refInside, isInside, setIsInside] = useClickOutside(false);
 	const [isShowReactionBar, setIsShowReactionBar] = useState(false);
-	const [likes, setLikes] = useState(2);
+	const [likes, setLikes] = useState(post.likes.length);
+	const [numberOfComments, setNumberOfComments] = useState(
+		post.comments.length
+	);
 
 	const setModal = useContext(ModalContext);
 	useEffect(() => {
@@ -87,10 +59,10 @@ function PostCard({ post }) {
 			<Box height="w-full" bg="bg-white shadow-lg" p="p-6">
 				<div className="flex flex-1 mb-6 items-center">
 					<div className="flex flex-1">
-						<Avatar avatar={user.avatar} />
+						<Avatar avatar={post.user.avatar} />
 						<div className="flex flex-col ml-4">
 							<span className="font-semibold dark:text-slate-300">
-								{user.name}
+								{post.user.name}
 							</span>
 							<span className="text-xl text-slate-700 dark:text-textColorDark">{`${differenceNumber} ${timeUnit} ago`}</span>
 						</div>
@@ -122,36 +94,21 @@ function PostCard({ post }) {
 
 				<div className="flex justify-between mb-[0.2rem]">
 					<span className="text-slate-600 dark:text-textColorDark">
-						<span className="text-indigo-600">{likes}</span> Likes
+						<span className="text-indigo-600">{likes} </span>
+						Likes
 					</span>
-					<span
-						onClick={() => setIsShowComment(!isShowComment)}
-						className="hover:underline decoration-[0.5px] cursor-pointer text-slate-600 dark:text-textColorDark"
-					>
-						<span className="text-indigo-600 ">2</span> Comments
-					</span>
+					{numberOfComments > 0 && (
+						<span
+							onClick={() => setIsShowComment(!isShowComment)}
+							className="hover:underline decoration-[0.5px] cursor-pointer text-slate-600 dark:text-textColorDark"
+						>
+							<span className="text-indigo-600 ">{numberOfComments}</span>
+							{numberOfComments > 1 ? '	Comments' : ' Comment'}
+						</span>
+					)}
 				</div>
 				<div className="flex flex-1 justify-between pt-2  border-t border-solid border-slate-300">
-					<div className="relative flex-1">
-						<div
-							className="cursor-pointer flex-1 text-center rounded-lg p-2 hover:bg-slate-200 dark:hover:bg-indigo-1050 relative dark:text-textColorDark"
-							onMouseEnter={handleHoverLike}
-							onMouseLeave={() => setIsShowReactionBar(false)}
-						>
-							<i className="fas fa-thumbs-up text-blue-700"></i> Like
-						</div>
-						{isShowReactionBar && (
-							<div
-								className="absolute top-0 -translate-y-full left-1/2 -translate-x-1/2 "
-								onClick={() => setIsShowReactionBar(false)}
-								onMouseEnter={() => setIsShowReactionBar(true)}
-								onMouseLeave={() => setIsShowReactionBar(false)}
-							>
-								<ReactionBar />
-							</div>
-						)}
-					</div>
-
+					<Like />
 					<div
 						className="cursor-pointer flex-1 text-center rounded-lg p-2 hover:bg-slate-200 dark:hover:bg-indigo-1050 relative dark:text-textColorDark"
 						onClick={() => setIsShowComment(!isShowComment)}
@@ -161,7 +118,11 @@ function PostCard({ post }) {
 				</div>
 				{isShowComment && (
 					<div className="border-t w-full border-solid border-slate-300 pt-4 mt-2">
-						<ListOfComments type="comment" id={post._id} />
+						<ListOfComments
+							type="comment"
+							postID={post._id}
+							setNumberOfComments={setNumberOfComments}
+						/>
 					</div>
 				)}
 			</Box>

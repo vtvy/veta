@@ -16,6 +16,7 @@ import Photo from './features/Photo';
 import AddEditPost from './features/Post/Pages/AddEditPost';
 import Profile from './features/Profile';
 import useDarkMode from './Hooks/useDarkMode';
+import Test from './test';
 import TestServer from './testServer';
 export const ModalContext = createContext();
 export const ThemeContext = createContext();
@@ -96,6 +97,7 @@ function App() {
 							<Route path="/profile/*" element={<Profile />} />
 							<Route path="/people" element={<Container type="people" />} />
 							<Route path="/setting" element={<Container type="setting" />} />
+							<Route path="/test" element={<Test />} />
 						</Route>
 					</Route>
 				</Routes>
