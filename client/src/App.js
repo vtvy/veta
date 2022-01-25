@@ -8,13 +8,21 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import PublicRoutes from './components/PublicRoutes';
 import SidebarLeft from './components/SidebarLeft';
 import SidebarRight from './components/SidebarRight';
+import Spinner from './components/Spinner';
 import Auth from './features/Auth';
 import { logOut, setUser } from './features/Auth/userSlice';
+import Home from './features/Home';
+import Photo from './features/Photo';
 import AddEditPost from './features/Post/Pages/AddEditPost';
+import Profile from './features/Profile';
+import useDarkMode from './Hooks/useDarkMode';
+import Test from './test';
 import TestServer from './testServer';
 export const ModalContext = createContext();
+export const ThemeContext = createContext();
 
 function App() {
+	const [isDarkMode, toggleDarkMode] = useDarkMode();
 	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 	const dispatch = useDispatch();
 
@@ -56,12 +64,13 @@ function App() {
 			window.addEventListener('resize', handleResizeWindow);
 		};
 	}, []);
-
 	return (
 		<ModalContext.Provider value={setModal}>
-			<div className="App flex flex-col min-h-screen h-full bg-slate-300">
+			<div className="App flex flex-col min-h-screen h-full bg-slate-300 dark:bg-indigo-1050 scrollbar">
 				{isLoggedIn && (
-					<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
+					<ThemeContext.Provider value={toggleDarkMode}>
+						<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
+					</ThemeContext.Provider>
 				)}
 				{isLoggedIn && <SidebarLeft toggleMenu={toggleMenu} />}
 				{isLoggedIn && <SidebarRight toggleMenu={toggleMenu} />}
@@ -81,12 +90,15 @@ function App() {
 					</Route>
 
 					<Route element={<ProtectedRoutes isLogged={isLoggedIn} />}>
-						<Route path="/server" element={<TestServer />} />
-						<Route path="/" element={<Container type="home" />} />
-						<Route path="/photo" element={<Container type="photo" />} />
-						<Route path="/profile" element={<Container type="profile" />} />
-						<Route path="/people" element={<Container type="people" />} />
-						<Route path="/setting" element={<Container type="setting" />} />
+						<Route path="/" element={<Container />}>
+							<Route path="/" element={<Home />} />
+							<Route path="/photo" element={<Photo />} />
+							<Route path="/server" element={<TestServer />} />
+							<Route path="/profile/*" element={<Profile />} />
+							<Route path="/people" element={<Container type="people" />} />
+							<Route path="/setting" element={<Container type="setting" />} />
+							<Route path="/test" element={<Test />} />
+						</Route>
 					</Route>
 				</Routes>
 			</div>

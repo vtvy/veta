@@ -17,7 +17,7 @@ function Box({
 				bg || 'bg-white shadow'
 			} ${
 				p || 'p-4'
-			} inline-block ${flex} ${flexCol} ${width} ${height} max-w-full `}
+			} inline-block ${flex} ${flexCol} ${width} ${height} max-w-full dark:bg-indigo-950 dark:text-textColorDark`}
 		>
 			{children}
 		</div>

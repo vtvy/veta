@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function Auth({ type }) {
-	const loginInUser = useSelector((state) => state.user.current);
-	const isLoggedIn = !!loginInUser.userID;
+	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
 	const navigate = useNavigate();
 
 	useEffect(() => {

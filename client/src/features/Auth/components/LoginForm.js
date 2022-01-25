@@ -12,7 +12,6 @@ function LoginForm({ onSubmit }) {
 	const {
 		register,
 		handleSubmit,
-
 		formState: { errors, isValid },
 	} = useForm({
 		mode: 'onChange',

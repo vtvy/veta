@@ -12,13 +12,11 @@ function AddEditPost({ setIsAddEditPost, content }) {
 
 	const handleCreateNewPost = async (data) => {
 		data.append('email', user.email);
-		console.log(data.get('postImage'));
 		setIsUploading(true);
 		try {
 			const res = await postApi.create(data);
 			if (res.data.success) {
 				setIsUploading(false);
-				console.log(res.data.newPost);
 				const newPost = res.data.newPost;
 				const action = addNewPost(newPost);
 				dispatch(action);
@@ -48,7 +46,6 @@ function AddEditPost({ setIsAddEditPost, content }) {
 					data
 				);
 				if (res.data.success) {
-					console.log(res.data.updatedPost);
 					const updatedPost = res.data.updatedPost;
 					const action = updatePost(updatedPost);
 					dispatch(action);

@@ -2,6 +2,15 @@ module.exports = {
 	content: ['./src/**/*.{js,jsx,ts,tsx}'],
 	theme: {
 		extend: {
+			colors: {
+				textColorDark: '#8c91b6',
+				indigo: {
+					850: '#465f8b',
+					950: '#1E2745',
+					1000: '#182039',
+					1050: '#171E37',
+				},
+			},
 			animation: {
 				scale: 'scale 2s linear infinite alternate-reverse',
 				wiggle: 'wiggle 1s ease-in-out infinite',
@@ -18,4 +27,5 @@ module.exports = {
 		},
 	},
 	plugins: [],
+	darkMode: 'class',
 };

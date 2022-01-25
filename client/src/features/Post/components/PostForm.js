@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../Auth/components/ErrorMessage';
 import CloudImg from './CloudImg';
 import CardSection from '../../../components/CardSection';
+import Loading from '../../../components/Loading';
 
 function PostForm({ onSubmit, initialData, isUploading, type }) {
 	const user = useSelector((state) => state.user.current);
@@ -45,9 +46,10 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 	}, [watch('postText'), imageSelected]);
 
 	const handleAddImage = (e) => {
-		const reviewImage = URL.createObjectURL(e.target.files[0]);
+		const image = e.target.files[0];
+		const reviewImage = URL.createObjectURL(image);
 		setReviewImage({ type: 'local', path: reviewImage });
-		setImageSelected(e.target.files[0]);
+		setImageSelected(image);
 	};
 	const handleUndoAddImage = () => {
 		setReviewImage({ type: 'local', path: '' });
@@ -60,9 +62,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 				<div className="flex items-start">
 					<Avatar avatar={user.avatar} />
 					<div className="ml-4">
-						<span className="font-bold">
-							{user.firstName + ' ' + user.lastName}
-						</span>
+						<span className="font-bold">{user.name}</span>
 					</div>
 
 					<div className="absolute right-4 top-4 w-16 h-16 rounded-[50%] bg-slate-200 flex items-center justify-center cursor-pointer close-position hover:bg-slate-300">
@@ -70,7 +70,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 					</div>
 				</div>
 				<form
-					className="w-full h-full mt-4 flex flex-col "
+					className="w-full h-full mt-4 flex flex-col pb-4 "
 					onSubmit={handleSubmit(onSubmitForm)}
 				>
 					<div className="flex flex-col mt-4 mb-4">
@@ -81,13 +81,13 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 							<i className="fas fa-scroll"></i>Post
 						</label>
 						<textarea
-							className="border rounded-lg bg-white px-6 py-4 h-full focus:outline-indigo-600"
+							className=" outline-none resize-none dark:border-indigo-950 rounded-lg bg-white dark:bg-indigo-950 px-6 py-4 h-full"
 							type="text"
 							rows="3"
 							name="content"
 							defaultValue={initialData.postText || ''}
 							{...register('postText')}
-							placeholder="Post content"
+							placeholder="Write something..."
 						/>
 						{errors.content ? (
 							<ErrorMessage message={'Content post is required field'} />
@@ -97,7 +97,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 					</div>
 					{reviewImage.path && (
 						<Box custom="relative bg-slate-200 border border-solid border-slate-300 shadow-md">
-							<div className="max-h-96 rounded-lg overflow-y-scroll relative">
+							<div className="max-h-96 rounded-lg overflow-y-scroll relative scrollbar">
 								{reviewImage.type === 'cloud' ? (
 									<CloudImg publicId={reviewImage.path} />
 								) : (
@@ -109,7 +109,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 								)}
 							</div>
 							<div
-								className="absolute right-12 top-6 w-10 h-10 bg-indigo-600 rounded-full flex justify-center items-center text-white"
+								className="absolute right-12 cursor-pointer top-6 w-10 h-10 bg-indigo-600 rounded-full flex justify-center items-center text-white"
 								onClick={handleUndoAddImage}
 							>
 								<i className="fas fa-times font-thin"></i>
@@ -121,20 +121,20 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 							<i className="fas fa-paperclip"></i>Attach
 						</label>
 
-						<div className="border border-solid border-slate-300 shadow-md flex justify-around rounded-lg bg-white px-6 py-4 h-full focus:outline-indigo-600">
-							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
+						<div className="border border-solid border-slate-300 dark:border-indigo-950 shadow-md flex justify-around rounded-lg bg-white px-6 py-4 h-full focus:outline-indigo-600 dark:bg-indigo-1050">
+							<div className="w-16 h-16 flex items-center bg-slate-200 dark:bg-indigo-850 dark:text-white justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
 								<i className="far fa-grin-beam text-5xl"></i>
 							</div>
 							<label htmlFor="file">
-								<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
+								<div className="w-16 h-16 flex items-center bg-slate-200 dark:bg-indigo-850 dark:text-white justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
 									<i className="fas fa-photo-video"></i>
 								</div>
 							</label>
-							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
+							<div className="w-16 h-16 flex items-center bg-slate-200 dark:bg-indigo-850 dark:text-white justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
 								<i className="fas fa-user-tag"></i>
 							</div>
 
-							<div className="w-16 h-16 flex items-center bg-slate-200 justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
+							<div className="w-16 h-16 flex items-center bg-slate-200 dark:bg-indigo-850 dark:text-white justify-center rounded-[50%] hover:bg-slate-400 cursor-pointer">
 								<i className="fas fa-ellipsis-h"></i>
 							</div>
 						</div>
@@ -159,6 +159,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 					</Button>
 				</form>
 			</CardSection>
+			{isUploading && <Loading />}
 		</div>
 	);
 }

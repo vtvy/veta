@@ -18,7 +18,7 @@ function RegisterPage() {
 		const url = '/auth/otp';
 		try {
 			const res = await axiosClient.post(url, data);
-			console.log(res);
+
 			if (res.data.success) {
 				setEmail(data.email);
 				setIsOpenOtpForm(true);
@@ -68,7 +68,9 @@ function RegisterPage() {
 				{isCorrectOtp && (
 					<RegisterForm onSubmit={handleRegister} email={email} />
 				)}
-				{!isCorrectOtp && <EmailForm onSubmit={handleSendOtp} />}
+				{!isCorrectOtp && (
+					<EmailForm onSubmit={handleSendOtp} isCorrectOtp={isCorrectOtp} />
+				)}
 				{isOpenOtpForm && (
 					<Modal setIsOpen={setIsOpenOtpForm}>
 						<OtpForm onSubmit={handleSubmitOtp} resendOtp={resendOtp} />

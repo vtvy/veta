@@ -27,7 +27,7 @@ const commentApi = {
 		return res;
 	},
 	async getCommentById(id) {
-		const url = `/comments/${id}`;
+		const url = `/comment/${id}`;
 
 		const res = await axiosClient.get(url, {
 			headers: { accessToken },
@@ -40,6 +40,7 @@ const commentApi = {
 		const res = await axiosClient.put(url, data, {
 			headers: { accessToken },
 		});
+
 		return res;
 	},
 
