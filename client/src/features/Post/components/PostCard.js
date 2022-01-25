@@ -13,11 +13,10 @@ import ListOfComments from './ListOfComment';
 import PostMenu from './PostMenu';
 
 function PostCard({ post }) {
-	console.log(post);
 	const [isEditPost, setIsEditPost] = useState(false);
 	const [isShowComment, setIsShowComment] = useState(false);
 	const [refInside, isInside, setIsInside] = useClickOutside(false);
-	const [isShowReactionBar, setIsShowReactionBar] = useState(false);
+
 	const [likes, setLikes] = useState(post.likes.length);
 	const [numberOfComments, setNumberOfComments] = useState(
 		post.comments.length
@@ -47,10 +46,6 @@ function PostCard({ post }) {
 		} catch (error) {
 			alert(error);
 		}
-	};
-	//create comment
-	const handleHoverLike = () => {
-		setIsShowReactionBar(true);
 	};
 
 	const { differenceNumber, timeUnit } = getDifferenceTime(post.updatedAt);
@@ -108,7 +103,7 @@ function PostCard({ post }) {
 					)}
 				</div>
 				<div className="flex flex-1 justify-between pt-2  border-t border-solid border-slate-300">
-					<Like />
+					<Like postID={post._id} setLikes={setLikes} listLike={post.likes} />
 					<div
 						className="cursor-pointer flex-1 text-center rounded-lg p-2 hover:bg-slate-200 dark:hover:bg-indigo-1050 relative dark:text-textColorDark"
 						onClick={() => setIsShowComment(!isShowComment)}

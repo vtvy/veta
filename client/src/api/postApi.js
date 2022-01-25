@@ -43,6 +43,17 @@ const postApi = {
 		});
 		return res;
 	},
+	async setLove(postID) {
+		const url = `/post/love`;
+		const res = await axiosClient.put(
+			url,
+			{ postID },
+			{
+				headers: { accessToken },
+			}
+		);
+		return res;
+	},
 };
 
 export default postApi;

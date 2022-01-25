@@ -37,7 +37,6 @@ function ListOfComment({ postID, setNumberOfComments }) {
 			if (res.data.success) {
 				console.log(res.data.newComment);
 				setNumberOfComments((prevNum) => ++prevNum);
-
 				setListOfComment([...listOfComment, res.data.newComment]);
 			}
 		} catch (error) {

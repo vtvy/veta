@@ -55,13 +55,17 @@ function ListOfChildComment({ commentID, postID }) {
 			const res = await axiosClient.post(url, data, {
 				headers: { accessToken },
 			});
+			console.log(res);
 			if (res.data.success) {
+				console.log(res.data.newChildComment);
 				setListOfChildComment([
 					...listOfChildComment,
 					res.data.newChildComment,
 				]);
-			} else console.log(res);
-		} catch (error) {}
+			} else console.log(res.message);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
