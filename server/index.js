@@ -8,6 +8,7 @@ const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
 const commentRouter = require("./routes/comment");
 const childCommentRouter = require("./routes/childComment");
+const userRouter = require("./routes/user");
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/comment", commentRouter);
 app.use("/api/childComment", childCommentRouter);
+app.use("/api/user", userRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
