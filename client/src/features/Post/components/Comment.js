@@ -58,7 +58,9 @@ function Comment({ comment, onClickReply, onEditComment, onDeleteComment }) {
 								<span className="text-2xl text-black font-medium ">
 									{comment.user.name}
 								</span>
-								<span className="font-thin">{comment.commentText}</span>
+								<span className="font-thin text-black">
+									{comment.commentText}
+								</span>
 								<span className="w-96 h-full top-0 absolute right-0 translate-x-full"></span>
 								<div
 									className="absolute -right-12 w-10 h-10 hidden rounded-[50%] cursor-pointer  top-1/2 -translate-y-1/2 group-hover:flex hover:bg-slate-300 items-center justify-center"

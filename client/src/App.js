@@ -15,11 +15,13 @@ import Home from './features/Home';
 import Photo from './features/Photo';
 import AddEditPost from './features/Post/Pages/AddEditPost';
 import Profile from './features/Profile';
+import ListOfSearch from './features/Search/page/ListOfSearch';
 import useDarkMode from './Hooks/useDarkMode';
 import Test from './test';
 import TestServer from './testServer';
 export const ModalContext = createContext();
 export const ThemeContext = createContext();
+export const SearchContext = createContext();
 
 function App() {
 	const [isDarkMode, toggleDarkMode] = useDarkMode();
@@ -51,6 +53,8 @@ function App() {
 		setIsOpen: false,
 		content: {},
 	});
+	const [searchResult, setSearchResult] = useState();
+
 	useEffect(() => {
 		const handleResizeWindow = () => {
 			if (window.innerWidth <= 1280) {
@@ -69,7 +73,9 @@ function App() {
 			<div className="App flex flex-col min-h-screen h-full bg-slate-300 dark:bg-indigo-1050 scrollbar">
 				{isLoggedIn && (
 					<ThemeContext.Provider value={toggleDarkMode}>
-						<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
+						<SearchContext.Provider value={setSearchResult}>
+							<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
+						</SearchContext.Provider>
 					</ThemeContext.Provider>
 				)}
 				{isLoggedIn && <SidebarLeft toggleMenu={toggleMenu} />}
@@ -94,10 +100,14 @@ function App() {
 							<Route path="/" element={<Home />} />
 							<Route path="/photo" element={<Photo />} />
 							<Route path="/server" element={<TestServer />} />
-							<Route path="/profile/*" element={<Profile />} />
+							<Route path="/profile/:id/*" element={<Profile />} />
 							<Route path="/people" element={<Container type="people" />} />
 							<Route path="/setting" element={<Container type="setting" />} />
 							<Route path="/test" element={<Test />} />
+							<Route
+								path="/search"
+								element={<ListOfSearch listOfSearch={searchResult} />}
+							/>
 						</Route>
 					</Route>
 				</Routes>

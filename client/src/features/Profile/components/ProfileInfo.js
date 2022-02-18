@@ -24,9 +24,7 @@ function ProfileInfo() {
 			<div className="w-full relative bg-white dark:bg-indigo-950 flex-1 flex items-center p-4">
 				<div className="absolute -top-full left-1/2 -translate-x-1/2 flex flex-col items-center ">
 					<Avatar size="h-48 w-48 mb-4" avatar={user.avatar} />
-					<span className="text-4xl dark:text-textColorDark">
-						{user.firstName + ' ' + user.lastName}
-					</span>
+					<span className="text-4xl dark:text-textColorDark">{user.name}</span>
 				</div>
 				<ul className="flex ml-auto space-x-6">
 					{socialInfo.map((item) => (

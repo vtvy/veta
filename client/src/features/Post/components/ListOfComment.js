@@ -35,7 +35,6 @@ function ListOfComment({ postID, setNumberOfComments }) {
 		try {
 			const res = await commentApi.create(data);
 			if (res.data.success) {
-				console.log(res.data.newComment);
 				setNumberOfComments((prevNum) => ++prevNum);
 				setListOfComment([...listOfComment, res.data.newComment]);
 			}

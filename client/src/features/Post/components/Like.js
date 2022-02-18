@@ -28,9 +28,9 @@ function Like({ listLike, postID, setLikes }) {
 					onClick={handleLikePost}
 				>
 					{isLikePost === false ? (
-						<i className="text-black dark:text-textColorDark far fa-thumbs-up "></i>
+						<i className="text-black dark:text-textColorDark far fa-thumbs-up mr-2"></i>
 					) : (
-						<i className="text-indigo-600 fas fa-thumbs-up"></i>
+						<i className="text-indigo-600 fas fa-thumbs-up mr-2"></i>
 					)}
 					Like
 				</div>
