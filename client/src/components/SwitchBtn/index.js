@@ -4,7 +4,7 @@ function SwitchBtn() {
 	const [toggle, setToggle] = useState(localStorage.theme === 'dark');
 	return (
 		<div
-			className="md:w-14 md:h-7 w-12 h-6 flex items-center bg-gray-300 dark:bg-indigo-850 rounded-full p-1 cursor-pointer"
+			className="md:w-14 md:h-7 w-12 h-6 flex items-center bg-gray-300 dark:bg-indigo-900 rounded-full p-1 cursor-pointer"
 			onClick={() => {
 				setToggle(!toggle);
 			}}

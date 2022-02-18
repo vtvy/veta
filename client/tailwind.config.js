@@ -3,7 +3,7 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				textColorDark: '#8c91b6',
+				textColorDark: '#C5C8D8',
 				indigo: {
 					850: '#465f8b',
 					950: '#1E2745',

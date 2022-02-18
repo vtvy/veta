@@ -66,7 +66,7 @@ function PostForm({ onSubmit, initialData, isUploading, type }) {
 					</div>
 
 					<div className="absolute right-4 top-4 w-16 h-16 rounded-[50%] bg-slate-200 flex items-center justify-center cursor-pointer close-position hover:bg-slate-300">
-						<i className="fas fa-times close-position font-thin text-3xl"></i>
+						<i className="fas fa-times close-position font-thin text-3xl dark:text-black"></i>
 					</div>
 				</div>
 				<form

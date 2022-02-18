@@ -68,7 +68,7 @@ function CommentForm({ onSubmit, initialValue, type }) {
 				<form className="w-full" onSubmit={handleSubmit(onSubmitForm)}>
 					<Box custom="w-full py-3 flex items-center relative bg-[#f0f2f5] rounded-[2rem] dark:bg-[#BEDAFD] ">
 						<input
-							className="w-full outline-none bg-[#f0f2f5] dark:bg-[#BEDAFD]"
+							className="w-full outline-none dark:text-black bg-[#f0f2f5] dark:bg-[#BEDAFD]"
 							autoFocus
 							type="text"
 							placeholder="write an answer..."

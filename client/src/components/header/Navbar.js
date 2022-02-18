@@ -2,10 +2,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logOut } from '../../features/Auth/userSlice';
+import Search from '../../features/Search';
 import useClickOutside from '../../Hooks/useClickOutside';
 import Avatar from '../Avatar';
 import NavbarMenu from './NavbarMenu';
-import SearchBar from './SearchBar';
 
 function Navbar({ setToggleMenu, toggleMenu }) {
 	const user = useSelector((state) => state.user.current);
@@ -33,7 +33,7 @@ function Navbar({ setToggleMenu, toggleMenu }) {
 					Veta
 				</Link>
 			</div>
-			<SearchBar />
+			<Search />
 			<div className="flex gap-x-4 items-center">
 				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] dark:bg-indigo-850 hover:bg-[#d9dbdd] cursor-pointer">
 					<i className="fas fa-comment-dots dark:text-white"></i>

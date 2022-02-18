@@ -22,7 +22,7 @@ const userApi = {
 
 	async getUserById(id) {
 		const accessToken = localStorage.getItem(StorageKeys.accessToken);
-		const url = `/users/${id}`;
+		const url = `/user/${id}`;
 		const response = await axiosClient.get(url, {
 			headers: { accessToken },
 		});
