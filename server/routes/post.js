@@ -9,6 +9,8 @@ router.get("/", verifyToken, postController.getAllPost);
 
 router.get("/:id", verifyToken, postController.getAPost);
 
+router.get("/profile/:id", verifyToken, postController.getAllPostOfAUser);
+
 router.put("/update/:id", verifyToken, postController.update);
 
 router.put("/love", verifyToken, postController.love);
