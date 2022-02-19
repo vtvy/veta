@@ -9,7 +9,6 @@ import Follow from '../../Follow';
 function ListOfSearch({ searchInput }) {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const searchTerm = searchParams.get('user') || '';
-	console.log(searchTerm);
 	const [listOfSearch, setListOfSearch] = useState();
 	const getSearchResult = async () => {
 		try {

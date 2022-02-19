@@ -5,7 +5,7 @@ import Avatar from '../../components/Avatar';
 function QuickViewUser({ user, showEmail, showFollower }) {
 	return (
 		<Link
-			to={`/profile/${user._id}/timeline`}
+			to={`/profile/${user._id}`}
 			className="flex items-center 
     "
 		>
