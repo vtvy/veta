@@ -53,7 +53,7 @@ function App() {
         setIsOpen: false,
         content: {},
     });
-    const [searchResult, setSearchResult] = useState();
+    const [searchInput, setSearchInput] = useState();
 
     useEffect(() => {
         const handleResizeWindow = () => {
@@ -73,7 +73,7 @@ function App() {
             <div className="App flex flex-col min-h-screen h-full bg-slate-300 dark:bg-indigo-1050 scrollbar">
                 {isLoggedIn && (
                     <ThemeContext.Provider value={toggleDarkMode}>
-                        <SearchContext.Provider value={setSearchResult}>
+                        <SearchContext.Provider value={setSearchInput}>
                             <Header
                                 setToggleMenu={setToggleMenu}
                                 toggleMenu={toggleMenu}
@@ -120,9 +120,9 @@ function App() {
                             />
                             <Route path="/test" element={<Test />} />
                             <Route
-                                path="/search"
+                                path="/search/*"
                                 element={
-                                    <ListOfSearch listOfSearch={searchResult} />
+                                    <ListOfSearch searchInput={searchInput} />
                                 }
                             />
                         </Route>

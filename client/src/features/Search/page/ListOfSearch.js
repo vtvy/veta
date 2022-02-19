@@ -1,17 +1,49 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import axiosClient from '../../../api/axiosClient';
 
 import CardSection from '../../../components/CardSection';
 import QuickViewUser from '../../../components/QuickViewUser';
+import StorageKeys from '../../../constants/storageKeys';
 import Follow from '../../Follow';
 
-function ListOfSearch({ listOfSearch }) {
+function ListOfSearch({ searchInput }) {
 	const navigate = useNavigate();
-	useEffect(() => {
-		if (!listOfSearch) {
-			navigate('/');
+	const [searchParams, setSearchParams] = useSearchParams();
+	const searchTerm = searchParams.get('user') || '';
+	console.log(searchTerm);
+	const [listOfSearch, setListOfSearch] = useState();
+	const getSearchResult = async () => {
+		try {
+			const accessToken = localStorage.getItem(StorageKeys.accessToken);
+			const url = `user/search/${searchTerm}`;
+			const res = await axiosClient.get(url, { headers: { accessToken } });
+			if (res.data.success) {
+				setListOfSearch(res.data.searchUser);
+			}
+		} catch (error) {
+			console.log(error);
 		}
-	}, [listOfSearch]);
+	};
+
+	useEffect(() => {
+		let mounted = true;
+		if (searchInput) {
+			setSearchParams({ user: searchInput });
+		}
+		return () => (mounted = false);
+	}, [searchInput]);
+
+	useEffect(() => {
+		let mounted = true;
+
+		if (searchTerm) {
+			getSearchResult();
+		} else {
+			setListOfSearch(null);
+		}
+		return () => (mounted = false);
+	}, [searchTerm]);
 
 	return (
 		<>
