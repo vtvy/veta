@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import axiosClient from '../../../api/axiosClient';
-
 import CardSection from '../../../components/CardSection';
 import QuickViewUser from '../../../components/QuickViewUser';
 import StorageKeys from '../../../constants/storageKeys';
 import Follow from '../../Follow';
 
 function ListOfSearch({ searchInput }) {
-	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const searchTerm = searchParams.get('user') || '';
-	console.log(searchTerm);
 	const [listOfSearch, setListOfSearch] = useState();
 	const getSearchResult = async () => {
 		try {
