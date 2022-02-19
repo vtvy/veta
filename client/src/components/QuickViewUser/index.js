@@ -3,13 +3,8 @@ import { Link } from 'react-router-dom';
 import Avatar from '../../components/Avatar';
 
 function QuickViewUser({ user, showEmail, showFollower }) {
-	const handleViewDetails = () => {};
 	return (
-		<Link
-			to={`/profile/${user._id}`}
-			className="flex items-center"
-			onClick={handleViewDetails}
-		>
+		<Link to={`/profile/${user._id}/timeline`} className="flex items-center">
 			<div className="flex-shrink-0">
 				<Avatar avatar={user.avatar} />
 			</div>

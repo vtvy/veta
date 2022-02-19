@@ -1,24 +1,22 @@
-import React, { useContext } from 'react';
-import axiosClient from '../../api/axiosClient';
-import StorageKeys from '../../constants/storageKeys';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SearchBar from './SearchBar';
 import { SearchContext } from '../../App';
+import SearchBar from './SearchBar';
 
 function Search() {
-	const setSearchResult = useContext(SearchContext);
 	let navigate = useNavigate();
+	const setSearchInput = useContext(SearchContext);
+	const [searchValue, setSearchValue] = useState();
+	useEffect(() => {
+		if (searchValue) {
+			setSearchInput(searchValue);
+			navigate('/search/');
+		}
+	}, [searchValue]);
 	const handleSearch = async (data) => {
-		const accessToken = localStorage.getItem(StorageKeys.accessToken);
-		try {
-			const url = `user/search/${data.searchValue}`;
-			const res = await axiosClient.get(url, { headers: { accessToken } });
-			if (res.data.success) {
-				setSearchResult(res.data.searchUser);
-				navigate('/search');
-			}
-		} catch (error) {
-			console.log(error);
+		const searchValue = data.searchValue.trim();
+		if (searchValue) {
+			setSearchValue(searchValue);
 		}
 	};
 
