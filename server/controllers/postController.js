@@ -1,5 +1,6 @@
 const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
 const Post = require("../models/Post");
+const User = require("../models/User");
 const Comment = require("../models/Comment");
 const ChildComment = require("../models/ChildComment");
 const { post } = require("../routes/auth");
@@ -54,10 +55,15 @@ const postController = {
 
     getAllPost: async (req, res) => {
         const { userID } = req.body;
-        const listOfPost = await Post.find({ user: userID }).populate({
-            path: "user",
-            select: "avatar name",
+        const user = await User.find({ _id: userID }).select("following");
+        const listOfPost = await Post.find({
+            user: [...user[0].following, userID],
         });
+        console.log();
+        // .populate({
+        //     path: "user",
+        //     select: "avatar name",
+        // });
         res.json({
             success: true,
             message: "This is list of post",
