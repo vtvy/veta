@@ -1,6 +1,5 @@
 import axiosClient from './axiosClient';
 import StorageKeys from '../constants/storageKeys';
-const accessToken = localStorage.getItem(StorageKeys.accessToken);
 
 const userApi = {
 	register(data) {
@@ -13,6 +12,8 @@ const userApi = {
 		return axiosClient.post(url, data);
 	},
 	async getUser() {
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
+
 		const url = '/auth';
 		const response = await axiosClient.get(url, {
 			headers: { accessToken },
@@ -21,6 +22,7 @@ const userApi = {
 	},
 
 	async getUserById(id) {
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const url = `/user/${id}`;
 
 		const response = await axiosClient.get(url, {
@@ -30,6 +32,7 @@ const userApi = {
 		return response;
 	},
 	async getProfileByID(id) {
+		const accessToken = localStorage.getItem(StorageKeys.accessToken);
 		const url = `/post/profile/${id}`;
 
 		const response = await axiosClient.get(url, {

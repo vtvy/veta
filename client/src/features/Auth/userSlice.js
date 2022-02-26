@@ -9,6 +9,7 @@ export const register = createAsyncThunk('auth/register', async (payload) => {
 			localStorage.setItem(StorageKeys.accessToken, res.data.accessToken);
 			const resUser = await userApi.getUser();
 			const user = resUser.data.user;
+
 			return { user, isLoggedIn: true };
 		} else {
 			alert(res.data.message);

@@ -12,7 +12,7 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar-track {
-	background: #dfe4eb;
+	background: transparent;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
