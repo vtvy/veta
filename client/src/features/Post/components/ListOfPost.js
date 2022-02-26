@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '../../../components/Box';
 import PostCard from './PostCard';
 
-function ListOfPost({ postList, isLoading }) {
+function ListOfPost({ postList, isLoading, socket }) {
 	return (
 		<>
 			{isLoading && (
@@ -26,7 +26,7 @@ function ListOfPost({ postList, isLoading }) {
 				{!isLoading &&
 					postList.map((post, index) => (
 						<div key={index}>
-							<PostCard post={post} />
+							<PostCard post={post} socket={socket} />
 						</div>
 					))}
 			</div>

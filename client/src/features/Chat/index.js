@@ -5,7 +5,6 @@ import SidebarLeft from './components/SidebarLeft';
 import io from 'socket.io-client';
 
 function Chat() {
-	// const socket = io.connect(process.env.REACT_APP_API_URL);
 	const params = useParams();
 	const socket = io.connect('http://localhost:3001');
 

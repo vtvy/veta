@@ -3,16 +3,17 @@ import { useSelector } from 'react-redux';
 
 import postApi from '../../../api/postApi';
 
-function Like({ listLike, postID, setLikes }) {
+function Like({ listLike, postID, setLikes, socket, post }) {
+	const user = useSelector((state) => state.user.current);
 	const [isLikePost, setIsLikePost] = useState(
 		listLike.includes(useSelector((state) => state.user.current._id))
 	);
 	const handleLikePost = async () => {
 		try {
 			const res = await postApi.setLove(postID);
+
 			if (res.data.success) {
-				const isLikePost = res.data.state === 1 ? true : false;
-				setIsLikePost(isLikePost);
+				await socket.emit('likePost', res.data.lovedPost);
 				setLikes((prev) => res.data.state + prev);
 			} else console.log(res.data.message);
 		} catch (error) {

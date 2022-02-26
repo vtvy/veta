@@ -4,6 +4,7 @@ import axiosClient from '../../api/axiosClient';
 import StorageKeys from '../../constants/storageKeys';
 
 function Follow({ id, listOfFollowers }) {
+	console.log(id);
 	const [isFollowed, setIsFollowed] = useState(
 		listOfFollowers.includes(useSelector((state) => state.user.current._id))
 	);

@@ -20,6 +20,7 @@ import ListOfSearch from './features/Search/page/ListOfSearch';
 import useDarkMode from './Hooks/useDarkMode';
 import Test from './test';
 import TestServer from './testServer';
+import io from 'socket.io-client';
 export const ModalContext = createContext();
 export const ThemeContext = createContext();
 export const SearchContext = createContext();
@@ -27,7 +28,17 @@ export const SearchContext = createContext();
 function App() {
 	const [isDarkMode, toggleDarkMode] = useDarkMode();
 	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+	const user = useSelector((state) => state.user.current) || '';
 	const dispatch = useDispatch();
+
+	const socket = io.connect('http://localhost:9999');
+	socket.emit('joinUser', user);
+
+	useEffect(() => {
+		if (user) {
+		}
+		// return socket.disconnect();
+	}, [socket, user]);
 
 	useEffect(() => {
 		var mounted = true;
@@ -99,7 +110,7 @@ function App() {
 
 					<Route element={<ProtectedRoutes isLogged={isLoggedIn} />}>
 						<Route path="/" element={<Container />}>
-							<Route path="/" element={<Home />} />
+							<Route path="/" element={<Home socket={socket} />} />
 							<Route path="/photo" element={<Photo />} />
 							<Route path="/server" element={<TestServer />} />
 							<Route path="/chat/*" element={<Chat />} />
