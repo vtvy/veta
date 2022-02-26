@@ -57,12 +57,10 @@ const postController = {
         const user = await User.find({ _id: userID }).select("following");
         const listOfPost = await Post.find({
             user: [...user[0].following, userID],
+        }).populate({
+            path: "user",
+            select: "avatar name",
         });
-        console.log();
-        // .populate({
-        //     path: "user",
-        //     select: "avatar name",
-        // });
         res.json({
             success: true,
             message: "This is list of post",
@@ -74,23 +72,36 @@ const postController = {
         const postID = req.params.id;
 
         const { userID } = req.body;
-        const Post = await Post.findOne({
+        const post = await Post.findOne({
             user: userID,
             post: postID,
         }).populate({
             path: "user",
             select: "avatar name",
         });
-        res.json({ success: true, message: "This is a post", Post });
+        res.json({ success: true, message: "This is a post", post });
     },
 
     getAllPostOfAUser: async (req, res) => {
         const userID = req.params.id;
 
-        const Post = await Post.find({ user: userID }).populate({
+        const post = await Post.find({ user: userID }).populate({
             path: "user",
-            select: "-password",
+            select: "avatar name",
         });
+        success = true;
+        if (success) {
+            res.json({
+                success,
+                message: "This is all post of a user",
+                post,
+            });
+        } else {
+            res.json({
+                success,
+                message: "Get post fail",
+            });
+        }
     },
 
     update: async (req, res) => {

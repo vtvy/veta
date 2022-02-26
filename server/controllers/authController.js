@@ -159,6 +159,7 @@ const authController = {
             name: existUser.name,
             email: existUser.email,
         };
+        console.log(user);
         res.json({ success: true, message: "Validate successfully", user });
     },
 };
