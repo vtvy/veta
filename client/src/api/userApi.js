@@ -1,43 +1,43 @@
-import axiosClient from './axiosClient';
-import StorageKeys from '../constants/storageKeys';
+import axiosClient from "./axiosClient";
+import StorageKeys from "../constants/storageKeys";
 const accessToken = localStorage.getItem(StorageKeys.accessToken);
 
 const userApi = {
-	register(data) {
-		const url = 'auth/register';
-		return axiosClient.post(url, data);
-	},
+    register(data) {
+        const url = "auth/register";
+        return axiosClient.post(url, data);
+    },
 
-	login(data) {
-		const url = 'auth/login';
-		return axiosClient.post(url, data);
-	},
-	async getUser() {
-		const url = '/auth';
-		const response = await axiosClient.get(url, {
-			headers: { accessToken },
-		});
-		return response;
-	},
+    login(data) {
+        const url = "auth/login";
+        return axiosClient.post(url, data);
+    },
+    async getUser() {
+        const url = "/auth";
+        const response = await axiosClient.get(url, {
+            headers: { accessToken },
+        });
+        return response;
+    },
 
-	async getUserById(id) {
-		const url = `/user/${id}`;
+    async getUserById(id) {
+        const url = `/user/${id}`;
 
-		const response = await axiosClient.get(url, {
-			headers: { accessToken },
-		});
+        const response = await axiosClient.get(url, {
+            headers: { accessToken },
+        });
 
-		return response;
-	},
-	async getProfileByID(id) {
-		const url = `/post/profile/${id}`;
+        return response;
+    },
+    async getProfileByID(id) {
+        const url = `/post/profile/${id}`;
 
-		const response = await axiosClient.get(url, {
-			headers: { accessToken },
-		});
+        const response = await axiosClient.get(url, {
+            headers: { accessToken },
+        });
 
-		return response;
-	},
+        return response;
+    },
 };
 
 export default userApi;

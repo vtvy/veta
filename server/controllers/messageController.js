@@ -1,10 +1,12 @@
 const Conversations = require("../models/conversationModel");
 const Messages = require("../models/messageModel");
+const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
+var success = false;
 
 const messageController = {
     create: async (req, res) => {
         try {
-            const { userID, recipient, text } = req.body;
+            const { userID, recipient, text, media, call } = req.body;
 
             if (!recipient || (!text.trim() && media.length === 0 && !call))
                 return;
@@ -19,21 +21,40 @@ const messageController = {
                 {
                     recipients: [userID, recipient],
                     text,
+                    media,
+                    call,
                 },
                 { new: true, upsert: true }
             );
 
-            const newMessage = new Messages({
+            var newMessage = new Messages({
                 conversation: newConversation._id,
                 userID,
+                call,
                 recipient,
+                text,
+                media,
             });
-
             await newMessage.save();
 
-            res.json({ msg: "Create Success!" });
+            success = true;
         } catch (err) {
-            return res.status(500).json({ msg: err.message });
+            console.log(err);
+        }
+
+        if (req.files) await deleteTmp(req.files);
+
+        if (success) {
+            return res.json({
+                success,
+                message: "Create Success!",
+                newMessage,
+            });
+        } else {
+            return res.json({
+                success,
+                message: "Cannot comment at this post",
+            });
         }
     },
     getConversations: async (req, res) => {
