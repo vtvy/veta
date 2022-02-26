@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import MessageView from './MessageView';
 
 function ChannelContent({ channelContent }) {
-	let params = useParams();
+	const messagesEndRef = useRef(null);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [channelContent]);
 	const user = useSelector((state) => state.user.current);
 	return (
 		<>
@@ -16,6 +23,7 @@ function ChannelContent({ channelContent }) {
 						isUser={user._id === message.user._id}
 					/>
 				))}
+			<div ref={messagesEndRef}></div>
 		</>
 	);
 }

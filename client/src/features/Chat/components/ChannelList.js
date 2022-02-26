@@ -12,10 +12,10 @@ const listChannel = [
 
 function ListChat({ socket }) {
 	const user = useSelector((state) => state.user.current);
-	const joinChannel = (data) => {
-		const channelID = data._id + user._id;
-		socket.emit('join_channel', '123');
-	};
+	// const joinChannel = (data) => {
+	// 	const channelID = data._id + user._id;
+	// 	socket.emit('join_channel', '123');
+	// };
 
 	return (
 		<div className="py-4 max-h-[68.4rem]">
@@ -24,7 +24,7 @@ function ListChat({ socket }) {
 				{listChannel &&
 					listChannel.map((channel, index) => (
 						<div
-							onClick={() => joinChannel(channel)}
+							// onClick={() => joinChannel(channel)}
 							key={index}
 							className="flex-1 p-4 bg-slate-100 dark:bg-indigo-850 rounded-lg hover:bg-slate-400 dark:hover:opacity-70 hover:pointer "
 						>
