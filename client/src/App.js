@@ -11,6 +11,7 @@ import SidebarRight from './components/SidebarRight';
 import Spinner from './components/Spinner';
 import Auth from './features/Auth';
 import { logOut, setUser } from './features/Auth/userSlice';
+import Chat from './features/Chat';
 import Home from './features/Home';
 import Photo from './features/Photo';
 import AddEditPost from './features/Post/Pages/AddEditPost';
@@ -29,6 +30,7 @@ function App() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		var mounted = true;
 		const loginUser = async () => {
 			const res = await userApi.getUser();
 			if (res.data.success) {
@@ -41,7 +43,7 @@ function App() {
 		};
 		loginUser();
 		return () => {
-			loginUser();
+			mounted = false;
 		};
 	}, []);
 
@@ -100,6 +102,7 @@ function App() {
 							<Route path="/" element={<Home />} />
 							<Route path="/photo" element={<Photo />} />
 							<Route path="/server" element={<TestServer />} />
+							<Route path="/chat/*" element={<Chat />} />
 							<Route path="/profile/:id/*" element={<Profile />} />
 							<Route path="/people" element={<Container type="people" />} />
 							<Route path="/setting" element={<Container type="setting" />} />

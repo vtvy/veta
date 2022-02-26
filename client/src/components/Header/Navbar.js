@@ -35,9 +35,12 @@ function Navbar({ setToggleMenu, toggleMenu }) {
 			</div>
 			<Search />
 			<div className="flex gap-x-4 items-center">
-				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] dark:bg-indigo-850 hover:bg-[#d9dbdd] cursor-pointer">
+				<Link
+					to="/chat"
+					className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] dark:bg-indigo-850 hover:bg-[#d9dbdd] cursor-pointer"
+				>
 					<i className="fas fa-comment-dots dark:text-white"></i>
-				</div>
+				</Link>
 				<div className="w-16 h-16 rounded-full flex justify-center items-center bg-[#e4e6eb] hover:bg-[#d9dbdd] cursor-pointer">
 					<i className="fas fa-bell text-3xl"></i>
 				</div>

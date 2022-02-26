@@ -15,6 +15,7 @@ function InputField(props) {
 				type={props.type}
 				name={props.name}
 				id={props.name}
+				autoComplete="on"
 				placeholder={`${props.label}`}
 				{...props.register(`${props.name}`)}
 			/>
