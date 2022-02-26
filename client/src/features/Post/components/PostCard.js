@@ -1,23 +1,44 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import postApi from '../../../api/postApi';
 import { ModalContext } from '../../../App';
 import Avatar from '../../../components/Avatar';
 import Box from '../../../components/Box';
 import useClickOutside from '../../../Hooks/useClickOutside';
 import getDifferenceTime from '../../../myFunction/getDifferenceTime';
-import { deletePost } from '../postSlice';
+import { addNewPost, deletePost, updatePost } from '../postSlice';
 import CloudImg from './CloudImg';
 import Like from './Like';
 import ListOfComments from './ListOfComment';
 import PostMenu from './PostMenu';
 
-function PostCard({ post }) {
+function PostCard({ post, socket }) {
+	const dispatch = useDispatch();
+	const user = useSelector((state) => state.user.current);
+
+	// Likes
+	useEffect(() => {
+		socket.on('likeToClient', (newPost) => {
+			const action = updatePost(newPost);
+			dispatch(action);
+		});
+
+		return () => socket.off('likeToClient');
+	}, [socket, dispatch]);
+
+	useEffect(() => {
+		socket.on('unLikeToClient', (newPost) => {
+			const action = addNewPost(newPost);
+			dispatch(action);
+		});
+
+		return () => socket.off('unLikeToClient');
+	}, [socket, dispatch]);
+
 	const [isEditPost, setIsEditPost] = useState(false);
 	const [isShowComment, setIsShowComment] = useState(false);
 	const [refInside, isInside, setIsInside] = useClickOutside(false);
 
-	const [likes, setLikes] = useState(post.likes.length);
 	const [numberOfComments, setNumberOfComments] = useState(
 		post.comments.length
 	);
@@ -34,7 +55,6 @@ function PostCard({ post }) {
 			},
 		});
 	}, [isEditPost]);
-	const dispatch = useDispatch();
 	//delete post
 	const handleDeletePost = async () => {
 		try {
@@ -89,7 +109,7 @@ function PostCard({ post }) {
 
 				<div className="flex justify-between mb-[0.2rem]">
 					<span className="text-slate-600 dark:text-textColorDark">
-						<span className="text-indigo-600">{likes} </span>
+						<span className="text-indigo-600">{post.likes.length} </span>
 						Likes
 					</span>
 					{numberOfComments > 0 && (
@@ -103,7 +123,12 @@ function PostCard({ post }) {
 					)}
 				</div>
 				<div className="flex flex-1 justify-between pt-2  border-t border-solid border-slate-300">
-					<Like postID={post._id} setLikes={setLikes} listLike={post.likes} />
+					<Like
+						postID={post._id}
+						listLike={post.likes}
+						socket={socket}
+						post={post}
+					/>
 					<div
 						className="cursor-pointer flex-1 text-center rounded-lg p-2 hover:bg-slate-200 dark:hover:bg-indigo-1050 relative dark:text-textColorDark"
 						onClick={() => setIsShowComment(!isShowComment)}

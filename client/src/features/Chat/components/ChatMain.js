@@ -41,7 +41,6 @@ function ChatMain({ socket, channelID }) {
 	}, [socket]);
 
 	useEffect(() => {
-		let mounted = true;
 		socket.on('receive_message', (data) => {
 			setListMessage((list) => [...list, data]);
 		});
