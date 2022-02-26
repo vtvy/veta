@@ -1,4 +1,3 @@
-const { upload, destroy, destroyDirectory, deleteTmp } = require("../utils");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
