@@ -14,9 +14,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
+    fileUpload({
+        useTempFiles: true,
+    })
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,6 +29,6 @@ app.use("/api/childComment", childCommentRouter);
 app.use("/api/user", userRouter);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server started on port ${process.env.PORT}`);
-  console.log("-------------------------------");
+    console.log(`Server started on port ${process.env.PORT}`);
+    console.log("-------------------------------");
 });
