@@ -13,14 +13,7 @@ const postController = {
             if (file || postText) {
                 var postImage = "";
                 //Create new post
-                var newPost = new Post({
-                    postText,
-                    postImage,
-                    user: userID,
-                }).populate({
-                    path: "user",
-                    select: "avatar name followers",
-                });
+                var newPost = new Post({ postText, postImage, user: userID });
                 await newPost.save();
                 if (file) {
                     postImage = await upload(
@@ -33,12 +26,12 @@ const postController = {
                         { _id: newPost._id },
                         { postImage },
                         { new: true }
-                    ).populate({
-                        path: "user",
-                        select: "avatar name followers",
-                    });
+                    );
                 }
-                console.log(newPost);
+                newPost = await Post.findOne({ _id: newPost._id }).populate({
+                    path: "user",
+                    select: "avatar name followers",
+                });
                 success = true;
             }
         } catch (error) {
