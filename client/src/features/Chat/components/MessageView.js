@@ -7,12 +7,12 @@ function MessageView({ message, isUser }) {
 			{!isUser ? (
 				<div className={`flex w-full self-start`}>
 					<Avatar avatar={message.user.avatar} />
-					<div className="p-4 mx-4  rounded-lg max-w-[50%] bg-white">
+					<div className="p-4 mx-4 rounded-lg max-w-[50%] bg-white word-break: break-all">
 						{message.messageText}
 					</div>
 				</div>
 			) : (
-				<div className="p-4 mx-4 bg-blue-300 rounded-lg max-w-[50%] self-end ">
+				<div className="p-4 mx-4 bg-blue-300 rounded-lg max-w-[50%] self-end word-break: break-all">
 					{message.messageText}
 				</div>
 			)}

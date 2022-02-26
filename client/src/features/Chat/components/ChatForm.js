@@ -37,9 +37,9 @@ function ChatForm({ onSubmit }) {
 		}
 	};
 	return (
-		<div className="w-full px-4 h-full py-2 flex flex-col justify-center">
-			<div>
-				{reviewImage.path && (
+		<div className="w-full px-4 h-full py-2 flex flex-col justify-center relative">
+			{reviewImage.path && (
+				<div className="absolute bg-indigo-950 w-full top-0 left-0 -translate-y-[90%] pt-4 pl-4">
 					<Box
 						width={'w-48'}
 						p={'p-0'}
@@ -55,8 +55,9 @@ function ChatForm({ onSubmit }) {
 							<i className="fas fa-times font-thin"></i>
 						</div>
 					</Box>
-				)}
-			</div>
+				</div>
+			)}
+
 			<form
 				className="h-full w-full flex space-x-4  items-center"
 				onSubmit={handleSubmit(onSubmitData)}
@@ -64,7 +65,7 @@ function ChatForm({ onSubmit }) {
 				<div className="w-full flex-1 flex items-center min-h-[40px] rounded-[2rem] overflow-hidden bg-[#f0f2f5]">
 					<input
 						type="text"
-						className="flex-1 max-w-4/5  flex items-center min-h-[40px] rounded-[2rem] overflow-hidden bg-[#f0f2f5] outline-none px-6 transition-all"
+						className="flex-1 max-w-4/5  flex items-center min-h-[40px] rounded-[2rem] overflow-hidden bg-[#f0f2f5] dark:bg-slate-500 outline-none px-6 transition-all"
 						{...register('messageText')}
 						autoComplete="off"
 					/>

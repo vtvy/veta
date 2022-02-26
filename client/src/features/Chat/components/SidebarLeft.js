@@ -11,7 +11,7 @@ function SidebarLeft({ socket }) {
 	return (
 		<div className="h-full w-1/4 bg-white dark:bg-indigo-950 shadow-lg border-r dark:border-slate-700 p-4">
 			<div className="h-[6rem] py-4 flex items-center  ">
-				<span className="text-4xl">Chats</span>
+				<span className="text-4xl dark:text-textColorDark">Chats</span>
 			</div>
 			<SearchBar onSubmit={onSubmit} />
 			<ChannelList socket={socket} />
