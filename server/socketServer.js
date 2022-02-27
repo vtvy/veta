@@ -61,24 +61,30 @@ const SocketServer = (socket) => {
 	});
 
 	// Comments
-	socket.on('createComment', (newPost) => {
-		const ids = [...newPost.user.followers, newPost.user._id];
+	socket.on('createComment', (data) => {
+		// const ids = [...newPost.user.followers, newPost.user._id];
+		// const clients = users.filter((user) => ids.includes(user.id));
+		const ids = [...data.post.user.followers, data.post.user._id];
 		const clients = users.filter((user) => ids.includes(user.id));
-
 		if (clients.length > 0) {
 			clients.forEach((client) => {
-				socket.to(`${client.socketId}`).emit('createCommentToClient', newPost);
+				socket
+					.to(`${client.socketId}`)
+					.emit('createCommentToClient', data.newComment);
 			});
 		}
 	});
 
-	socket.on('deleteComment', (newPost) => {
-		const ids = [...newPost.user.followers, newPost.user._id];
+	socket.on('deleteComment', (data) => {
+		// const ids = [...newPost.user.followers, newPost.user._id];
+		// const clients = users.filter((user) => ids.includes(user.id));
+		const ids = [...data.post.user.followers, data.post.user._id];
 		const clients = users.filter((user) => ids.includes(user.id));
-
 		if (clients.length > 0) {
 			clients.forEach((client) => {
-				socket.to(`${client.socketId}`).emit('deleteCommentToClient', newPost);
+				socket
+					.to(`${client.socketId}`)
+					.emit('deleteCommentToClient', data.commentId);
 			});
 		}
 	});
@@ -106,6 +112,13 @@ const SocketServer = (socket) => {
 	});
 
 	// Message
+	socket.on('join_channel', (data) => {
+		socket.join(data);
+		console.log(`User with ID: ${socket.id} joined channel: ${data}`);
+	});
+	socket.on('send_message', (data) => {
+		socket.to(data.channel).emit('receive_message', data.data);
+	});
 	socket.on('addMessage', (msg) => {
 		const user = users.find((user) => user.id === msg.recipient);
 		user && socket.to(`${user.socketId}`).emit('addMessageToClient', msg);

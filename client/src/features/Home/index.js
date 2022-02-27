@@ -8,7 +8,7 @@ import Post from '../Post';
 import ListOfPost from '../Post/components/ListOfPost';
 import { setPostList } from '../Post/postSlice';
 
-function Home({ socket }) {
+function Home() {
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(true);
 	const postList = useSelector((state) => state.post.postList);
@@ -33,7 +33,7 @@ function Home({ socket }) {
 			<div className="flex flex-col max-w-[65.6rem] w-full">
 				<Post />
 
-				<ListOfPost postList={postList} isLoading={isLoading} socket={socket} />
+				<ListOfPost postList={postList} isLoading={isLoading} />
 			</div>
 			<div className="w-[32rem] self-start flex-col space-y-8 ml-8 rounded-lg hidden lg:flex">
 				<CardSection title="Stories">

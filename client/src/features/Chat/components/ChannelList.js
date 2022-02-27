@@ -3,15 +3,24 @@ import { useSelector } from 'react-redux';
 import Channel from './Channel';
 const listChannel = [
 	{
-		avatar: 'veta/avatars/kfr7oli3iajat02jljjn',
-		email: 'nhatyugioh@gmail.com',
-		name: 'undefined undefined',
 		_id: '6219b9387b15aebb1c1257ed',
+		email: 'nhatyugioh@gmail.com',
+		name: 'Nhat Nguyen',
+		avatar: 'veta/avatars/kfr7oli3iajat02jljjn',
+		followers: Array(1),
+	},
+	{
+		_id: '61d030167da9b948fafdba19',
+		email: 'nguyenminhnhat301101@gmail.com',
+		avatar: 'veta/avatars/kavmrmwq3tmylxewu5xt',
+		name: 'Minh Nhat',
+		followers: Array(1),
 	},
 ];
 
 function ListChat({ socket }) {
 	const user = useSelector((state) => state.user.current);
+
 	// const joinChannel = (data) => {
 	// 	const channelID = data._id + user._id;
 	// 	socket.emit('join_channel', '123');

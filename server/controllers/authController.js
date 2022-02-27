@@ -155,7 +155,6 @@ const authController = {
 		const existUser = await User.findOne({ _id: userID }).select(
 			'avatar name email followers'
 		);
-		console.log(existUser);
 		res.json({
 			success: true,
 			message: 'Validate successfully',

@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../../../api/axiosClient';
 import commentApi from '../../../api/commentApi';
+import { SocketContext } from '../../../App';
 import StorageKeys from '../../../constants/storageKeys';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 import ListOfChildComment from './ListOfChildComment';
 
-function ListOfComment({ postID, setNumberOfComments }) {
+function ListOfComment({ post, postID, setNumberOfComments }) {
 	const [replyCommentID, setReplyCommentID] = useState(null);
 	const [listOfComment, setListOfComment] = useState([]);
 	const apiURL = '/comment';
 	const accessToken = localStorage.getItem(StorageKeys.accessToken);
+	const socket = useContext(SocketContext);
 
 	useEffect(() => {
 		const getListOfComment = async () => {
@@ -35,8 +37,10 @@ function ListOfComment({ postID, setNumberOfComments }) {
 		try {
 			const res = await commentApi.create(data);
 			if (res.data.success) {
+				const newComment = res.data.newComment;
+				await socket.emit('createComment', { post, newComment });
 				setNumberOfComments((prevNum) => ++prevNum);
-				setListOfComment([...listOfComment, res.data.newComment]);
+				setListOfComment([...listOfComment, newComment]);
 			}
 		} catch (error) {
 			console.log(error);
@@ -47,6 +51,7 @@ function ListOfComment({ postID, setNumberOfComments }) {
 		try {
 			const res = await commentApi.deleteCommentById(commentId);
 			if (res.data.success) {
+				await socket.emit('deleteComment', { post, commentId });
 				setNumberOfComments((prevNum) => --prevNum);
 				setListOfComment(
 					listOfComment.filter((comment) => comment._id !== commentId)
@@ -64,7 +69,6 @@ function ListOfComment({ postID, setNumberOfComments }) {
 				data
 			);
 			if (res.data.success) {
-				console.log(res.data.updatedComment);
 				const newListOfComment = listOfComment.map((comment) => {
 					if (comment._id === data.get('commentID'))
 						return res.data.updatedComment;
@@ -76,6 +80,27 @@ function ListOfComment({ postID, setNumberOfComments }) {
 			console.log(error);
 		}
 	};
+
+	//socket
+	useEffect(() => {
+		socket.on('createCommentToClient', (newComment) => {
+			setNumberOfComments((prevNum) => ++prevNum);
+			setListOfComment((list) => [...list, newComment]);
+		});
+
+		return () => socket.off('createCommentToClient');
+	}, [socket]);
+
+	useEffect(() => {
+		socket.on('deleteCommentToClient', (commentID) => {
+			setNumberOfComments((prevNum) => --prevNum);
+			setListOfComment((list) =>
+				list.filter((comment) => comment._id !== commentID)
+			);
+		});
+
+		return () => socket.off('deleteCommentToClient');
+	}, [socket]);
 
 	return (
 		<div className="space-y-10">

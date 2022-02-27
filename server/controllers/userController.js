@@ -24,7 +24,7 @@ const UserController = {
 
 	follow: async (req, res) => {
 		const { userID, friendID } = req.body;
-		console.log(userID + ' ' + friendID);
+
 		if (userID !== friendID) {
 			try {
 				var myself = await User.findOne({ _id: userID }).select('following');

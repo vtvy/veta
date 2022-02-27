@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Routes, useParams } from 'react-router-dom';
 import ChatMain from './components/ChatMain';
 import SidebarLeft from './components/SidebarLeft';
-import io from 'socket.io-client';
+import { SocketContext } from '../../App';
 
 function Chat() {
 	const params = useParams();
-	const socket = io.connect('http://localhost:3001');
+	const socket = useContext(SocketContext);
 
 	return (
 		<div className="w-full pb-8 max-h-[79.4rem] ">
