@@ -23,7 +23,7 @@ const userApi = {
 
     async getUserById(id) {
         const accessToken = localStorage.getItem(StorageKeys.accessToken);
-        const url = `/user/${id}`;
+        const url = `/user/profile/${id}`;
 
         const response = await axiosClient.get(url, {
             headers: { accessToken },
@@ -33,7 +33,7 @@ const userApi = {
     },
     async getProfileByID(id) {
         const accessToken = localStorage.getItem(StorageKeys.accessToken);
-        const url = `/post/profile/${id}`;
+        const url = `/post/user/${id}`;
 
         const response = await axiosClient.get(url, {
             headers: { accessToken },
