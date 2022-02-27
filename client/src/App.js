@@ -24,6 +24,7 @@ import io from 'socket.io-client';
 export const ModalContext = createContext();
 export const ThemeContext = createContext();
 export const SearchContext = createContext();
+export const SocketContext = createContext();
 
 function App() {
 	const [isDarkMode, toggleDarkMode] = useDarkMode();
@@ -33,12 +34,6 @@ function App() {
 
 	const socket = io.connect('http://localhost:9999');
 	socket.emit('joinUser', user);
-
-	useEffect(() => {
-		if (user) {
-		}
-		// return socket.disconnect();
-	}, [socket, user]);
 
 	useEffect(() => {
 		var mounted = true;
@@ -82,51 +77,53 @@ function App() {
 		};
 	}, []);
 	return (
-		<ModalContext.Provider value={setModal}>
-			<div className="App flex flex-col min-h-screen h-full bg-slate-300 dark:bg-indigo-1050 scrollbar">
-				{isLoggedIn && (
-					<ThemeContext.Provider value={toggleDarkMode}>
-						<SearchContext.Provider value={setSearchInput}>
-							<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
-						</SearchContext.Provider>
-					</ThemeContext.Provider>
-				)}
-				{isLoggedIn && <SidebarLeft toggleMenu={toggleMenu} />}
-				{isLoggedIn && <SidebarRight toggleMenu={toggleMenu} />}
+		<SocketContext.Provider value={socket}>
+			<ModalContext.Provider value={setModal}>
+				<div className="App flex flex-col min-h-screen h-full bg-slate-300 dark:bg-indigo-1050 scrollbar">
+					{isLoggedIn && (
+						<ThemeContext.Provider value={toggleDarkMode}>
+							<SearchContext.Provider value={setSearchInput}>
+								<Header setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} />
+							</SearchContext.Provider>
+						</ThemeContext.Provider>
+					)}
+					{isLoggedIn && <SidebarLeft toggleMenu={toggleMenu} />}
+					{isLoggedIn && <SidebarRight toggleMenu={toggleMenu} />}
 
-				{/* modal */}
-				{modal.isOpen && (
-					<AddEditPost
-						setIsAddEditPost={modal.setIsOpen}
-						content={modal.content}
-					/>
-				)}
+					{/* modal */}
+					{modal.isOpen && (
+						<AddEditPost
+							setIsAddEditPost={modal.setIsOpen}
+							content={modal.content}
+						/>
+					)}
 
-				<Routes>
-					<Route element={<PublicRoutes isLogged={isLoggedIn} />}>
-						<Route path="/login" element={<Auth type="login" />} />
-						<Route path="/register" element={<Auth type="register" />} />
-					</Route>
-
-					<Route element={<ProtectedRoutes isLogged={isLoggedIn} />}>
-						<Route path="/" element={<Container />}>
-							<Route path="/" element={<Home socket={socket} />} />
-							<Route path="/photo" element={<Photo />} />
-							<Route path="/server" element={<TestServer />} />
-							<Route path="/chat/*" element={<Chat />} />
-							<Route path="/profile/:id/*" element={<Profile />} />
-							<Route path="/people" element={<Container type="people" />} />
-							<Route path="/setting" element={<Container type="setting" />} />
-							<Route path="/test" element={<Test />} />
-							<Route
-								path="/search/*"
-								element={<ListOfSearch searchInput={searchInput} />}
-							/>
+					<Routes>
+						<Route element={<PublicRoutes isLogged={isLoggedIn} />}>
+							<Route path="/login" element={<Auth type="login" />} />
+							<Route path="/register" element={<Auth type="register" />} />
 						</Route>
-					</Route>
-				</Routes>
-			</div>
-		</ModalContext.Provider>
+
+						<Route element={<ProtectedRoutes isLogged={isLoggedIn} />}>
+							<Route path="/" element={<Container />}>
+								<Route path="/" element={<Home />} />
+								<Route path="/photo" element={<Photo />} />
+								<Route path="/server" element={<TestServer />} />
+								<Route path="/chat/*" element={<Chat />} />
+								<Route path="/profile/:id/*" element={<Profile />} />
+								<Route path="/people" element={<Container type="people" />} />
+								<Route path="/setting" element={<Container type="setting" />} />
+								<Route path="/test" element={<Test />} />
+								<Route
+									path="/search/*"
+									element={<ListOfSearch searchInput={searchInput} />}
+								/>
+							</Route>
+						</Route>
+					</Routes>
+				</div>
+			</ModalContext.Provider>
+		</SocketContext.Provider>
 	);
 }
 

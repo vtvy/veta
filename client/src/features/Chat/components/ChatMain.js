@@ -5,10 +5,14 @@ import QuickViewUser from '../../../components/QuickViewUser';
 import ChannelContent from './ChannelContent';
 import ChatForm from './ChatForm';
 
-function ChatMain({ socket, channelID }) {
+function ChatMain({ socket }) {
 	const params = useParams();
 	const user = useSelector((state) => state.user.current);
-	const [channel, setChannel] = useState();
+	const [channel, setChannel] = useState({
+		_id: params.id + user._id,
+		name: 'Channel1',
+		listMessage: [],
+	});
 	const [listMessage, setListMessage] = useState([]);
 	const sendMessage = async (data) => {
 		const sendData = {
@@ -24,21 +28,23 @@ function ChatMain({ socket, channelID }) {
 
 		await socket.emit('send_message', sendData);
 	};
-
 	useEffect(() => {
-		console.log(1);
-		var mounted = true;
+		const idArray = [params.id, user._id].sort();
+		const channelID = idArray.join('');
+
 		setChannel({
-			_id: '123',
+			_id: channelID,
 			name: 'Channel1',
 			listMessage: [],
 		});
-
-		socket.emit('join_channel', '123');
+	}, [params.id, user]);
+	useEffect(() => {
+		var mounted = true;
+		socket.emit('join_channel', channel._id);
 		return () => {
 			mounted = false;
 		};
-	}, [socket]);
+	}, [socket, channel]);
 
 	useEffect(() => {
 		socket.on('receive_message', (data) => {

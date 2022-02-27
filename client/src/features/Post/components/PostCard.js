@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import postApi from '../../../api/postApi';
-import { ModalContext } from '../../../App';
+import { ModalContext, SocketContext } from '../../../App';
 import Avatar from '../../../components/Avatar';
 import Box from '../../../components/Box';
 import useClickOutside from '../../../Hooks/useClickOutside';
@@ -12,9 +12,25 @@ import Like from './Like';
 import ListOfComments from './ListOfComment';
 import PostMenu from './PostMenu';
 
-function PostCard({ post, socket }) {
+function PostCard({ post }) {
+	const socket = useContext(SocketContext);
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.current);
+
+	const [isEditPost, setIsEditPost] = useState(false);
+	const [isShowComment, setIsShowComment] = useState(false);
+	const [refInside, isInside, setIsInside] = useClickOutside(false);
+	const [isLiked, setIsLiked] = useState(
+		post.likes.includes(useSelector((state) => state.user.current._id))
+	);
+	const [numberOfComments, setNumberOfComments] = useState(
+		post.comments.length
+	);
+
+	//check liked
+	useEffect(() => {
+		setIsLiked(post.likes.includes(user._id));
+	}, [post, user]);
 
 	// Likes
 	useEffect(() => {
@@ -25,23 +41,14 @@ function PostCard({ post, socket }) {
 
 		return () => socket.off('likeToClient');
 	}, [socket, dispatch]);
-
+	// unlike
 	useEffect(() => {
 		socket.on('unLikeToClient', (newPost) => {
 			const action = addNewPost(newPost);
 			dispatch(action);
 		});
-
 		return () => socket.off('unLikeToClient');
 	}, [socket, dispatch]);
-
-	const [isEditPost, setIsEditPost] = useState(false);
-	const [isShowComment, setIsShowComment] = useState(false);
-	const [refInside, isInside, setIsInside] = useClickOutside(false);
-
-	const [numberOfComments, setNumberOfComments] = useState(
-		post.comments.length
-	);
 
 	const setModal = useContext(ModalContext);
 	useEffect(() => {
@@ -68,7 +75,7 @@ function PostCard({ post, socket }) {
 		}
 	};
 
-	const { differenceNumber, timeUnit } = getDifferenceTime(post.updatedAt);
+	const { differenceNumber, timeUnit } = getDifferenceTime(post.createdAt);
 	return (
 		<>
 			<Box height="w-full" bg="bg-white shadow-lg" p="p-6">
@@ -125,7 +132,7 @@ function PostCard({ post, socket }) {
 				<div className="flex flex-1 justify-between pt-2  border-t border-solid border-slate-300">
 					<Like
 						postID={post._id}
-						listLike={post.likes}
+						isLiked={isLiked}
 						socket={socket}
 						post={post}
 					/>
@@ -142,6 +149,7 @@ function PostCard({ post, socket }) {
 							type="comment"
 							postID={post._id}
 							setNumberOfComments={setNumberOfComments}
+							post={post}
 						/>
 					</div>
 				)}
